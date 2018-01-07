@@ -1,0 +1,29 @@
+{
+  "name": "proteus-js-frames",
+  "repository": "https://github.com/netifi-proteus/proteus-js",
+  "version": "0.0.1",
+  "description": "Proteus Java Client",
+  "contributors": [
+    "Ryland Degnan <ryland@netifi.com>"
+  ],
+  "bugs": {
+    "url": "https://github.com/netifi-proteus/proteus-js/issues"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "rsocket"
+  ],
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo 'Please run `npm test` from the root of the repo' && exit 1",
+    "build": "npm run build-js && npm run build-flow",
+    "build-js": "babel-node ../../resources/buildJs.js",
+    "build-flow": "babel-node ../../resources/buildFlow.js",
+    "prepublish": "node ../../resources/prepublish.js"
+  },
+  "dependencies": {
+    "rsocket-core": "0.0.1"
+  }
+}

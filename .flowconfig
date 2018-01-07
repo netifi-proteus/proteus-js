@@ -1,0 +1,17 @@
+[ignore]
+.*/__mocks__/.*
+.*/__tests__/.*
+.*/coverage/.*
+.*/dist/.*
+.*/resources/.*
+.*/node_modules/conventional-changelog-core/*
+
+[include]
+./node_modules/fbjs/lib
+
+[libs]
+./node_modules/fbjs/flow/lib
+./flow/
+
+[options]
+module.name_mapper='^proteus-js-\([^/]+\)$' -> '<PROJECT_ROOT>/packages/\1/src/index.js'
