@@ -50,7 +50,7 @@ export type DestinationSetupFrame = {|
   type: 0x01,
   flags: number,
   publicKey: ?Encodable,
-  accessToken: ?Encodable,
+  accessToken: Encodable,
   seqId: number,
   accessKey: number,
   destination: string,
