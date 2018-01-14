@@ -29,6 +29,10 @@ import {
   serializeDestinationSetupFrame
 } from '../DestinationSetupFrame';
 
+import {
+  serializeRouterSetupFrame
+} from '../RouterSetupFrame';
+
 describe('DestinationSetupFrameTest', () => {
   it('testEncodeWithEncryption', () => {
     const publicKey = randomBytes(32);
@@ -46,6 +50,25 @@ describe('DestinationSetupFrameTest', () => {
     };
 
     const buffer = serializeDestinationSetupFrame(frame);
+    expect(deserializeFrame(buffer)).to.deep.equal(frame);
+  });
+});
+
+describe('RouterSetupFrameTest', () => {
+  it('testEncode', () => {
+    const clusterId = randomBytes(32);
+    const routerId = randomBytes(32);
+    const authToken = randomBytes(64);
+    const frame = {
+      type: 0x02,
+      flags: 0,
+      clusterId,
+      routerId,
+      authToken,
+      seqId: 0
+    };
+
+    const buffer = serializeRouterSetupFrame(frame);
     expect(deserializeFrame(buffer)).to.deep.equal(frame);
   });
 });

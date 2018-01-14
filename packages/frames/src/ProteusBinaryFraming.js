@@ -45,6 +45,11 @@ import {
   serializeDestinationSetupFrame
 } from './DestinationSetupFrame.js';
 
+import {
+  deserializeRouterSetupFrame,
+  serializeRouterSetupFrame
+} from './RouterSetupFrame.js';
+
 import invariant from 'fbjs/lib/invariant';
 import {
   BufferEncoder,
@@ -99,6 +104,8 @@ export function deserializeFrame(buffer: Buffer): Frame {
   switch (type) {
     case FRAME_TYPES.DESTINATION_SETUP:
       return deserializeDestinationSetupFrame(buffer, flags, seqId);
+    case FRAME_TYPES.ROUTER_SETUP:
+      return deserializeRouterSetupFrame(buffer, flags, seqId);
     default:
       invariant(
         false,
