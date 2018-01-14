@@ -54,5 +54,8 @@
     "lerna": "^2.0.0",
     "mocha": "4.1.0",
     "prettier": "^1.5.3"
+  },
+  "dependencies": {
+    "rsocket-core": "0.0.1"
   }
 }

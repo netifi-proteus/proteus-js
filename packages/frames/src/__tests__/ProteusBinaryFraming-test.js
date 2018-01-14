@@ -22,9 +22,12 @@ import {randomBytes} from 'crypto';
 import {readUInt64BE} from 'rsocket-core';
 import {
   ENCRYPTED,
-  serializeDestinationSetupFrame,
   deserializeFrame,
 } from '../ProteusBinaryFraming';
+
+import {
+  serializeDestinationSetupFrame
+} from '../DestinationSetupFrame';
 
 describe('DestinationSetupFrameTest', () => {
   it('testEncodeWithEncryption', () => {
