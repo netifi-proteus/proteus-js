@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2017-present, Netifi Inc.
  *
@@ -43,60 +42,56 @@ import {
 	writeHeader
 } from './Utilities.js'
 
+const PUBLIC_KEY_SIZE = 32;
+const TOKEN_SIZE = 32;
 
-const CLUSTER_ID_SIZE = 8; // supposed to be Long value
-const ROUTER_ID_SIZE = 8; // supposed to be Long value
-
-export function serializeRouterSetupFrame(
-      frame: RouterSetupFrame
+export function serializeRequestSharedSecretFrame(
+      frame: RequestSharedSecretFrame
       ): Buffer {
-	
-	const authTokenLength = BufferEncoder.byteLength(frame.authToken);
 
 	const buffer = createBuffer(
 		FRAME_HEADER_SIZE +
-		CLUSTER_ID_SIZE +
-		ROUTER_ID_SIZE +
-		authTokenLength
+		PUBLIC_KEY_SIZE +
+		TOKEN_SIZE
 	);
   	
   	let offset = writeHeader(buffer, frame);
 
-	offset = writeUInt64BE(buffer, frame.clusterId, offset);
-	
-	offset = writeUInt64BE(buffer, frame.routerId, offset);
-  	
-	offset = UTF8Encoder.encode(
-		frame.authToken,
+	offset = BufferEncoder.encode(
+		frame.publicKey,
 		buffer,
 		offset,
-		offset + authTokenLength
+		offset + PUBLIC_KEY_SIZE,
+    );
+	
+	offset = BufferEncoder.encode(
+	    frame.token,
+	    buffer,
+	    offset,
+	    offset + TOKEN_SIZE,
 	);
 
 	return buffer;
 }
 
-export function deserializeRouterSetupFrame(
+export function deserializeRequestSharedSecretFrame(
 	buffer: Buffer,
 	flags: number,
-	seqId: number) : RouterSetupFrame {
+	seqId: number) : RequestSharedSecretFrame {
 
 	let offset = FRAME_HEADER_SIZE;
 	const totalLength = BufferEncoder.byteLength(buffer);
 
-	const clusterId = readUInt64BE(buffer, offset);
-	offset += CLUSTER_ID_SIZE;
+	const publicKey = readUInt32BE(buffer, offset);
+	offset += PUBLIC_KEY_SIZE;
 
-	const routerId = readUInt64BE(buffer, offset);
-	offset += ROUTER_ID_SIZE;
-
-	const authToken = BufferEncoder.decode(buffer, offset) //decode to end of Buffer
-
+	const token = readUInt32BE(buffer, offset);
+	
 	return {
-		type: FRAME_TYPES.ROUTER_SETUP,
+		type: FRAME_TYPES.REQUEST_SHARED_SECRET,
 		flags,
-		clusterId,
+		publicKey,
 		seqId,
-		authToken
+		token
 	};
 }

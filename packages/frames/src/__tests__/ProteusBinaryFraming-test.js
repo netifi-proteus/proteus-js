@@ -19,7 +19,7 @@
 import {expect} from 'chai';
 import {describe, it} from 'mocha';
 import {randomBytes} from 'crypto';
-import {readUInt64BE} from 'rsocket-core';
+import {readUInt64BE, toBuffer} from 'rsocket-core';
 import {
   ENCRYPTED,
   deserializeFrame,
@@ -33,11 +33,19 @@ import {
   serializeRouterSetupFrame
 } from '../RouterSetupFrame';
 
+import {
+  serializeQuerySetupFrame
+} from '../QuerySetupFrame';
+
+import {
+  serializeRequestSharedSecretFrame
+} from '../RequestSharedSecretFrame';
+
 describe('DestinationSetupFrameTest', () => {
   it('testEncodeWithEncryption', () => {
     const publicKey = randomBytes(32);
     const accessToken = randomBytes(20);
-    const accessKey = randomBytes(4).readUInt32BE(0);
+    const accessKey = toBuffer(randomBytes(4));
     const frame = {
       type: 0x01,
       flags: ENCRYPTED,
@@ -56,9 +64,9 @@ describe('DestinationSetupFrameTest', () => {
 
 describe('RouterSetupFrameTest', () => {
   it('testEncode', () => {
-    const clusterId = randomBytes(32);
-    const routerId = randomBytes(32);
-    const authToken = randomBytes(64);
+    const clusterId = randomBytes(8);
+    const routerId = randomBytes(8);
+    const authToken = toBuffer(randomBytes(20));
     const frame = {
       type: 0x02,
       flags: 0,
@@ -69,6 +77,40 @@ describe('RouterSetupFrameTest', () => {
     };
 
     const buffer = serializeRouterSetupFrame(frame);
+    expect(deserializeFrame(buffer)).to.deep.equal(frame);
+  });
+});
+
+describe('QuerySetupFrameTest', () => {
+  it('testEncode', () => {
+    const accessToken = randomBytes(20);
+    const accessKey = randomBytes(8);
+    const frame = {
+      type: 0x03,
+      flags: 0,
+      accessToken,
+      seqId: 0,
+      accessKey
+    };
+
+    const buffer = serializeQuerySetupFrame(frame);
+    expect(deserializeFrame(buffer)).to.deep.equal(frame);
+  });
+});
+
+describe('RequestSharedSecretFrameTest', () => {
+  it('testEncode', () => {
+    const publicKey = randomBytes(32);
+    const token = toBuffer(randomBytes(20));
+    const frame = {
+      type: 0x04,
+      flags: 0,
+      publicKey,
+      seqId: 0,
+      token
+    };
+
+    const buffer = serializeRequestSharedSecretFrame(frame);
     expect(deserializeFrame(buffer)).to.deep.equal(frame);
   });
 });

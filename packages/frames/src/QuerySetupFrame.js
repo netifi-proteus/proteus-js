@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2017-present, Netifi Inc.
  *
@@ -43,60 +42,59 @@ import {
 	writeHeader
 } from './Utilities.js'
 
+const ACCESS_TOKEN_SIZE = 20;
+const ACCESS_KEY_SIZE = 8; // supposed to be Long size
 
-const CLUSTER_ID_SIZE = 8; // supposed to be Long value
-const ROUTER_ID_SIZE = 8; // supposed to be Long value
+export function serializeQuerySetupFrame(frame: QuerySetupFrame) : Buffer {
 
-export function serializeRouterSetupFrame(
-      frame: RouterSetupFrame
-      ): Buffer {
-	
-	const authTokenLength = BufferEncoder.byteLength(frame.authToken);
+	const accessTokenLength = BufferEncoder.byteLength(frame.accessToken);
+	invariant(
+	accessTokenLength === ACCESS_TOKEN_SIZE,
+	'QuerySetupFrame: invalid access token size: found %s, expected %s',
+	accessTokenLength,
+	ACCESS_TOKEN_SIZE,
+	);
 
 	const buffer = createBuffer(
-		FRAME_HEADER_SIZE +
-		CLUSTER_ID_SIZE +
-		ROUTER_ID_SIZE +
-		authTokenLength
+	  FRAME_HEADER_SIZE +
+      ACCESS_TOKEN_SIZE +
+      ACCESS_KEY_SIZE
 	);
-  	
-  	let offset = writeHeader(buffer, frame);
+	let offset = writeHeader(buffer, frame);
 
-	offset = writeUInt64BE(buffer, frame.clusterId, offset);
-	
-	offset = writeUInt64BE(buffer, frame.routerId, offset);
-  	
-	offset = UTF8Encoder.encode(
-		frame.authToken,
+	offset = BufferEncoder.encode(
+		frame.accessToken,
 		buffer,
 		offset,
-		offset + authTokenLength
+		offset + accessTokenLength,
 	);
+
+	offset = writeUInt64BE(buffer, frame.accessKey, offset);
 
 	return buffer;
 }
 
-export function deserializeRouterSetupFrame(
+export function deserializeQuerySetupFrame(
 	buffer: Buffer,
 	flags: number,
-	seqId: number) : RouterSetupFrame {
-
+	seqId: number) : QuerySetupFrame{
+	
 	let offset = FRAME_HEADER_SIZE;
-	const totalLength = BufferEncoder.byteLength(buffer);
 
-	const clusterId = readUInt64BE(buffer, offset);
-	offset += CLUSTER_ID_SIZE;
+	const accessToken = BufferEncoder.decode(
+	buffer,
+	offset,
+	offset + ACCESS_TOKEN_SIZE,
+	);
+	offset += ACCESS_TOKEN_SIZE;
 
-	const routerId = readUInt64BE(buffer, offset);
-	offset += ROUTER_ID_SIZE;
-
-	const authToken = BufferEncoder.decode(buffer, offset) //decode to end of Buffer
+	const accessKey = readUInt64BE(buffer, offset);
 
 	return {
-		type: FRAME_TYPES.ROUTER_SETUP,
+		type: FRAME_TYPES.QUERY_SETUP,
 		flags,
-		clusterId,
+		accessToken,
 		seqId,
-		authToken
+		accessKey
 	};
 }

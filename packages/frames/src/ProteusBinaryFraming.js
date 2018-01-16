@@ -50,6 +50,16 @@ import {
   serializeRouterSetupFrame
 } from './RouterSetupFrame.js';
 
+import {
+  serializeQuerySetupFrame,
+  deserializeQuerySetupFrame
+} from './QuerySetupFrame';
+
+import {
+  serializeRequestSharedSecretFrame,
+  deserializeRequestSharedSecretFrame
+} from './RequestSharedSecretFrame';
+
 import invariant from 'fbjs/lib/invariant';
 import {
   BufferEncoder,
@@ -106,6 +116,10 @@ export function deserializeFrame(buffer: Buffer): Frame {
       return deserializeDestinationSetupFrame(buffer, flags, seqId);
     case FRAME_TYPES.ROUTER_SETUP:
       return deserializeRouterSetupFrame(buffer, flags, seqId);
+    case FRAME_TYPES.QUERY_SETUP:
+      return deserializeQuerySetupFrame(buffer, flags, seqId);
+    case FRAME_TYPES.REQUEST_SHARED_SECRET:
+      return deserializeRequestSharedSecretFrame(buffer, flags, seqId);
     default:
       invariant(
         false,
