@@ -28,6 +28,10 @@ import {
   writeUInt64BE,
 } from 'rsocket-core';
 
+// import {
+// 	Buffer
+// } from 'buffer'
+
 import {FRAME_TYPES} from './ProteusFrame';
 
 import {
@@ -43,7 +47,7 @@ import {
 } from './Utilities.js'
 
 const PUBLIC_KEY_SIZE = 32;
-const TOKEN_SIZE = 32;
+const TOKEN_SIZE = 4;
 
 export function serializeRequestSharedSecretFrame(
       frame: RequestSharedSecretFrame
@@ -80,12 +84,11 @@ export function deserializeRequestSharedSecretFrame(
 	seqId: number) : RequestSharedSecretFrame {
 
 	let offset = FRAME_HEADER_SIZE;
-	const totalLength = BufferEncoder.byteLength(buffer);
 
-	const publicKey = readUInt32BE(buffer, offset);
+	const publicKey = BufferEncoder.decode(buffer, offset, offset+PUBLIC_KEY_SIZE);
 	offset += PUBLIC_KEY_SIZE;
 
-	const token = readUInt32BE(buffer, offset);
+	const token = buffer.slice(offset, offset+TOKEN_SIZE);
 	
 	return {
 		type: FRAME_TYPES.REQUEST_SHARED_SECRET,

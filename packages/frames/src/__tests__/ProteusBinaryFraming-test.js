@@ -45,7 +45,7 @@ describe('DestinationSetupFrameTest', () => {
   it('testEncodeWithEncryption', () => {
     const publicKey = randomBytes(32);
     const accessToken = randomBytes(20);
-    const accessKey = toBuffer(randomBytes(4));
+    const accessKey = randomBytes(4).readUInt32BE(0,4);
     const frame = {
       type: 0x01,
       flags: ENCRYPTED,
@@ -64,9 +64,9 @@ describe('DestinationSetupFrameTest', () => {
 
 describe('RouterSetupFrameTest', () => {
   it('testEncode', () => {
-    const clusterId = randomBytes(8);
-    const routerId = randomBytes(8);
-    const authToken = toBuffer(randomBytes(20));
+    const clusterId = randomBytes(8).readUIntBE(0,8);
+    const routerId = randomBytes(8).readUIntBE(0,8);
+    const authToken = randomBytes(20);
     const frame = {
       type: 0x02,
       flags: 0,
@@ -84,7 +84,7 @@ describe('RouterSetupFrameTest', () => {
 describe('QuerySetupFrameTest', () => {
   it('testEncode', () => {
     const accessToken = randomBytes(20);
-    const accessKey = randomBytes(8);
+    const accessKey = randomBytes(8).readUIntBE(0,8);
     const frame = {
       type: 0x03,
       flags: 0,
@@ -101,7 +101,7 @@ describe('QuerySetupFrameTest', () => {
 describe('RequestSharedSecretFrameTest', () => {
   it('testEncode', () => {
     const publicKey = randomBytes(32);
-    const token = toBuffer(randomBytes(20));
+    const token = randomBytes(4);
     const frame = {
       type: 0x04,
       flags: 0,

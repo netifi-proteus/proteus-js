@@ -66,7 +66,7 @@ export function serializeRouterSetupFrame(
 	
 	offset = writeUInt64BE(buffer, frame.routerId, offset);
   	
-	offset = UTF8Encoder.encode(
+	offset = BufferEncoder.encode(
 		frame.authToken,
 		buffer,
 		offset,
@@ -82,7 +82,6 @@ export function deserializeRouterSetupFrame(
 	seqId: number) : RouterSetupFrame {
 
 	let offset = FRAME_HEADER_SIZE;
-	const totalLength = BufferEncoder.byteLength(buffer);
 
 	const clusterId = readUInt64BE(buffer, offset);
 	offset += CLUSTER_ID_SIZE;
@@ -96,6 +95,7 @@ export function deserializeRouterSetupFrame(
 		type: FRAME_TYPES.ROUTER_SETUP,
 		flags,
 		clusterId,
+		routerId,
 		seqId,
 		authToken
 	};
