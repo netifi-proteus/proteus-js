@@ -19,7 +19,8 @@
 import {expect} from 'chai';
 import {describe, it} from 'mocha';
 import {randomBytes} from 'crypto';
-import {readUInt64BE, toBuffer} from 'rsocket-core';
+import ByteBuffer from 'bytebuffer';
+import Long from 'long';
 import {
   ENCRYPTED,
   deserializeFrame,
@@ -43,15 +44,15 @@ import {
 
 describe('DestinationSetupFrameTest', () => {
   it('testEncodeWithEncryption', () => {
-    const publicKey = randomBytes(32);
-    const accessToken = randomBytes(20);
+    const publicKey = ByteBuffer.fromBinary(randomBytes(32));
+    const accessToken = ByteBuffer.fromBinary(randomBytes(20));
     const accessKey = randomBytes(4).readUInt32BE(0,4);
     const frame = {
       type: 0x01,
       flags: ENCRYPTED,
       publicKey,
       accessToken,
-      seqId: 0,
+      seqId: Long.UZERO,
       accessKey,
       destination: 'dest',
       group: 'group',
@@ -64,16 +65,16 @@ describe('DestinationSetupFrameTest', () => {
 
 describe('RouterSetupFrameTest', () => {
   it('testEncode', () => {
-    const clusterId = randomBytes(8).readUIntBE(0,8);
-    const routerId = randomBytes(8).readUIntBE(0,8);
-    const authToken = randomBytes(20);
+    const clusterId = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0));
+    const routerId = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0));
+    const authToken = ByteBuffer.fromBinary(randomBytes(20));
     const frame = {
       type: 0x02,
       flags: 0,
       clusterId,
       routerId,
       authToken,
-      seqId: 0
+      seqId: Long.UZERO
     };
 
     const buffer = serializeRouterSetupFrame(frame);
@@ -83,13 +84,13 @@ describe('RouterSetupFrameTest', () => {
 
 describe('QuerySetupFrameTest', () => {
   it('testEncode', () => {
-    const accessToken = randomBytes(20);
-    const accessKey = randomBytes(8).readUIntBE(0,8);
+    const accessToken = ByteBuffer.fromBinary(randomBytes(20));
+    const accessKey = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0));
     const frame = {
       type: 0x03,
       flags: 0,
       accessToken,
-      seqId: 0,
+      seqId: Long.UZERO,
       accessKey
     };
 
@@ -100,13 +101,13 @@ describe('QuerySetupFrameTest', () => {
 
 describe('RequestSharedSecretFrameTest', () => {
   it('testEncode', () => {
-    const publicKey = randomBytes(32);
-    const token = randomBytes(4);
+    const publicKey = ByteBuffer.wrap(randomBytes(32).buffer);
+    const token = ByteBuffer.wrap(randomBytes(4).buffer);
     const frame = {
       type: 0x04,
       flags: 0,
       publicKey,
-      seqId: 0,
+      seqId: Long.UZERO,
       token
     };
 

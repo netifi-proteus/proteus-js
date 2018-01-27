@@ -24,9 +24,9 @@
 import {
   BufferEncoder,
   UTF8Encoder,
-  createBuffer,
-  readUInt64BE,
-  writeUInt64BE,
+  createByteBuffer,
+  readUint64,
+  writeUint64,
 } from 'rsocket-core';
 
 import {FRAME_TYPES} from './ProteusFrame';
@@ -53,7 +53,7 @@ export function serializeRouterSetupFrame(
 	
 	const authTokenLength = BufferEncoder.byteLength(frame.authToken);
 
-	const buffer = createBuffer(
+	const buffer = createByteBuffer(
 		FRAME_HEADER_SIZE +
 		CLUSTER_ID_SIZE +
 		ROUTER_ID_SIZE +
@@ -62,9 +62,11 @@ export function serializeRouterSetupFrame(
   	
   	let offset = writeHeader(buffer, frame);
 
-	offset = writeUInt64BE(buffer, frame.clusterId, offset);
+	writeUint64(buffer, frame.clusterId, offset);
+	offset += 8;
 	
-	offset = writeUInt64BE(buffer, frame.routerId, offset);
+	writeUint64(buffer, frame.routerId, offset);
+	offset += 8;
   	
 	offset = BufferEncoder.encode(
 		frame.authToken,
@@ -83,10 +85,10 @@ export function deserializeRouterSetupFrame(
 
 	let offset = FRAME_HEADER_SIZE;
 
-	const clusterId = readUInt64BE(buffer, offset);
+	const clusterId = readUint64(buffer, offset);
 	offset += CLUSTER_ID_SIZE;
 
-	const routerId = readUInt64BE(buffer, offset);
+	const routerId = readUint64(buffer, offset);
 	offset += ROUTER_ID_SIZE;
 
 	const authToken = BufferEncoder.decode(buffer, offset) //decode to end of Buffer

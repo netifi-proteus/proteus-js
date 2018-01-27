@@ -18,6 +18,8 @@
 
 import type {Encodable} from 'rsocket-core';
 
+import {Long} from 'long';
+
 export type Frame =
   | DestinationSetupFrame
   | RouterSetupFrame
@@ -51,8 +53,8 @@ export type DestinationSetupFrame = {|
   flags: number,
   publicKey: ?Encodable,
   accessToken: Encodable,
-  seqId: number,
-  accessKey: number,
+  seqId: Long,
+  accessKey: Long,
   destination: string,
   group: string
 |};
@@ -61,10 +63,10 @@ export type DestinationSetupFrame = {|
 export type RouterSetupFrame = {|
   type: 0x02,
   flags: number,
-  clusterId: number,
-  routerId: number,
+  clusterId: Long,
+  routerId: Long,
   authToken: ?Encodable,
-  seqId: number
+  seqId: Long
 |};
 
 // prettier-ignore
@@ -72,8 +74,8 @@ export type QuerySetupFrame = {|
   type: 0x03,
   flags: number,
   accessToken: ?Encodable,
-  accessKey: number,
-  seqId: number
+  accessKey: Long,
+  seqId: Long
 |};
 
 // prettier-ignore
@@ -82,7 +84,7 @@ export type RequestSharedSecretFrame = {|
   flags: number,
   token: number,
   publicKey: ?Encodable,
-  seqId: number
+  seqId: Long
 |};
 
 // prettier-ignore
@@ -92,7 +94,7 @@ export type SharedSecredFrame = {|
   token: number,
   publicKey: ?Encodable,
   sharedSecret: ?Encodable,
-  seqId: number
+  seqId: Long
 |};
 
 // prettier-ignore
@@ -104,7 +106,7 @@ export type RouteFrame = {|
   token: number,
   fromAccessKey: number,
   fromDestination: string,
-  seqId: number,
+  seqId: Long,
   route: ?Encodable,
   wrappedMetadata: ?Encodable,
 |};
@@ -118,7 +120,7 @@ export type QueryDestinationAvailFrame = {|
   accessKey: number,
   accountId: number,
   destinationId: number,
-  seqId: number
+  seqId: Long
 |};
 
 // prettier-ignore
@@ -127,7 +129,7 @@ export type DestinationAvailResultFrame = {|
   flags: number,
   destination: string,
   found: boolean,
-  seqId: number
+  seqId: Long
 |};
 
 // prettier-ignore
@@ -136,7 +138,7 @@ export type AuthenticationRequestFrame = {|
   flags: number,
   accessToken: ?Encodable,
   accessKey: number,
-  seqId: number
+  seqId: Long
 |};
 
 // prettier-ignore
@@ -146,7 +148,7 @@ export type AuthenticationResponseFrame = {|
   accountId: number,
   count: number,
   sessionToken: ?Encodable,
-  seqId: number
+  seqId: Long
 |};
 
 // prettier-ignore
@@ -155,7 +157,7 @@ export type InfoSetupFrame = {|
   flags: number,
   publicKey: ?Encodable,
   accessToken: ?Encodable,
-  seqId: number,
+  seqId: Long,
   accessKey: number,
   destination: string,
   group: string
@@ -165,14 +167,14 @@ export type InfoSetupFrame = {|
 export type RouterInfoFrame = {|
   type: 0x11,
   flags: number,
-  seqId: number
+  seqId: Long
 |};
 
 // prettier-ignore
 export type RouterInfoSnapshotFrame = {|
   type: 0x12,
   flags: number,
-  seqId: number
+  seqId: Long
 |};
 
 // prettier-ignore
@@ -187,12 +189,12 @@ export type RouterInfoResultFrame = {|
   clusterPort: number,
   adminAddress: string,
   adminPort: number,
-  seqId: number
+  seqId: Long
 |};
 
 // prettier-ignore
 export type ExtensionFrame = {|
   type: 0x7F,
   flags: number,
-  seqId: number
+  seqId: Long
 |};

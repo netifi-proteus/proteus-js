@@ -23,9 +23,9 @@
 import {
   BufferEncoder,
   UTF8Encoder,
-  createBuffer,
-  readUInt64BE,
-  writeUInt64BE,
+  createByteBuffer,
+  readUint64,
+  writeUint64,
 } from 'rsocket-core';
 
 import {FRAME_TYPES} from './ProteusFrame';
@@ -89,7 +89,7 @@ export function serializeDestinationSetupFrame(
     'ProteusBinaryFraming: group is longer then 255 characters',
   );
 
-  const buffer = createBuffer(
+  const buffer = createByteBuffer(
     FRAME_HEADER_SIZE +
       DESTINATION_SETUP_FIXED_SIZE +
       (encrypted ? PUBLIC_KEY_SIZE : 0) +
@@ -115,9 +115,12 @@ export function serializeDestinationSetupFrame(
     offset + accessTokenLength,
   );
 
-  offset = writeUInt64BE(buffer, frame.accessKey, offset);
+  writeUint64(buffer, frame.accessKey, offset);
+  offset += 8;
 
-  offset = buffer.writeUInt8(destinationLength, offset);
+  buffer.writeUInt8(destinationLength, offset);
+  offset += 1;
+
   offset = UTF8Encoder.encode(
     frame.destination,
     buffer,
@@ -125,7 +128,9 @@ export function serializeDestinationSetupFrame(
     offset + destinationLength,
   );
 
-  offset = buffer.writeUInt8(groupLength, offset);
+  buffer.writeUInt8(groupLength, offset);
+  offset += 1;
+
   offset = UTF8Encoder.encode(
     frame.group,
     buffer,
@@ -160,7 +165,7 @@ export function deserializeDestinationSetupFrame(
   );
   offset += ACCESS_TOKEN_SIZE;
 
-  const accessKey = readUInt64BE(buffer, offset);
+  const accessKey = readUint64(buffer, offset);
   offset += 8;
 
   const destinationLength = buffer.readUInt8(offset);

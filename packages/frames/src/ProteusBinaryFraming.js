@@ -65,8 +65,8 @@ import {
   BufferEncoder,
   UTF8Encoder,
   createBuffer,
-  readUInt64BE,
-  writeUInt64BE,
+  readUint64,
+  writeUint64,
 } from 'rsocket-core';
 
 /**
@@ -103,13 +103,13 @@ export const MINOR_VERSION_MASK = 0b00000000000000000000000011111111;
 /**
  * Read a frame from the buffer.
  */
-export function deserializeFrame(buffer: Buffer): Frame {
-  const typeAndFlags = buffer.readInt32BE(0);
+export function deserializeFrame(buffer: ByteBuffer): Frame {
+  const typeAndFlags = buffer.readInt32(0);
   const type = (typeAndFlags & FRAME_TYPE_MASK) >>> 24;
   const flags = (typeAndFlags & FLAGS_MASK) >>> 16;
   const majorVersion = (typeAndFlags & MAJOR_VERSION_MASK) >>> 8;
   const minorVersion = typeAndFlags & MINOR_VERSION_MASK;
-  const seqId = readUInt64BE(buffer, 4);
+  const seqId = readUint64(buffer, 4);
 
   switch (type) {
     case FRAME_TYPES.DESTINATION_SETUP:

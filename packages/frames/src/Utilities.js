@@ -22,10 +22,11 @@
 /* eslint-disable consistent-return, no-bitwise */
 
 import {
-  readUInt64BE,
-  writeUInt64BE
+  readUint64,
+  writeUint64
 } from 'rsocket-core';
 
+import ByteBuffer from 'bytebuffer';
 /**
  * Frame header is:
  * - flags (uint32 = 4)
@@ -58,20 +59,20 @@ export const MAJOR_VERSION_MASK = 0b00000000000000001111111100000000;
 export const MINOR_VERSION_MASK = 0b00000000000000000000000011111111;
 
 
-export function frameType(buffer: Buffer): number {
-  return (buffer.readInt32BE(0) & FRAME_TYPE_MASK) >>> 24;
+export function frameType(buffer: ByteBuffer): number {
+  return (buffer.readInt32(0) & FRAME_TYPE_MASK) >>> 24;
 }
 
-export function flags(buffer: Buffer): number {
-  return (buffer.readInt32BE(0) & FLAGS_MASK) >>> 16;
+export function flags(buffer: ByteBuffer): number {
+  return (buffer.readInt32(0) & FLAGS_MASK) >>> 16;
 }
 
-export function majorVersion(buffer: Buffer): number {
-  return (buffer.readInt32BE(0) & MAJOR_VERSION_MASK) >>> 8;
+export function majorVersion(buffer: ByteBuffer): number {
+  return (buffer.readInt32(0) & MAJOR_VERSION_MASK) >>> 8;
 }
 
-export function minorVersion(buffer: Buffer): number {
-  return buffer.readInt32BE(0) & MINOR_VERSION_MASK;
+export function minorVersion(buffer: ByteBuffer): number {
+  return buffer.readInt32(0) & MINOR_VERSION_MASK;
 }
 
 export function encodeFlags(
@@ -86,45 +87,46 @@ export function encodeFlags(
   return eflags;
 }
 
-export function hasData(buffer: Buffer): boolean {
+export function hasData(buffer: ByteBuffer): boolean {
   return (flags(buffer) & USER_DATA_PRESENT) === USER_DATA_PRESENT;
 }
 
-export function hasMetadata(buffer: Buffer): boolean {
+export function hasMetadata(buffer: ByteBuffer): boolean {
   return (flags(buffer) & METADATA_PRESENT) === METADATA_PRESENT;
 }
 
-export function isEncrypted(buffer: Buffer): boolean {
+export function isEncrypted(buffer: ByteBuffer): boolean {
   return (flags(buffer) & ENCRYPTED) !== 0;
 }
 
-export function isBroadcast(buffer: Buffer): boolean {
+export function isBroadcast(buffer: ByteBuffer): boolean {
   return (flags(buffer) & BROADCAST) !== 0;
 }
 
-export function isApiCall(buffer: Buffer): boolean {
+export function isApiCall(buffer: ByteBuffer): boolean {
   return (flags(buffer) & API_CALL) !== 0;
 }
 
-export function isToken(buffer: Buffer): boolean {
+export function isToken(buffer: ByteBuffer): boolean {
   return (flags(buffer) & TOKEN) === TOKEN;
 }
 
-export function seqId(buffer: Buffer): number {
-  return readUInt64BE(buffer, 4);
+export function seqId(buffer: ByteBuffer): Long {
+  return readUint64(buffer, 4);
 }
 
 /**
  * Write the header of the frame into the buffer.
  */
-export function writeHeader(buffer: Buffer, frame: Frame): number {
+export function writeHeader(buffer: ByteBuffer, frame: Frame): number {
   const header =
     (frame.type << 24) |
     (frame.flags << 16) |
     (MAJOR_VERSION << 8) |
     MINOR_VERSION;
 
-  let offset = buffer.writeInt32BE(header, 0);
+  buffer.writeInt32(header, 0);
 
-  return writeUInt64BE(buffer, frame.seqId, offset);
+  writeUint64(buffer, frame.seqId, 4);
+  return FRAME_HEADER_SIZE;
 }

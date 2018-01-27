@@ -23,9 +23,9 @@
 import {
   BufferEncoder,
   UTF8Encoder,
-  createBuffer,
-  readUInt64BE,
-  writeUInt64BE,
+  createByteBuffer,
+  readUint64,
+  writeUint64,
 } from 'rsocket-core';
 
 import {FRAME_TYPES} from './ProteusFrame';
@@ -55,7 +55,7 @@ export function serializeQuerySetupFrame(frame: QuerySetupFrame) : Buffer {
 	ACCESS_TOKEN_SIZE,
 	);
 
-	const buffer = createBuffer(
+	const buffer = createByteBuffer(
 	  FRAME_HEADER_SIZE +
       ACCESS_TOKEN_SIZE +
       ACCESS_KEY_SIZE
@@ -69,7 +69,7 @@ export function serializeQuerySetupFrame(frame: QuerySetupFrame) : Buffer {
 		offset + accessTokenLength,
 	);
 
-	offset = writeUInt64BE(buffer, frame.accessKey, offset);
+	offset = writeUint64(buffer, frame.accessKey, offset);
 
 	return buffer;
 }
@@ -88,7 +88,7 @@ export function deserializeQuerySetupFrame(
 	);
 	offset += ACCESS_TOKEN_SIZE;
 
-	const accessKey = readUInt64BE(buffer, offset);
+	const accessKey = readUint64(buffer, offset);
 
 	return {
 		type: FRAME_TYPES.QUERY_SETUP,
