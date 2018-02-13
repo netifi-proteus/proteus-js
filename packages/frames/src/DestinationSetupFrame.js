@@ -20,14 +20,6 @@
 
 /* eslint-disable consistent-return, no-bitwise */
 
-import {
-  BufferEncoder,
-  UTF8Encoder,
-  createByteBuffer,
-  readUint64,
-  writeUint64,
-} from 'rsocket-core';
-
 import {FRAME_TYPES} from './ProteusFrame';
 
 import {
@@ -36,10 +28,23 @@ import {
 } from './ProteusBinaryFraming';
 
 
+import ByteBuffer from 'bytebuffer';
+
 import invariant from 'fbjs/lib/invariant';
 
 import {
-	writeHeader
+  writeHeader,
+  writeBytes,
+  writeString,
+  readBytes,
+  readString,
+  getByteLength,
+  getStringByteLength,
+  bufferFromByteBuffer,
+  bytebufferFromBuffer,
+  readUint64,
+  writeUint64
+
 } from './Utilities.js'
 
 /**
@@ -59,7 +64,7 @@ export function serializeDestinationSetupFrame(
 ): Buffer {
   const encrypted = (frame.flags & ENCRYPTED) !== 0;
   const publicKeyLength =
-    frame.publicKey != null ? BufferEncoder.byteLength(frame.publicKey) : 0;
+    frame.publicKey != null ? getByteLength(frame.publicKey) : 0;
   if (encrypted) {
     invariant(
       publicKeyLength === PUBLIC_KEY_SIZE,
@@ -69,7 +74,7 @@ export function serializeDestinationSetupFrame(
     );
   }
 
-  const accessTokenLength = BufferEncoder.byteLength(frame.accessToken);
+  const accessTokenLength = getByteLength(frame.accessToken);
   invariant(
     accessTokenLength === ACCESS_TOKEN_SIZE,
     'ProteusBinaryFraming: invalid access token size: found %s, expected %s',
@@ -77,19 +82,19 @@ export function serializeDestinationSetupFrame(
     ACCESS_TOKEN_SIZE,
   );
 
-  const destinationLength = UTF8Encoder.byteLength(frame.destination);
+  const destinationLength = getStringByteLength(frame.destination);
   invariant(
     destinationLength <= 255,
     'ProteusBinaryFraming: destination is longer then 255 characters',
   );
 
-  const groupLength = UTF8Encoder.byteLength(frame.group);
+  const groupLength = getStringByteLength(frame.group);
   invariant(
     groupLength <= 255,
     'ProteusBinaryFraming: group is longer then 255 characters',
   );
 
-  const buffer = createByteBuffer(
+  const buffer = ByteBuffer.allocate(
     FRAME_HEADER_SIZE +
       DESTINATION_SETUP_FIXED_SIZE +
       (encrypted ? PUBLIC_KEY_SIZE : 0) +
@@ -100,19 +105,17 @@ export function serializeDestinationSetupFrame(
   let offset = writeHeader(buffer, frame);
 
   if (encrypted && frame.publicKey != null) {
-    offset = BufferEncoder.encode(
+    offset = writeBytes(
       frame.publicKey,
       buffer,
-      offset,
-      offset + publicKeyLength,
+      offset
     );
   }
 
-  offset = BufferEncoder.encode(
+  offset = writeBytes(
     frame.accessToken,
     buffer,
-    offset,
-    offset + accessTokenLength,
+    offset
   );
 
   writeUint64(buffer, frame.accessKey, offset);
@@ -121,21 +124,19 @@ export function serializeDestinationSetupFrame(
   buffer.writeUInt8(destinationLength, offset);
   offset += 1;
 
-  offset = UTF8Encoder.encode(
+  offset = writeString(
     frame.destination,
     buffer,
-    offset,
-    offset + destinationLength,
+    offset
   );
 
   buffer.writeUInt8(groupLength, offset);
   offset += 1;
 
-  offset = UTF8Encoder.encode(
+  offset = writeString(
     frame.group,
     buffer,
-    offset,
-    offset + groupLength,
+    offset
   );
 
   return buffer;
@@ -147,21 +148,21 @@ export function serializeDestinationSetupFrame(
 export function deserializeDestinationSetupFrame(
   buffer: Buffer,
   flags: number,
-  seqId: number,
+  seqId: Long,
 ): DestinationSetupFrame {
   let offset = FRAME_HEADER_SIZE;
 
   let publicKey;
   const encrypted = (flags & ENCRYPTED) !== 0;
   if (encrypted) {
-    publicKey = BufferEncoder.decode(buffer, offset, offset + PUBLIC_KEY_SIZE);
+    publicKey = readBytes(buffer, offset, PUBLIC_KEY_SIZE);
     offset += PUBLIC_KEY_SIZE;
   }
 
-  const accessToken = BufferEncoder.decode(
+  const accessToken = readBytes(
     buffer,
     offset,
-    offset + ACCESS_TOKEN_SIZE,
+    ACCESS_TOKEN_SIZE,
   );
   offset += ACCESS_TOKEN_SIZE;
 
@@ -170,16 +171,16 @@ export function deserializeDestinationSetupFrame(
 
   const destinationLength = buffer.readUInt8(offset);
   offset += 1;
-  const destination = UTF8Encoder.decode(
+  const destination = readString(
     buffer,
     offset,
-    offset + destinationLength,
+    destinationLength
   );
   offset += destinationLength;
 
   const groupLength = buffer.readUInt8(offset);
   offset += 1;
-  const group = UTF8Encoder.decode(buffer, offset, offset + groupLength);
+  const group = readString(buffer, offset, groupLength);
   offset += groupLength;
 
   return {

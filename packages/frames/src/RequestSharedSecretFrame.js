@@ -21,10 +21,18 @@
 /* eslint-disable consistent-return, no-bitwise */
 
 import {
-  BufferEncoder,
-  UTF8Encoder,
-  createByteBuffer
-} from 'rsocket-core';
+	writeHeader,
+	writeBytes,
+	readBytes,
+	getByteLength,
+	bufferFromByteBuffer,
+	bytebufferFromBuffer,
+	readUint64,
+	writeUint64
+
+} from './Utilities.js'
+
+import ByteBuffer from 'bytebuffer';
 
 import {FRAME_TYPES} from './ProteusFrame';
 
@@ -36,10 +44,6 @@ import {
 
 import invariant from 'fbjs/lib/invariant';
 
-import {
-	writeHeader
-} from './Utilities.js'
-
 const PUBLIC_KEY_SIZE = 32;
 const TOKEN_SIZE = 4;
 
@@ -47,7 +51,7 @@ export function serializeRequestSharedSecretFrame(
       frame: RequestSharedSecretFrame
       ): ByteBuffer {
 
-	const buffer = createByteBuffer(
+	const buffer = ByteBuffer.allocate(
 		FRAME_HEADER_SIZE +
 		PUBLIC_KEY_SIZE +
 		TOKEN_SIZE
@@ -55,34 +59,32 @@ export function serializeRequestSharedSecretFrame(
   	
   	let offset = writeHeader(buffer, frame);
 
-	offset = BufferEncoder.encode(
+	offset = writeBytes(
 		frame.publicKey,
 		buffer,
-		offset,
-		offset + PUBLIC_KEY_SIZE,
+		offset
     );
 	
-	offset = BufferEncoder.encode(
+	offset = writeBytes(
 	    frame.token,
 	    buffer,
-	    offset,
-	    offset + TOKEN_SIZE,
+	    offset
 	);
 
 	return buffer;
 }
 
 export function deserializeRequestSharedSecretFrame(
-	ByteBuffer: ByteBuffer,
+	buffer: ByteBuffer,
 	flags: number,
-	seqId: number) : RequestSharedSecretFrame {
+	seqId: Long) : RequestSharedSecretFrame {
 
 	let offset = FRAME_HEADER_SIZE;
 
-	const publicKey = BufferEncoder.decode(ByteBuffer, offset, offset+PUBLIC_KEY_SIZE);
+	const publicKey = readBytes(buffer, offset, PUBLIC_KEY_SIZE);
 	offset += PUBLIC_KEY_SIZE;
 
-	const token = ByteBuffer.slice(offset, offset+TOKEN_SIZE);
+	const token = readBytes(buffer, offset, TOKEN_SIZE);
 	
 	return {
 		type: FRAME_TYPES.REQUEST_SHARED_SECRET,

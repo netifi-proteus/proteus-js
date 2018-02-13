@@ -21,14 +21,6 @@
 
 /* eslint-disable consistent-return, no-bitwise */
 
-import {
-  BufferEncoder,
-  UTF8Encoder,
-  createByteBuffer,
-  readUint64,
-  writeUint64,
-} from 'rsocket-core';
-
 import {FRAME_TYPES} from './ProteusFrame';
 
 import {
@@ -37,12 +29,21 @@ import {
 } from './ProteusBinaryFraming';
 
 
+import ByteBuffer from 'bytebuffer';
+
 import invariant from 'fbjs/lib/invariant';
 
 import {
-	writeHeader
-} from './Utilities.js'
+	writeHeader,
+	writeBytes,
+	readBytes,
+	getByteLength,
+	bufferFromByteBuffer,
+	bytebufferFromBuffer,
+	readUint64,
+	writeUint64
 
+} from './Utilities.js'
 
 const CLUSTER_ID_SIZE = 8; // supposed to be Long value
 const ROUTER_ID_SIZE = 8; // supposed to be Long value
@@ -51,9 +52,9 @@ export function serializeRouterSetupFrame(
       frame: RouterSetupFrame
       ): Buffer {
 	
-	const authTokenLength = BufferEncoder.byteLength(frame.authToken);
+	const authTokenLength = getByteLength(frame.authToken);
 
-	const buffer = createByteBuffer(
+	const buffer = ByteBuffer.allocate(
 		FRAME_HEADER_SIZE +
 		CLUSTER_ID_SIZE +
 		ROUTER_ID_SIZE +
@@ -62,17 +63,14 @@ export function serializeRouterSetupFrame(
   	
   	let offset = writeHeader(buffer, frame);
 
-	writeUint64(buffer, frame.clusterId, offset);
-	offset += 8;
+	offset = writeUint64(buffer, frame.clusterId, offset);
 	
-	writeUint64(buffer, frame.routerId, offset);
-	offset += 8;
+	offset = writeUint64(buffer, frame.routerId, offset);
   	
-	offset = BufferEncoder.encode(
+	offset = writeBytes(
 		frame.authToken,
 		buffer,
-		offset,
-		offset + authTokenLength
+		offset
 	);
 
 	return buffer;
@@ -81,7 +79,7 @@ export function serializeRouterSetupFrame(
 export function deserializeRouterSetupFrame(
 	buffer: Buffer,
 	flags: number,
-	seqId: number) : RouterSetupFrame {
+	seqId: Long) : RouterSetupFrame {
 
 	let offset = FRAME_HEADER_SIZE;
 
@@ -91,7 +89,7 @@ export function deserializeRouterSetupFrame(
 	const routerId = readUint64(buffer, offset);
 	offset += ROUTER_ID_SIZE;
 
-	const authToken = BufferEncoder.decode(buffer, offset) //decode to end of Buffer
+	const authToken = readBytes(buffer, offset) //decode to end of Buffer
 
 	return {
 		type: FRAME_TYPES.ROUTER_SETUP,

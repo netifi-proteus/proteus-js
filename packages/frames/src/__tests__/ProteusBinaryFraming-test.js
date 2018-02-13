@@ -46,7 +46,7 @@ describe('DestinationSetupFrameTest', () => {
   it('testEncodeWithEncryption', () => {
     const publicKey = ByteBuffer.fromBinary(randomBytes(32));
     const accessToken = ByteBuffer.fromBinary(randomBytes(20));
-    const accessKey = randomBytes(4).readUInt32BE(0,4);
+    const accessKey = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0), true);
     const frame = {
       type: 0x01,
       flags: ENCRYPTED,
@@ -65,8 +65,8 @@ describe('DestinationSetupFrameTest', () => {
 
 describe('RouterSetupFrameTest', () => {
   it('testEncode', () => {
-    const clusterId = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0));
-    const routerId = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0));
+    const clusterId = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0), true);
+    const routerId = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0), true);
     const authToken = ByteBuffer.fromBinary(randomBytes(20));
     const frame = {
       type: 0x02,
@@ -85,7 +85,7 @@ describe('RouterSetupFrameTest', () => {
 describe('QuerySetupFrameTest', () => {
   it('testEncode', () => {
     const accessToken = ByteBuffer.fromBinary(randomBytes(20));
-    const accessKey = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0));
+    const accessKey = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0), true);
     const frame = {
       type: 0x03,
       flags: 0,

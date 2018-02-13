@@ -65,9 +65,10 @@ import {
   BufferEncoder,
   UTF8Encoder,
   createBuffer,
-  readUint64,
   writeUint64,
 } from 'rsocket-core';
+
+import {readUint64} from './Utilities';
 
 /**
  * Frame header is:

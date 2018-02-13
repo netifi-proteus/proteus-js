@@ -20,14 +20,6 @@
 
 /* eslint-disable consistent-return, no-bitwise */
 
-import {
-  BufferEncoder,
-  UTF8Encoder,
-  createByteBuffer,
-  readUint64,
-  writeUint64,
-} from 'rsocket-core';
-
 import {FRAME_TYPES} from './ProteusFrame';
 
 import {
@@ -35,11 +27,20 @@ import {
 	ENCRYPTED
 } from './ProteusBinaryFraming';
 
+import ByteBuffer from 'bytebuffer';
 
 import invariant from 'fbjs/lib/invariant';
 
 import {
-	writeHeader
+	writeHeader,
+	writeBytes,
+	readBytes,
+	getByteLength,
+	bufferFromByteBuffer,
+	bytebufferFromBuffer,
+	readUint64,
+	writeUint64
+
 } from './Utilities.js'
 
 const ACCESS_TOKEN_SIZE = 20;
@@ -47,7 +48,7 @@ const ACCESS_KEY_SIZE = 8; // supposed to be Long size
 
 export function serializeQuerySetupFrame(frame: QuerySetupFrame) : Buffer {
 
-	const accessTokenLength = BufferEncoder.byteLength(frame.accessToken);
+	const accessTokenLength = getByteLength(frame.accessToken);
 	invariant(
 	accessTokenLength === ACCESS_TOKEN_SIZE,
 	'QuerySetupFrame: invalid access token size: found %s, expected %s',
@@ -55,18 +56,18 @@ export function serializeQuerySetupFrame(frame: QuerySetupFrame) : Buffer {
 	ACCESS_TOKEN_SIZE,
 	);
 
-	const buffer = createByteBuffer(
+	const buffer = ByteBuffer.allocate(
 	  FRAME_HEADER_SIZE +
       ACCESS_TOKEN_SIZE +
       ACCESS_KEY_SIZE
 	);
+	
 	let offset = writeHeader(buffer, frame);
 
-	offset = BufferEncoder.encode(
+	offset = writeBytes(
 		frame.accessToken,
 		buffer,
-		offset,
-		offset + accessTokenLength,
+		offset
 	);
 
 	offset = writeUint64(buffer, frame.accessKey, offset);
@@ -75,17 +76,13 @@ export function serializeQuerySetupFrame(frame: QuerySetupFrame) : Buffer {
 }
 
 export function deserializeQuerySetupFrame(
-	buffer: Buffer,
+	buffer: ByteBuffer,
 	flags: number,
-	seqId: number) : QuerySetupFrame{
+	seqId: Long) : QuerySetupFrame{
 	
 	let offset = FRAME_HEADER_SIZE;
 
-	const accessToken = BufferEncoder.decode(
-	buffer,
-	offset,
-	offset + ACCESS_TOKEN_SIZE,
-	);
+	const accessToken = readBytes(buffer, offset, ACCESS_TOKEN_SIZE);
 	offset += ACCESS_TOKEN_SIZE;
 
 	const accessKey = readUint64(buffer, offset);

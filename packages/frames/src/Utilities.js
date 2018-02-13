@@ -21,11 +21,6 @@
 
 /* eslint-disable consistent-return, no-bitwise */
 
-import {
-  readUint64,
-  writeUint64
-} from 'rsocket-core';
-
 import ByteBuffer from 'bytebuffer';
 /**
  * Frame header is:
@@ -125,8 +120,79 @@ export function writeHeader(buffer: ByteBuffer, frame: Frame): number {
     (MAJOR_VERSION << 8) |
     MINOR_VERSION;
 
-  buffer.writeInt32(header, 0);
-
+  buffer.writeUint32(header, 0);
   writeUint64(buffer, frame.seqId, 4);
   return FRAME_HEADER_SIZE;
+}
+
+export function writeUint64(buffer: ByteBuffer, value: Long, offset: number) : number {
+  buffer.writeUint64(value, offset);
+  return offset + 8;
+}
+
+export function readUint64(buffer: ByteBuffer, offset: number) : Long {
+  return buffer.readUint64(offset);
+}
+
+export function bytebufferFromBuffer(buffer: Buffer) : ByteBuffer {
+  return ByteBuffer.wrap(buffer.buffer);
+}
+
+export function bufferFromByteBuffer(buffer: ByteBuffer) : Buffer {
+  if(buffer.buffer instanceof Buffer){
+    return buffer.buffer; // in Node, the backing buffer is a Node buffer I believe
+  }
+  return Buffer.from(buffer.buffer);
+}
+
+export function getByteLength(value: any): number {
+  if(!ByteBuffer.isByteBuffer(value)){
+    throw `ProteusUtilities getByteLength: Expected value to be a buffer, got ${value}`;
+  }
+  return value.limit;
+}
+
+export function getStringByteLength(value: String): number{
+  return ByteBuffer.calculateUTF8Bytes(value);
+}
+
+export function writeBytes(
+  value: any,
+  buffer: ByteBuffer,
+  offset: number,
+): number {
+  if(!ByteBuffer.isByteBuffer(value)){
+    throw `ProteusUtilities writeBytes: Expected value to be a buffer, got ${value}`;
+  }
+  value.copyTo(buffer, offset, 0, value.limit);
+  return offset + value.limit;
+}
+
+export function writeString(
+  value: String,
+  buffer: ByteBuffer,
+  offset: number) : number{
+
+  return offset + buffer.writeString(value, offset);
+}
+
+export function readBytes(
+  buffer: ByteBuffer,
+  offset: number,
+  length: ?number
+  ) : ByteBuffer {
+
+  const size = length || buffer.limit - offset;
+  let output = ByteBuffer.allocate(size);
+  buffer.copyTo(output, 0, offset, offset + size);
+  return output;
+}
+
+export function readString(
+  buffer: ByteBuffer,
+  offset: number,
+  length: ?number) : String {
+
+  const size = length || buffer.limit - offset;
+  return buffer.readUTF8String(size, undefined, offset).string; // object {string: "str", length: x}
 }
