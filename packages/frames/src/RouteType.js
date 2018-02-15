@@ -18,36 +18,36 @@
  */
 
 export type RouteType = {|
-  hasDestination: () => boolean,
-  getEncodedType: () => number
+  hasDestination: boolean,
+  encodedType: number
 |};
 
 export const UNDEFINED : RouteType = {
-  getEncodedType: () => 0x00,
-  hasDestination: () => false
+  encodedType: 0x00,
+  hasDestination: false
 };
 
 export const STREAM_ID_ROUTE : RouteType = {
-  getEncodedType: () => 0x01,
-  hasDestination: () => true
+  encodedType: 0x01,
+  hasDestination: true
 };
 
 export const STREAM_GROUP_ROUTE : RouteType = {
-  getEncodedType: () => 0x02,
-  hasDestination: () => false
+  encodedType: 0x02,
+  hasDestination: false
 };
 
 export const PRESENCE_ID_QUERY : RouteType = {
-  getEncodedType: () => 0x03,
-  hasDestination: () => true
+  encodedType: 0x03,
+  hasDestination: true
 };
 
 export const PRESENCE_GROUP_QUERY : RouteType = {
-  getEncodedType: () => 0x04,
-  hasDestination: () => false
+  encodedType: 0x04,
+  hasDestination: false
 };
 
-export const typesById = {
+export const routeTypeForId = {
     0: UNDEFINED,
     1: STREAM_ID_ROUTE,
     2: STREAM_GROUP_ROUTE,
