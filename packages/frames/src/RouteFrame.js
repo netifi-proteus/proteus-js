@@ -55,23 +55,10 @@ const WRAPPED_METADATA_LENGTH_SIZE = 4;
 const TOKEN_SIZE = 4;
 
 
-export function serializeRouteFrame(frame: RouteFrame) : Buffer {
-
-
-/*
-type: 0x06,
-  flags: number,
-  hasToken: boolean,
-  hasMetadata: boolean,
-  token: number,
-  fromAccessKey: number,
-  fromDestination: string,
-  seqId: Long,
-  route: ?Encodable,
-  wrappedMetadata: ?Encodable,*/
+export function serializeRouteFrame(frame: RouteFrame) : ByteBuffer {
 
 	const destinationLength = getStringByteLength(frame.fromDestination);
-	  invariant(
+	invariant(
 	    destinationLength <= 255,
 	    'DestinationSetupFrame: destination is longer then 255 characters',
 	 );

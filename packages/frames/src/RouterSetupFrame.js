@@ -50,7 +50,7 @@ const ROUTER_ID_SIZE = 8; // supposed to be Long value
 
 export function serializeRouterSetupFrame(
       frame: RouterSetupFrame
-      ): Buffer {
+      ): ByteBuffer {
 	
 	const authTokenLength = getByteLength(frame.authToken);
 

@@ -46,7 +46,7 @@ import {
 const ACCESS_TOKEN_SIZE = 20;
 const ACCESS_KEY_SIZE = 8; // supposed to be Long size
 
-export function serializeQuerySetupFrame(frame: QuerySetupFrame) : Buffer {
+export function serializeQuerySetupFrame(frame: QuerySetupFrame) : ByteBuffer {
 
 	const accessTokenLength = getByteLength(frame.accessToken);
 	invariant(

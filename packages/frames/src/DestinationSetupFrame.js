@@ -61,7 +61,7 @@ const ACCESS_TOKEN_SIZE = 20;
 
 export function serializeDestinationSetupFrame(
   frame: DestinationSetupFrame,
-): Buffer {
+): ByteBuffer {
   const encrypted = (frame.flags & ENCRYPTED) !== 0;
   const publicKeyLength =
     frame.publicKey != null ? getByteLength(frame.publicKey) : 0;
