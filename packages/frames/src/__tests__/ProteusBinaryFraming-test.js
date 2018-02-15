@@ -42,6 +42,22 @@ import {
   serializeRequestSharedSecretFrame
 } from '../RequestSharedSecretFrame';
 
+import {
+  serializeSharedSecretFrame
+} from '../SharedSecretFrame';
+
+import {
+  serializeAuthenticationRequestFrame
+} from '../AuthenticationRequestFrame';
+
+import {
+  serializeAuthenticationResponseFrame
+} from '../AuthenticationResponseFrame';
+
+import {
+  serializeRouteFrame
+} from '../RouteFrame';
+
 describe('DestinationSetupFrameTest', () => {
   it('testEncodeWithEncryption', () => {
     const publicKey = ByteBuffer.fromBinary(randomBytes(32));
@@ -112,6 +128,161 @@ describe('RequestSharedSecretFrameTest', () => {
     };
 
     const buffer = serializeRequestSharedSecretFrame(frame);
+    expect(deserializeFrame(buffer)).to.deep.equal(frame);
+  });
+});
+
+describe('SharedSecretFrameTest', () => {
+  it('testEncode', () => {
+    const publicKey = ByteBuffer.wrap(randomBytes(32).buffer);
+    const sharedSecret = ByteBuffer.wrap(randomBytes(16).buffer);
+    const token = ByteBuffer.wrap(randomBytes(4).buffer);
+    const frame = {
+      type: 0x05,
+      flags: 0,
+      publicKey,
+      sharedSecret,
+      seqId: Long.UZERO,
+      token
+    };
+
+    const buffer = serializeSharedSecretFrame(frame);
+    expect(deserializeFrame(buffer)).to.deep.equal(frame);
+  });
+});
+
+describe('AuthenticationRequestFrameTest', () => {
+  it('testEncode', () => {
+    const accessToken = ByteBuffer.fromBinary(randomBytes(20));
+    const accessKey = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0), true);
+    const frame = {
+      type: 0x09,
+      flags: 0,
+      accessToken,
+      seqId: Long.UZERO,
+      accessKey
+    };
+
+    const buffer = serializeAuthenticationRequestFrame(frame);
+    expect(deserializeFrame(buffer)).to.deep.equal(frame);
+  });
+});
+
+describe('AuthenticationResponseFrameTest', () => {
+  it('testEncode', () => {
+    const accountId = Math.floor(Number.MAX_SAFE_INTEGER * Math.random());
+    const count = Math.floor(Number.MAX_SAFE_INTEGER * Math.random());
+    const sessionToken = ByteBuffer.fromBinary(randomBytes(20));
+    const frame = {
+      type: 0x0A,
+      flags: 0,
+      accountId,
+      count,
+      seqId: Long.UZERO,
+      sessionToken
+    };
+
+    const buffer = serializeAuthenticationResponseFrame(frame);
+    expect(deserializeFrame(buffer)).to.deep.equal(frame);
+  });
+});
+
+/*
+type: 0x06,
+  flags: number,
+  hasToken: boolean,
+  hasMetadata: boolean,
+  token: number,
+  fromAccessKey: number,
+  fromDestination: string,
+  seqId: Long,
+  route: ?Encodable,
+  wrappedMetadata: ?Encodable,*/
+
+describe('RouteFrameTest', () => {
+  it('testNoMetadataNoTokenEncode', () => {
+    const fromAccessKey = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0), true);
+    const fromDestination = "A very nice destination";
+    const route = ByteBuffer.fromBinary(randomBytes(32).buffer);
+    const frame = {
+      type: 0x06,
+      flags: 0,
+      hasToken: false,
+      hasMetadata: false,
+      fromAccessKey,
+      fromDestination,
+      seqId: Long.UZERO,
+      route
+    };
+
+    const buffer = serializeRouteFrame(frame);
+    expect(deserializeFrame(buffer)).to.deep.equal(frame);
+  });
+
+  it('testNoMetadataHasTokenEncode', () => {
+    const fromAccessKey = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0), true);
+    const fromDestination = "A very nice destination";
+    const route = ByteBuffer.fromBinary(randomBytes(32).buffer);
+    const token = randomBytes(4).readUInt32BE(0);
+    const frame = {
+      type: 0x06,
+      flags: 0b00000100,
+      hasToken: true,
+      hasMetadata: false,
+      fromAccessKey,
+      fromDestination,
+      token,
+      seqId: Long.UZERO,
+      route
+    };
+
+    const buffer = serializeRouteFrame(frame);
+    expect(deserializeFrame(buffer)).to.deep.equal(frame);
+  });
+
+  it('testHasMetadataNoTokenEncode', () => {
+    const fromAccessKey = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0), true);
+    const fromDestination = "A very nice destination";
+    const route = ByteBuffer.fromBinary(randomBytes(32).buffer);
+    const randomSize = Math.ceil(Math.random() * 2048);
+    const wrappedMetadata = ByteBuffer.fromBinary(randomBytes(randomSize));
+    const frame = {
+      type: 0x06,
+      flags: 0b01000000,
+      hasToken: false,
+      hasMetadata: true,
+      fromAccessKey,
+      fromDestination,
+      wrappedMetadata,
+      seqId: Long.UZERO,
+      route
+    };
+
+    const buffer = serializeRouteFrame(frame);
+    expect(deserializeFrame(buffer)).to.deep.equal(frame);
+  });
+
+  it('testHasMetadataHasTokenEncode', () => {
+    const fromAccessKey = Long.fromBits(randomBytes(4).readUInt32BE(0), randomBytes(4).readUInt32BE(0), true);
+    const fromDestination = "A very nice destination";
+    const route = ByteBuffer.fromBinary(randomBytes(32).buffer);
+    const randomSize = Math.ceil(Math.random() * 2048);
+    const wrappedMetadata = ByteBuffer.fromBinary(randomBytes(randomSize));
+    const token = randomBytes(4).readUInt32BE(0);
+    const frame = {
+      type: 0x06,
+      flags: 0b01000100,
+      hasToken: true,
+      hasMetadata: true,
+      fromAccessKey,
+      fromDestination,
+      token,
+      wrappedMetadata,
+      seqId: Long.UZERO,
+      route
+    };
+
+    const buffer = serializeRouteFrame(frame);
     expect(deserializeFrame(buffer)).to.deep.equal(frame);
   });
 });

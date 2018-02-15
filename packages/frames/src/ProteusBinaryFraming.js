@@ -26,7 +26,7 @@ import type {
   RouterSetupFrame,
   QuerySetupFrame,
   RequestSharedSecretFrame,
-  SharedSecredFrame,
+  SharedSecretFrame,
   RouteFrame,
   QueryDestinationAvailFrame,
   DestinationAvailResultFrame,
@@ -59,6 +59,26 @@ import {
   serializeRequestSharedSecretFrame,
   deserializeRequestSharedSecretFrame
 } from './RequestSharedSecretFrame';
+
+import {
+  serializeSharedSecretFrame,
+  deserializeSharedSecretFrame
+} from './SharedSecretFrame';
+
+import {
+  serializeAuthenticationRequestFrame,
+  deserializeAuthenticationRequestFrame
+} from './AuthenticationRequestFrame';
+
+import {
+  serializeAuthenticationResponseFrame,
+  deserializeAuthenticationResponseFrame
+} from './AuthenticationResponseFrame';
+
+import {
+  serializeRouteFrame,
+  deserializeRouteFrame
+} from './RouteFrame';
 
 import invariant from 'fbjs/lib/invariant';
 import {
@@ -121,6 +141,14 @@ export function deserializeFrame(buffer: ByteBuffer): Frame {
       return deserializeQuerySetupFrame(buffer, flags, seqId);
     case FRAME_TYPES.REQUEST_SHARED_SECRET:
       return deserializeRequestSharedSecretFrame(buffer, flags, seqId);
+    case FRAME_TYPES.SHARED_SECRET:
+      return deserializeSharedSecretFrame(buffer, flags, seqId);
+    case FRAME_TYPES.ROUTE:
+      return deserializeRouteFrame(buffer, flags, seqId);
+    case FRAME_TYPES.AUTH_REQUEST:
+      return deserializeAuthenticationRequestFrame(buffer, flags, seqId);
+    case FRAME_TYPES.AUTH_RESPONSE:
+      return deserializeAuthenticationResponseFrame(buffer, flags, seqId);
     default:
       invariant(
         false,

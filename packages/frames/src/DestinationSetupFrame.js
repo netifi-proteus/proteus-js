@@ -68,7 +68,7 @@ export function serializeDestinationSetupFrame(
   if (encrypted) {
     invariant(
       publicKeyLength === PUBLIC_KEY_SIZE,
-      'ProteusBinaryFraming: invalid public key size: found %s, expected %s',
+      'DestinationSetupFrame: invalid public key size: found %s, expected %s',
       publicKeyLength,
       PUBLIC_KEY_SIZE,
     );
@@ -77,7 +77,7 @@ export function serializeDestinationSetupFrame(
   const accessTokenLength = getByteLength(frame.accessToken);
   invariant(
     accessTokenLength === ACCESS_TOKEN_SIZE,
-    'ProteusBinaryFraming: invalid access token size: found %s, expected %s',
+    'DestinationSetupFrame: invalid access token size: found %s, expected %s',
     accessTokenLength,
     ACCESS_TOKEN_SIZE,
   );
@@ -85,13 +85,13 @@ export function serializeDestinationSetupFrame(
   const destinationLength = getStringByteLength(frame.destination);
   invariant(
     destinationLength <= 255,
-    'ProteusBinaryFraming: destination is longer then 255 characters',
+    'DestinationSetupFrame: destination is longer then 255 characters',
   );
 
   const groupLength = getStringByteLength(frame.group);
   invariant(
     groupLength <= 255,
-    'ProteusBinaryFraming: group is longer then 255 characters',
+    'DestinationSetupFrame: group is longer then 255 characters',
   );
 
   const buffer = ByteBuffer.allocate(

@@ -46,6 +46,11 @@ export const API_CALL = 0b00001000;
 export const TOKEN = 0b00000100;
 
 /**
+ * Mimimum value that would overflow bitwise operators (2^32).
+ */
+const BITWISE_OVERFLOW = 0x100000000;
+
+/**
  * Frame Header field masks
  */
 export const FRAME_TYPE_MASK = 0b01111111000000000000000000000000;
@@ -55,19 +60,19 @@ export const MINOR_VERSION_MASK = 0b00000000000000000000000011111111;
 
 
 export function frameType(buffer: ByteBuffer): number {
-  return (buffer.readInt32(0) & FRAME_TYPE_MASK) >>> 24;
+  return (buffer.readUint32(0) & FRAME_TYPE_MASK) >>> 24;
 }
 
 export function flags(buffer: ByteBuffer): number {
-  return (buffer.readInt32(0) & FLAGS_MASK) >>> 16;
+  return (buffer.readUint32(0) & FLAGS_MASK) >>> 16;
 }
 
 export function majorVersion(buffer: ByteBuffer): number {
-  return (buffer.readInt32(0) & MAJOR_VERSION_MASK) >>> 8;
+  return (buffer.readUint32(0) & MAJOR_VERSION_MASK) >>> 8;
 }
 
 export function minorVersion(buffer: ByteBuffer): number {
-  return buffer.readInt32(0) & MINOR_VERSION_MASK;
+  return buffer.readUint32(0) & MINOR_VERSION_MASK;
 }
 
 export function encodeFlags(
@@ -124,6 +129,25 @@ export function writeHeader(buffer: ByteBuffer, frame: Frame): number {
   writeUint64(buffer, frame.seqId, 4);
   return FRAME_HEADER_SIZE;
 }
+
+export function readJSNumber(buffer: ByteBuffer, offset: number): number {
+  const high = buffer.readUint32(offset);
+  const low = buffer.readUint32(offset + 4);
+  return high * BITWISE_OVERFLOW + low;
+}
+
+export function writeJSNumber(
+  buffer: ByteBuffer,
+  value: number,
+  offset: number,
+): number {
+  const high = value / BITWISE_OVERFLOW | 0;
+  const low = value % BITWISE_OVERFLOW;
+  buffer.writeUint32(high, offset); // first half of uint64
+  buffer.writeUint32(low, offset+4); // second half of uint64
+  return offset + 8;
+}
+
 
 export function writeUint64(buffer: ByteBuffer, value: Long, offset: number) : number {
   buffer.writeUint64(value, offset);

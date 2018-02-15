@@ -25,7 +25,7 @@ export type Frame =
   | RouterSetupFrame
   | QuerySetupFrame
   | RequestSharedSecretFrame
-  | SharedSecredFrame
+  | SharedSecretFrame
   | RouteFrame
   | QueryDestinationAvailFrame
   | DestinationAvailResultFrame
@@ -88,7 +88,7 @@ export type RequestSharedSecretFrame = {|
 |};
 
 // prettier-ignore
-export type SharedSecredFrame = {|
+export type SharedSecretFrame = {|
   type: 0x05,
   flags: number,
   token: number,
@@ -104,7 +104,7 @@ export type RouteFrame = {|
   hasToken: boolean,
   hasMetadata: boolean,
   token: number,
-  fromAccessKey: number,
+  fromAccessKey: Long,
   fromDestination: string,
   seqId: Long,
   route: ?Encodable,
