@@ -15,3 +15,6 @@
 
 [options]
 module.name_mapper='^proteus-js-\([^/]+\)$' -> '<PROJECT_ROOT>/packages/\1/src/index.js'
+
+[version]
+^0.74.0

@@ -16,20 +16,28 @@
  * @flow
  */
 
-export const FRAME_TYPES = {
-  DESTINATION_SETUP: 0x01,
-  ROUTER_SETUP: 0x02,
-  QUERY_SETUP: 0x03,
-  REQUEST_SHARED_SECRET: 0x04,
-  SHARED_SECRET: 0x05,
-  ROUTE: 0x06,
-  QUERY_DESTINATION_AVAIL: 0x07,
-  DESTINATION_AVAIL_RESULT: 0x08,
-  AUTH_REQUEST: 0x09,
-  AUTH_RESPONSE: 0x0a,
-  INFO_SETUP: 0x10,
-  ROUTER_INFO: 0x11,
-  ROUTER_INFO_SNAPSHOT: 0x12,
-  ROUTER_INFO_RESULT: 0x13,
-  EXTENSION_FRAME: 0x7f,
+import forEachObject from 'fbjs/lib/forEachObject';
+
+export const FrameTypes = {
+  BROKER_SETUP: 0x01,
+  DESTINATION_SETUP: 0x02,
+  DESTINATION: 0x03,
+  GROUP: 0x04,
+  BROADCAST: 0x05,
+  SHARD: 0x06,
 };
+
+// Maps frame type codes to type names
+export const FrameTypeNames = {};
+forEachObject(FrameTypes, (value, name) => {
+  FrameTypeNames[value] = name;
+});
+
+export function getFrameTypeName(type: number): string {
+  const name = FrameTypeNames[type];
+  return name != null ? name : toHex(type);
+}
+
+function toHex(n: number): string {
+  return '0x' + n.toString(16);
+}

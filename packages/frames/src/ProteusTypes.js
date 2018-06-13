@@ -16,185 +16,80 @@
  * @flow
  */
 
-import type {Encodable} from 'rsocket-core';
-
-import {Long} from 'long';
+import type {Encodable} from 'rsocket-types';
 
 export type Frame =
+  | BrokerSetupFrame
   | DestinationSetupFrame
-  | RouterSetupFrame
-  | QuerySetupFrame
-  | RequestSharedSecretFrame
-  | SharedSecretFrame
-  | RouteFrame
-  | QueryDestinationAvailFrame
-  | DestinationAvailResultFrame
-  | AuthenticationRequestFrame
-  | AuthenticationResponseFrame
-  | InfoSetupFrame
-  | RouterInfoFrame
-  | RouterInfoSnapshotFrame
-  | RouterInfoResultFrame
-  | ExtensionFrame;
-
-export const RouterNodeInfoEventType = {
-  JOIN: 0x01,
-  LEAVE: 0x02,
-  SEED_NEXT: 0x03,
-  SEED_COMPLETE: 0x04,
-};
+  | DestinationFrame
+  | GroupFrame
+  | BroadcastFrame
+  | ShardFrame;
 
 // prettier-ignore
-export type RouterNodeInfoEventTypeEnum = $Values<typeof RouterNodeInfoEventType>;
+export type BrokerSetupFrame = {|
+  type: 0x01,
+  majorVersion: ?number,
+  minorVersion: ?number,
+  brokerId: string,
+  clusterId: string,
+  accessKey: number,
+  accessToken: Encodable
+|};
 
 // prettier-ignore
 export type DestinationSetupFrame = {|
-  type: 0x01,
-  flags: number,
-  publicKey: ?Encodable,
-  accessToken: Encodable,
-  seqId: Long,
-  accessKey: Long,
-  destination: string,
-  group: string
-|};
-
-// prettier-ignore
-export type RouterSetupFrame = {|
   type: 0x02,
-  flags: number,
-  clusterId: Long,
-  routerId: Long,
-  authToken: ?Encodable,
-  seqId: Long
+  majorVersion: ?number,
+  minorVersion: ?number,
+  destination: string,
+  group: string,
+  accessKey: number,
+  accessToken: Encodable
 |};
 
 // prettier-ignore
-export type QuerySetupFrame = {|
+export type DestinationFrame = {|
   type: 0x03,
-  flags: number,
-  accessToken: ?Encodable,
-  accessKey: Long,
-  seqId: Long
-|};
-
-// prettier-ignore
-export type RequestSharedSecretFrame = {|
-  type: 0x04,
-  flags: number,
-  token: number,
-  publicKey: ?Encodable,
-  seqId: Long
-|};
-
-// prettier-ignore
-export type SharedSecretFrame = {|
-  type: 0x05,
-  flags: number,
-  token: number,
-  publicKey: ?Encodable,
-  sharedSecret: ?Encodable,
-  seqId: Long
-|};
-
-// prettier-ignore
-export type RouteFrame = {|
-  type: 0x06,
-  flags: number,
-  hasToken: boolean,
-  hasMetadata: boolean,
-  token: number,
-  fromAccessKey: Long,
+  majorVersion: ?number,
+  minorVersion: ?number,
   fromDestination: string,
-  seqId: Long,
-  route: ?Encodable,
-  wrappedMetadata: ?Encodable,
+  fromGroup: string,
+  toDestination: string,
+  toGroup: string,
+  metadata: ?Encodable,
 |};
 
 // prettier-ignore
-export type QueryDestinationAvailFrame = {|
-  type: 0x07,
-  flags: number,
-  hasToken: boolean,
-  token: number,
-  accessKey: number,
-  accountId: number,
-  destinationId: number,
-  seqId: Long
+export type GroupFrame = {|
+  type: 0x04,
+  majorVersion: ?number,
+  minorVersion: ?number,
+  fromDestination: string,
+  fromGroup: string,
+  toGroup: string,
+  metadata: ?Encodable,
 |};
 
 // prettier-ignore
-export type DestinationAvailResultFrame = {|
-  type: 0x08,
-  flags: number,
-  destination: string,
-  found: boolean,
-  seqId: Long
+export type BroadcastFrame = {|
+  type: 0x05,
+  majorVersion: ?number,
+  minorVersion: ?number,
+  fromDestination: string,
+  fromGroup: string,
+  toGroup: string,
+  metadata: ?Encodable,
 |};
 
 // prettier-ignore
-export type AuthenticationRequestFrame = {|
-  type: 0x09,
-  flags: number,
-  accessToken: ?Encodable,
-  accessKey: number,
-  seqId: Long
-|};
-
-// prettier-ignore
-export type AuthenticationResponseFrame = {|
-  type: 0x0A,
-  flags: number,
-  accountId: number,
-  count: number,
-  sessionToken: ?Encodable,
-  seqId: Long
-|};
-
-// prettier-ignore
-export type InfoSetupFrame = {|
-  type: 0x10,
-  flags: number,
-  publicKey: ?Encodable,
-  accessToken: ?Encodable,
-  seqId: Long,
-  accessKey: number,
-  destination: string,
-  group: string
-|};
-
-// prettier-ignore
-export type RouterInfoFrame = {|
-  type: 0x11,
-  flags: number,
-  seqId: Long
-|};
-
-// prettier-ignore
-export type RouterInfoSnapshotFrame = {|
-  type: 0x12,
-  flags: number,
-  seqId: Long
-|};
-
-// prettier-ignore
-export type RouterInfoResultFrame = {|
-  type: 0x13,
-  flags: number,
-  eventType: RouterNodeInfoEventTypeEnum,
-  routerId: string,
-  routerAddress: string,
-  routerPort: number,
-  clusterAddress: string,
-  clusterPort: number,
-  adminAddress: string,
-  adminPort: number,
-  seqId: Long
-|};
-
-// prettier-ignore
-export type ExtensionFrame = {|
-  type: 0x7F,
-  flags: number,
-  seqId: Long
+export type ShardFrame = {|
+  type: 0x06,
+  majorVersion: ?number,
+  minorVersion: ?number,
+  fromDestination: string,
+  fromGroup: string,
+  toGroup: string,
+  shardKey: Encodable,
+  metadata: ?Encodable,
 |};

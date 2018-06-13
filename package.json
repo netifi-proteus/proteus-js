@@ -50,14 +50,12 @@
     "eslint-plugin-dependencies": "2.4.0",
     "eslint-plugin-flowtype": "2.40.1",
     "eslint-plugin-prefer-object-spread": "1.2.1",
-    "flow-bin": "0.62.0",
+    "flow-bin": "0.74.0",
     "lerna": "^2.0.0",
     "mocha": "4.1.0",
     "prettier": "^1.5.3"
   },
   "dependencies": {
-    "bytebuffer": "^5.0.1",
-    "long": "^3.2.0",
-    "rsocket-core": "0.0.1"
+    "rsocket-core": "0.0.7"
   }
 }
