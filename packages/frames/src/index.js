@@ -18,6 +18,14 @@
 
 export * from './ProteusTypes';
 
-export {FrameTypes} from './ProteusFrame';
+export {FrameTypes, getFrameTypeName} from './ProteusFrame';
 
 export {encodeFrame, decodeFrame} from './ProteusBinaryFraming';
+
+export {
+  encodeProteusMetadata,
+  getVersion,
+  getService,
+  getMethod,
+  getMetadata,
+} from './ProteusMetadata';

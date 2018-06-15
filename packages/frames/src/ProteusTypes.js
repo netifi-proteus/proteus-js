@@ -16,8 +16,6 @@
  * @flow
  */
 
-import type {Encodable} from 'rsocket-types';
-
 export type Frame =
   | BrokerSetupFrame
   | DestinationSetupFrame
@@ -34,7 +32,7 @@ export type BrokerSetupFrame = {|
   brokerId: string,
   clusterId: string,
   accessKey: number,
-  accessToken: Encodable
+  accessToken: Buffer
 |};
 
 // prettier-ignore
@@ -45,7 +43,7 @@ export type DestinationSetupFrame = {|
   destination: string,
   group: string,
   accessKey: number,
-  accessToken: Encodable
+  accessToken: Buffer
 |};
 
 // prettier-ignore
@@ -57,7 +55,7 @@ export type DestinationFrame = {|
   fromGroup: string,
   toDestination: string,
   toGroup: string,
-  metadata: Encodable,
+  metadata: Buffer,
 |};
 
 // prettier-ignore
@@ -68,7 +66,7 @@ export type GroupFrame = {|
   fromDestination: string,
   fromGroup: string,
   toGroup: string,
-  metadata: Encodable,
+  metadata: Buffer,
 |};
 
 // prettier-ignore
@@ -79,7 +77,7 @@ export type BroadcastFrame = {|
   fromDestination: string,
   fromGroup: string,
   toGroup: string,
-  metadata: Encodable,
+  metadata: Buffer,
 |};
 
 // prettier-ignore
@@ -90,6 +88,6 @@ export type ShardFrame = {|
   fromDestination: string,
   fromGroup: string,
   toGroup: string,
-  shardKey: Encodable,
-  metadata: Encodable,
+  shardKey: Buffer,
+  metadata: Buffer,
 |};

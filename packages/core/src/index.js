@@ -19,8 +19,9 @@
 'use strict';
 
 import RequestHandlingRSocket from './RequestHandlingRSocket';
+import UnwrappingRSocket from './UnwrappingRSocket';
 
 /**
  * The public API of the `core` package.
  */
-export {RequestHandlingRSocket};
+export {RequestHandlingRSocket, UnwrappingRSocket};

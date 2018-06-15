@@ -16,27 +16,88 @@
  * @flow
  */
 
-import type {PartialResponder, Payload} from 'rsocket-types';
+import type {Responder, Payload} from 'rsocket-types';
 
 import {Flowable, Single} from 'rsocket-flowable';
 
-export default class RequestHandlingRSocket<D, M>
-  implements PartialResponder<D, M> {
-  fireAndForget(payload: Payload<D, M>): void {}
+import {getService} from 'proteus-js-frames';
 
-  requestResponse(payload: Payload<D, M>): Single<Payload<D, M>> {
-    return Single.error(new Error());
+export default class RequestHandlingRSocket
+  implements Responder<Buffer, Buffer> {
+  _registeredServices: Map<string, Responder<Buffer, Buffer>>;
+
+  constructor() {
+    this._registeredServices = new Map();
   }
 
-  requestStream(payload: Payload<D, M>): Flowable<Payload<D, M>> {
-    return Flowable.error(new Error());
+  addService(service: string, handler: Responder<Buffer, Buffer>) {
+    this._registeredServices.set(service, handler);
   }
 
-  requestChannel(payloads: Flowable<Payload<D, M>>): Flowable<Payload<D, M>> {
-    return Flowable.error(new Error());
+  fireAndForget(payload: Payload<Buffer, Buffer>): void {
+    if (payload.metadata == null) {
+      throw new Error('metadata is empty');
+    }
+
+    const service = getService(payload.metadata);
+    const handler = this._registeredServices.get(service);
+
+    if (handler == null) {
+      throw new Error('can not find service ' + service);
+    }
+
+    handler.fireAndForget(payload);
   }
 
-  metadataPush(payload: Payload<D, M>): Single<void> {
-    return Single.error(new Error());
+  requestResponse(
+    payload: Payload<Buffer, Buffer>,
+  ): Single<Payload<Buffer, Buffer>> {
+    try {
+      if (payload.metadata == null) {
+        return Single.error(new Error('metadata is empty'));
+      }
+
+      const service = getService(payload.metadata);
+      const handler = this._registeredServices.get(service);
+
+      if (handler == null) {
+        return Single.error(new Error('can not find service ' + service));
+      }
+
+      return handler.requestResponse(payload);
+    } catch (error) {
+      return Single.error(error);
+    }
+  }
+
+  requestStream(
+    payload: Payload<Buffer, Buffer>,
+  ): Flowable<Payload<Buffer, Buffer>> {
+    try {
+      if (payload.metadata == null) {
+        return Flowable.error(new Error('metadata is empty'));
+      }
+
+      const service = getService(payload.metadata);
+      const handler = this._registeredServices.get(service);
+
+      if (handler == null) {
+        return Flowable.error(new Error('can not find service ' + service));
+      }
+
+      return handler.requestStream(payload);
+    } catch (error) {
+      return Flowable.error(error);
+    }
+  }
+
+  requestChannel(
+    payloads: Flowable<Payload<Buffer, Buffer>>,
+  ): Flowable<Payload<Buffer, Buffer>> {
+    return Flowable.error(new Error('requestChannel() is not implemented'));
+  }
+
+  metadataPush(payload: Payload<Buffer, Buffer>): Single<void> {
+    return Single.error(new Error('metadataPush() is not implemented'));
   }
 }
