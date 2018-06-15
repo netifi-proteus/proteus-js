@@ -57,7 +57,7 @@ export type DestinationFrame = {|
   fromGroup: string,
   toDestination: string,
   toGroup: string,
-  metadata: ?Encodable,
+  metadata: Encodable,
 |};
 
 // prettier-ignore
@@ -68,7 +68,7 @@ export type GroupFrame = {|
   fromDestination: string,
   fromGroup: string,
   toGroup: string,
-  metadata: ?Encodable,
+  metadata: Encodable,
 |};
 
 // prettier-ignore
@@ -79,7 +79,7 @@ export type BroadcastFrame = {|
   fromDestination: string,
   fromGroup: string,
   toGroup: string,
-  metadata: ?Encodable,
+  metadata: Encodable,
 |};
 
 // prettier-ignore
@@ -91,5 +91,5 @@ export type ShardFrame = {|
   fromGroup: string,
   toGroup: string,
   shardKey: Encodable,
-  metadata: ?Encodable,
+  metadata: Encodable,
 |};

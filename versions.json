@@ -1,5 +1,8 @@
 {
   "proteus-js-frames": {
     "version": "0.0.1"
+  },
+  "proteus-js-core": {
+    "version": "0.0.1"
   }
 }

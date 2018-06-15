@@ -135,7 +135,7 @@ export function decodeDestinationFrame(
   const toGroup = UTF8Encoder.decode(buffer, offset, offset + toGroupLength);
   offset += toGroupLength;
 
-  const metadata = BufferEncoder.decode(buffer, offset);
+  const metadata = BufferEncoder.decode(buffer, offset, buffer.length);
 
   return {
     type: FrameTypes.DESTINATION,

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package io.netifi.proteus;
+
+// Empty message to Ack responses - won't generate to void
+message Ack {}
+
+// Empty message that represents void when returned
+message Empty {}

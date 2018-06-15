@@ -1,5 +1,5 @@
 {
-  "name": "proteus-js-frames",
+  "name": "proteus-js-core",
   "repository": "https://github.com/netifi-proteus/proteus-js",
   "version": "0.0.1",
   "description": "Proteus Java Client",
@@ -21,9 +21,11 @@
     "build": "npm run build-js && npm run build-flow",
     "build-js": "babel-node ../../resources/buildJs.js",
     "build-flow": "babel-node ../../resources/buildFlow.js",
-    "prepublish": "node ../../resources/prepublish.js"
+    "prepublish": "node ../../resources/prepublish.js",
+    "proto": "protoc --proto_path=proto --js_out=import_style=commonjs,binary:src proto/proteus/*.proto"
   },
   "dependencies": {
-    "rsocket-core": "0.0.7"
+    "proteus-js-frames": "^0.0.1",
+    "google-protobuf": "^3.5.0"
   }
 }

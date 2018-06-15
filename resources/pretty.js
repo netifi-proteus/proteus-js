@@ -27,7 +27,7 @@ const options = [
   '--single-quote',
   '--trailing-comma=all',
 ];
-const glob = '{packages/*/{resources,src},resources,src}/**/*.js';
+const glob = '{packages/*/{resources,src},resources,src}/**/!(*_pb).js';
 const root = join(__dirname, '..');
 const executable = join(root, 'node_modules', '.bin', 'prettier');
 

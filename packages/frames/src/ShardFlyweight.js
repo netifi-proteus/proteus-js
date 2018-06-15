@@ -135,7 +135,7 @@ export function decodeShardFrame(
   );
   offset += shardKeyLength;
 
-  const metadata = BufferEncoder.decode(buffer, offset);
+  const metadata = BufferEncoder.decode(buffer, offset, buffer.length);
 
   return {
     type: FrameTypes.SHARD,

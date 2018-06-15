@@ -16,8 +16,11 @@
  * @flow
  */
 
-export * from './ProteusTypes';
+'use strict';
 
-export {FrameTypes} from './ProteusFrame';
+import RequestHandlingRSocket from './RequestHandlingRSocket';
 
-export {encodeFrame, decodeFrame} from './ProteusBinaryFraming';
+/**
+ * The public API of the `core` package.
+ */
+export {RequestHandlingRSocket};

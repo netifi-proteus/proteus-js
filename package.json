@@ -16,7 +16,8 @@
     "check": "flow check --show-all-errors",
     "prepublish": "node resources/prepublish.js",
     "pretty": "node resources/pretty.js",
-    "pretty-check": "node resources/pretty.js --check"
+    "pretty-check": "node resources/pretty.js --check",
+    "proto": "lerna run proto"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
