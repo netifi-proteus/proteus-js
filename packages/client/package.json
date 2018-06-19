@@ -1,5 +1,5 @@
 {
-  "name": "proteus-js-frames",
+  "name": "proteus-js-client",
   "repository": "https://github.com/netifi-proteus/proteus-js",
   "version": "0.0.1",
   "description": "Proteus Java Client",
@@ -24,6 +24,6 @@
     "prepublish": "node ../../resources/prepublish.js"
   },
   "dependencies": {
-    "rsocket-core": "^0.0.7"
+    "proteus-js-core": "^0.0.1"
   }
 }

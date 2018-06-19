@@ -17,18 +17,3 @@
  */
 
 'use strict';
-
-import RequestHandlingRSocket from './RequestHandlingRSocket';
-import UnwrappingRSocket from './UnwrappingRSocket';
-import BrokerInfoServiceClient from './BrokerInfoServiceClient';
-import ProteusClient from './ProteusClient';
-
-/**
- * The public API of the `core` package.
- */
-export {
-  RequestHandlingRSocket,
-  UnwrappingRSocket,
-  BrokerInfoServiceClient,
-  ProteusClient,
-};

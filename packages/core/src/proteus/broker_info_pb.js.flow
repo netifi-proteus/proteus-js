@@ -1,0 +1,97 @@
+/**
+ * Copyright (c) 2017-present, Netifi Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @flow
+ */
+
+import type { ByteSource } from "google-protobuf";
+
+import { Message, ExtensionFieldInfo, ExtensionFieldBinaryInfo, BinaryReader, BinaryWriter } from "google-protobuf";
+
+declare export class Group extends Message {
+  getGroup(): string;
+  setGroup(value: string): void;
+  hasBroker(): boolean;
+  clearBroker(): void;
+  getBroker(): Broker | void;
+  setBroker(value?: Broker): void;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): any;
+  static toObject(includeInstance: boolean, msg: Group): any;
+  static extensions: { [key: number]: ExtensionFieldInfo<Message> };
+  static extensionsBinary: { [key: number]: ExtensionFieldBinaryInfo<Message> };
+  static serializeBinaryToWriter(message: Group, writer: BinaryWriter): void;
+  static deserializeBinary(bytes: ByteSource): Group;
+  static deserializeBinaryFromReader(message: Group, reader: BinaryReader): Group
+}
+
+declare export class Destination extends Message {
+  getGroup(): string;
+  setGroup(value: string): void;
+  getDestination(): string;
+  setDestination(value: string): void;
+  hasBroker(): boolean;
+  clearBroker(): void;
+  getBroker(): Broker | void;
+  setBroker(value?: Broker): void;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): any;
+  static toObject(includeInstance: boolean, msg: Destination): any;
+  static extensions: { [key: number]: ExtensionFieldInfo<Message> };
+  static extensionsBinary: { [key: number]: ExtensionFieldBinaryInfo<Message> };
+  static serializeBinaryToWriter(message: Destination, writer: BinaryWriter): void;
+  static deserializeBinary(bytes: ByteSource): Destination;
+  static deserializeBinaryFromReader(message: Destination, reader: BinaryReader): Destination
+}
+
+declare export class Broker extends Message {
+  getBrokerid(): string;
+  setBrokerid(value: string): void;
+  getIpaddress(): string;
+  setIpaddress(value: string): void;
+  getPort(): number;
+  setPort(value: number): void;
+  getClusterport(): number;
+  setClusterport(value: number): void;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): any;
+  static toObject(includeInstance: boolean, msg: Broker): any;
+  static extensions: { [key: number]: ExtensionFieldInfo<Message> };
+  static extensionsBinary: { [key: number]: ExtensionFieldBinaryInfo<Message> };
+  static serializeBinaryToWriter(message: Broker, writer: BinaryWriter): void;
+  static deserializeBinary(bytes: ByteSource): Broker;
+  static deserializeBinaryFromReader(message: Broker, reader: BinaryReader): Broker
+}
+
+declare export class Event extends Message {
+  getType(): number;
+  setType(value: number): void;
+  hasBroker(): boolean;
+  clearBroker(): void;
+  getBroker(): Broker | void;
+  setBroker(value?: Broker): void;
+  hasDestination(): boolean;
+  clearDestination(): void;
+  getDestination(): Destination | void;
+  setDestination(value?: Destination): void;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): any;
+  static toObject(includeInstance: boolean, msg: Event): any;
+  static extensions: { [key: number]: ExtensionFieldInfo<Message> };
+  static extensionsBinary: { [key: number]: ExtensionFieldBinaryInfo<Message> };
+  static serializeBinaryToWriter(message: Event, writer: BinaryWriter): void;
+  static deserializeBinary(bytes: ByteSource): Event;
+  static deserializeBinaryFromReader(message: Event, reader: BinaryReader): Event
+}
