@@ -51,27 +51,13 @@ export type ClientConfig<D, M> = {|
   responder?: Responder<D, M>,
 |};
 
-/**
- * ProteusClient: A client in an RSocket connection that will communicates with
- * the peer via the given transport client. Provides methods for establishing a
- * connection and initiating the RSocket interactions:
- * - fireAndForget()
- * - requestResponse()
- * - requestStream()
- * - requestChannel()
- * - metadataPush()
- */
 export default class ProteusClient<D, M> {
-  _cancel: ?() => void;
   _config: ClientConfig<D, M>;
   _connection: ?Single<ReactiveSocket<D, M>>;
-  _socket: ?ProteusClientSocket<D, M>;
 
   constructor(config: ClientConfig<D, M>) {
-    this._cancel = null;
     this._config = config;
     this._connection = null;
-    this._socket = null;
   }
 
   close(): void {
@@ -90,9 +76,7 @@ export default class ProteusClient<D, M> {
         onNext: status => {
           if (status.kind === 'CONNECTED') {
             subscription && subscription.cancel();
-            subscriber.onComplete(
-              new ProteusClientSocket(this._config, transport),
-            );
+            subscriber.onComplete(new ProteusSocket(this._config, transport));
           } else if (status.kind === 'ERROR') {
             subscription && subscription.cancel();
             subscriber.onError(status.error);
@@ -116,7 +100,7 @@ export default class ProteusClient<D, M> {
 /**
  * @private
  */
-class ProteusClientSocket<D, M> implements ReactiveSocket<D, M> {
+class ProteusSocket<D, M> implements ReactiveSocket<D, M> {
   _machine: ReactiveSocket<D, M>;
 
   constructor(config: ClientConfig<D, M>, connection: DuplexConnection) {

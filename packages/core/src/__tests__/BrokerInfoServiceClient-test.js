@@ -20,7 +20,7 @@ import {describe, it} from 'mocha';
 import {BufferEncoders} from 'rsocket-core';
 import {MAX_REQUEST_N} from 'rsocket-core/build/RSocketFrame';
 
-import RSocketTcpClient from 'rsocket-tcp-client';
+import RSocketWebSocketClient from 'rsocket-websocket-client';
 
 import BrokerInfoServiceClient from '../BrokerInfoServiceClient';
 import ProteusClient from '../ProteusClient';
@@ -28,11 +28,16 @@ import ProteusClient from '../ProteusClient';
 import {Empty} from '../proteus/core_pb';
 
 import Deferred from 'fbjs/lib/Deferred';
+import WrappingRSocket from '../WrappingRSocket';
+
+import WebSocket from 'ws';
+global.WebSocket = WebSocket;
 
 describe('BrokerInfoServiceClient', () => {
   it('retrieves brokers', async () => {
-    const transport = new RSocketTcpClient(
-      {host: 'localhost', port: 8001},
+    const transport = new RSocketWebSocketClient({
+        url: 'ws://localhost:8101/',
+      },
       BufferEncoders,
     );
     const client = new ProteusClient({
@@ -47,7 +52,13 @@ describe('BrokerInfoServiceClient', () => {
       transport,
     });
     const rs = await client.connect();
-    const brokerInfoService = new BrokerInfoServiceClient(rs);
+    const wrappedRs = WrappingRSocket.group(
+      'group',
+      'destination',
+      'com.netifi.proteus.brokerServices',
+      rs,
+    );
+    const brokerInfoService = new BrokerInfoServiceClient(wrappedRs);
     const deferred = new Deferred();
     brokerInfoService.brokers(new Empty(), Buffer.alloc(0)).subscribe({
       onComplete() {

@@ -16,47 +16,42 @@
  * @flow
  */
 
-import type {ReactiveSocket, Payload, Encodable} from 'rsocket-types';
+import type {ReactiveSocket, Encodable} from 'rsocket-types';
 
 import {Flowable, Single} from 'rsocket-flowable';
 
-import {Broker} from './proteus/broker_info_pb';
+import {Broker, Group, Destination, Event} from './proteus/broker_info_pb';
 
 import {Empty} from './proteus/core_pb';
 
-import {
-  FrameTypes,
-  encodeFrame,
-  encodeProteusMetadata,
-} from 'proteus-js-frames';
+import {encodeProteusMetadata} from 'proteus-js-frames';
 
 export default class BrokerInfoServiceClient {
   _rs: ReactiveSocket<Buffer, Buffer>;
+  _group: string;
+  _destination: string;
 
-  constructor(rs: ReactiveSocket<Buffer, Buffer>) {
+  constructor(
+    rs: ReactiveSocket<Buffer, Buffer>,
+    group: string,
+    destination: string,
+  ) {
     this._rs = rs;
+    this._group = group;
+    this._destination = destination;
   }
 
   brokers(message: Empty, metadata: Encodable): Flowable<Broker> {
+    const dataBuf = Buffer.from(message.serializeBinary());
     const metadataBuf = encodeProteusMetadata(
       'io.netifi.proteus.broker.info.BrokerInfoService',
       'Brokers',
       metadata,
     );
-    const wrappedMetadata = encodeFrame({
-      type: FrameTypes.GROUP,
-      majorVersion: null,
-      minorVersion: null,
-      fromGroup: 'group',
-      fromDestination: 'destination',
-      toGroup: 'com.netifi.proteus.brokerServices',
-      metadata: metadataBuf,
-    });
-    const dataBuf = Buffer.from(message.serializeBinary());
     return this._rs
       .requestStream({
         data: dataBuf,
-        metadata: wrappedMetadata,
+        metadata: metadataBuf,
       })
       .map(payload => {
         if (payload.data == null) {
@@ -64,6 +59,207 @@ export default class BrokerInfoServiceClient {
         }
         // TODO: https://github.com/google/protobuf/issues/1319
         return Broker.deserializeBinary(Array.from(payload.data));
+      });
+  }
+
+  groups(message: Broker, metadata: Encodable): Flowable<Group> {
+    const dataBuf = Buffer.from(message.serializeBinary());
+    const metadataBuf = encodeProteusMetadata(
+      'io.netifi.proteus.broker.info.BrokerInfoService',
+      'Groups',
+      metadata,
+    );
+    return this._rs
+      .requestStream({
+        data: dataBuf,
+        metadata: metadataBuf,
+      })
+      .map(payload => {
+        if (payload.data == null) {
+          throw new Error('data is null');
+        }
+        // TODO: https://github.com/google/protobuf/issues/1319
+        return Group.deserializeBinary(Array.from(payload.data));
+      });
+  }
+
+  destinations(message: Broker, metadata: Encodable): Flowable<Destination> {
+    const dataBuf = Buffer.from(message.serializeBinary());
+    const metadataBuf = encodeProteusMetadata(
+      'io.netifi.proteus.broker.info.BrokerInfoService',
+      'Destinations',
+      metadata,
+    );
+    return this._rs
+      .requestStream({
+        data: dataBuf,
+        metadata: metadataBuf,
+      })
+      .map(payload => {
+        if (payload.data == null) {
+          throw new Error('data is null');
+        }
+        // TODO: https://github.com/google/protobuf/issues/1319
+        return Destination.deserializeBinary(Array.from(payload.data));
+      });
+  }
+
+  destinationsByBrokerAndGroup(
+    message: Group,
+    metadata: Encodable,
+  ): Flowable<Destination> {
+    const dataBuf = Buffer.from(message.serializeBinary());
+    const metadataBuf = encodeProteusMetadata(
+      'io.netifi.proteus.broker.info.BrokerInfoService',
+      'DestinationsByBrokerAndGroup',
+      metadata,
+    );
+    return this._rs
+      .requestStream({
+        data: dataBuf,
+        metadata: metadataBuf,
+      })
+      .map(payload => {
+        if (payload.data == null) {
+          throw new Error('data is null');
+        }
+        // TODO: https://github.com/google/protobuf/issues/1319
+        return Destination.deserializeBinary(Array.from(payload.data));
+      });
+  }
+
+  destinationsByGroup(
+    message: Group,
+    metadata: Encodable,
+  ): Flowable<Destination> {
+    const dataBuf = Buffer.from(message.serializeBinary());
+    const metadataBuf = encodeProteusMetadata(
+      'io.netifi.proteus.broker.info.BrokerInfoService',
+      'DestinationsByGroup',
+      metadata,
+    );
+    return this._rs
+      .requestStream({
+        data: dataBuf,
+        metadata: metadataBuf,
+      })
+      .map(payload => {
+        if (payload.data == null) {
+          throw new Error('data is null');
+        }
+        // TODO: https://github.com/google/protobuf/issues/1319
+        return Destination.deserializeBinary(Array.from(payload.data));
+      });
+  }
+
+  brokersWithGroup(message: Group, metadata: Encodable): Flowable<Broker> {
+    const dataBuf = Buffer.from(message.serializeBinary());
+    const metadataBuf = encodeProteusMetadata(
+      'io.netifi.proteus.broker.info.BrokerInfoService',
+      'BrokersWithGroup',
+      metadata,
+    );
+    return this._rs
+      .requestStream({
+        data: dataBuf,
+        metadata: metadataBuf,
+      })
+      .map(payload => {
+        if (payload.data == null) {
+          throw new Error('data is null');
+        }
+        // TODO: https://github.com/google/protobuf/issues/1319
+        return Broker.deserializeBinary(Array.from(payload.data));
+      });
+  }
+
+  brokerWithDestination(
+    message: Destination,
+    metadata: Encodable,
+  ): Single<Broker> {
+    const dataBuf = Buffer.from(message.serializeBinary());
+    const metadataBuf = encodeProteusMetadata(
+      'io.netifi.proteus.broker.info.BrokerInfoService',
+      'BrokerWithDestination',
+      metadata,
+    );
+    return this._rs
+      .requestResponse({
+        data: dataBuf,
+        metadata: metadataBuf,
+      })
+      .map(payload => {
+        if (payload.data == null) {
+          throw new Error('data is null');
+        }
+        // TODO: https://github.com/google/protobuf/issues/1319
+        return Broker.deserializeBinary(Array.from(payload.data));
+      });
+  }
+
+  streamGroupEvents(message: Group, metadata: Encodable): Flowable<Event> {
+    const dataBuf = Buffer.from(message.serializeBinary());
+    const metadataBuf = encodeProteusMetadata(
+      'io.netifi.proteus.broker.info.BrokerInfoService',
+      'StreamGroupEvents',
+      metadata,
+    );
+    return this._rs
+      .requestStream({
+        data: dataBuf,
+        metadata: metadataBuf,
+      })
+      .map(payload => {
+        if (payload.data == null) {
+          throw new Error('data is null');
+        }
+        // TODO: https://github.com/google/protobuf/issues/1319
+        return Event.deserializeBinary(Array.from(payload.data));
+      });
+  }
+
+  streamDestinationEvents(
+    message: Group,
+    metadata: Encodable,
+  ): Flowable<Event> {
+    const dataBuf = Buffer.from(message.serializeBinary());
+    const metadataBuf = encodeProteusMetadata(
+      'io.netifi.proteus.broker.info.BrokerInfoService',
+      'StreamDestinationEvents',
+      metadata,
+    );
+    return this._rs
+      .requestStream({
+        data: dataBuf,
+        metadata: metadataBuf,
+      })
+      .map(payload => {
+        if (payload.data == null) {
+          throw new Error('data is null');
+        }
+        // TODO: https://github.com/google/protobuf/issues/1319
+        return Event.deserializeBinary(Array.from(payload.data));
+      });
+  }
+
+  streamBrokerEvents(message: Empty, metadata: Encodable): Flowable<Event> {
+    const dataBuf = Buffer.from(message.serializeBinary());
+    const metadataBuf = encodeProteusMetadata(
+      'io.netifi.proteus.broker.info.BrokerInfoService',
+      'StreamBrokerEvents',
+      metadata,
+    );
+    return this._rs
+      .requestStream({
+        data: dataBuf,
+        metadata: metadataBuf,
+      })
+      .map(payload => {
+        if (payload.data == null) {
+          throw new Error('data is null');
+        }
+        // TODO: https://github.com/google/protobuf/issues/1319
+        return Event.deserializeBinary(Array.from(payload.data));
       });
   }
 }
