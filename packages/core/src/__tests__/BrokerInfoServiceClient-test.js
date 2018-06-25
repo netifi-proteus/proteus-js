@@ -35,7 +35,8 @@ global.WebSocket = WebSocket;
 
 describe('BrokerInfoServiceClient', () => {
   it('retrieves brokers', async () => {
-    const transport = new RSocketWebSocketClient({
+    const transport = new RSocketWebSocketClient(
+      {
         url: 'ws://localhost:8101/',
       },
       BufferEncoders,
@@ -63,7 +64,6 @@ describe('BrokerInfoServiceClient', () => {
     brokerInfoService.brokers(new Empty(), Buffer.alloc(0)).subscribe({
       onComplete() {
         console.log('onComplete()');
-        deferred.resolve();
       },
       onError(error) {
         console.log('onError(%s)', error.message);
@@ -71,13 +71,15 @@ describe('BrokerInfoServiceClient', () => {
       },
       onNext(broker) {
         console.log('onNext(%o)', broker.toObject());
-        deferred.resolve(broker);
+        deferred.resolve(broker.toObject());
       },
       onSubscribe(subscription) {
         subscription.request(MAX_REQUEST_N);
       },
     });
     const broker = await deferred;
+    client.close();
     expect(broker).to.not.equal(null);
+    expect(broker.brokerid).to.not.equal(undefined);
   });
 });
