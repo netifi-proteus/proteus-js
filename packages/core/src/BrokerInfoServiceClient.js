@@ -57,8 +57,7 @@ export default class BrokerInfoServiceClient {
         if (payload.data == null) {
           throw new Error('data is null');
         }
-        // TODO: https://github.com/google/protobuf/issues/1319
-        return Broker.deserializeBinary(Array.from(payload.data));
+        return Broker.deserializeBinary(payload.data);
       });
   }
 
@@ -78,8 +77,7 @@ export default class BrokerInfoServiceClient {
         if (payload.data == null) {
           throw new Error('data is null');
         }
-        // TODO: https://github.com/google/protobuf/issues/1319
-        return Group.deserializeBinary(Array.from(payload.data));
+        return Group.deserializeBinary(payload.data);
       });
   }
 
@@ -99,8 +97,7 @@ export default class BrokerInfoServiceClient {
         if (payload.data == null) {
           throw new Error('data is null');
         }
-        // TODO: https://github.com/google/protobuf/issues/1319
-        return Destination.deserializeBinary(Array.from(payload.data));
+        return Destination.deserializeBinary(payload.data);
       });
   }
 
@@ -123,8 +120,7 @@ export default class BrokerInfoServiceClient {
         if (payload.data == null) {
           throw new Error('data is null');
         }
-        // TODO: https://github.com/google/protobuf/issues/1319
-        return Destination.deserializeBinary(Array.from(payload.data));
+        return Destination.deserializeBinary(payload.data);
       });
   }
 
@@ -147,8 +143,7 @@ export default class BrokerInfoServiceClient {
         if (payload.data == null) {
           throw new Error('data is null');
         }
-        // TODO: https://github.com/google/protobuf/issues/1319
-        return Destination.deserializeBinary(Array.from(payload.data));
+        return Destination.deserializeBinary(payload.data);
       });
   }
 
@@ -168,8 +163,7 @@ export default class BrokerInfoServiceClient {
         if (payload.data == null) {
           throw new Error('data is null');
         }
-        // TODO: https://github.com/google/protobuf/issues/1319
-        return Broker.deserializeBinary(Array.from(payload.data));
+        return Broker.deserializeBinary(payload.data);
       });
   }
 
@@ -192,8 +186,7 @@ export default class BrokerInfoServiceClient {
         if (payload.data == null) {
           throw new Error('data is null');
         }
-        // TODO: https://github.com/google/protobuf/issues/1319
-        return Broker.deserializeBinary(Array.from(payload.data));
+        return Broker.deserializeBinary(payload.data);
       });
   }
 
@@ -213,8 +206,7 @@ export default class BrokerInfoServiceClient {
         if (payload.data == null) {
           throw new Error('data is null');
         }
-        // TODO: https://github.com/google/protobuf/issues/1319
-        return Event.deserializeBinary(Array.from(payload.data));
+        return Event.deserializeBinary(payload.data);
       });
   }
 
@@ -237,8 +229,7 @@ export default class BrokerInfoServiceClient {
         if (payload.data == null) {
           throw new Error('data is null');
         }
-        // TODO: https://github.com/google/protobuf/issues/1319
-        return Event.deserializeBinary(Array.from(payload.data));
+        return Event.deserializeBinary(payload.data);
       });
   }
 
@@ -258,8 +249,7 @@ export default class BrokerInfoServiceClient {
         if (payload.data == null) {
           throw new Error('data is null');
         }
-        // TODO: https://github.com/google/protobuf/issues/1319
-        return Event.deserializeBinary(Array.from(payload.data));
+        return Event.deserializeBinary(payload.data);
       });
   }
 }

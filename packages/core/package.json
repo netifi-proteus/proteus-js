@@ -25,12 +25,10 @@
     "proto": "protoc --proto_path=proto --js_out=import_style=commonjs,binary:src proto/proteus/*.proto"
   },
   "devDependencies": {
-    "rsocket-tcp-client": "^0.0.7",
-    "rsocket-websocket-client": "^0.0.7",
-    "ws": "^2.3.1"
+    "rsocket-tcp-client": "^0.0.7"
   },
   "dependencies": {
     "proteus-js-frames": "^0.0.1",
-    "google-protobuf": "^3.5.0"
+    "google-protobuf": "^3.6.0"
   }
 }

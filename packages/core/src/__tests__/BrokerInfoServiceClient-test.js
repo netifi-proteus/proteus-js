@@ -20,7 +20,7 @@ import {describe, it} from 'mocha';
 import {BufferEncoders} from 'rsocket-core';
 import {MAX_REQUEST_N} from 'rsocket-core/build/RSocketFrame';
 
-import RSocketWebSocketClient from 'rsocket-websocket-client';
+import RSocketTcpClient from 'rsocket-tcp-client';
 
 import BrokerInfoServiceClient from '../BrokerInfoServiceClient';
 import ProteusClient from '../ProteusClient';
@@ -30,15 +30,10 @@ import {Empty} from '../proteus/core_pb';
 import Deferred from 'fbjs/lib/Deferred';
 import WrappingRSocket from '../WrappingRSocket';
 
-import WebSocket from 'ws';
-global.WebSocket = WebSocket;
-
 describe('BrokerInfoServiceClient', () => {
   it('retrieves brokers', async () => {
-    const transport = new RSocketWebSocketClient(
-      {
-        url: 'ws://localhost:8101/',
-      },
+    const transport = new RSocketTcpClient(
+      {host: 'localhost', port: 8001},
       BufferEncoders,
     );
     const client = new ProteusClient({
