@@ -20,8 +20,9 @@
 
 import RequestHandlingRSocket from './RequestHandlingRSocket';
 import UnwrappingRSocket from './UnwrappingRSocket';
-import BrokerInfoServiceClient from './BrokerInfoServiceClient';
 import ProteusClient from './ProteusClient';
+import DeferredConnectingRSocket from './DeferredConnectingRSocket';
+import {Empty} from './proteus/core_pb';
 
 /**
  * The public API of the `core` package.
@@ -29,6 +30,7 @@ import ProteusClient from './ProteusClient';
 export {
   RequestHandlingRSocket,
   UnwrappingRSocket,
-  BrokerInfoServiceClient,
   ProteusClient,
+  DeferredConnectingRSocket,
+  Empty,
 };

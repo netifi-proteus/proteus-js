@@ -17,26 +17,22 @@
 import {expect} from 'chai';
 import {describe, it} from 'mocha';
 
-import {BufferEncoders} from 'rsocket-core';
 import {MAX_REQUEST_N} from 'rsocket-core/build/RSocketFrame';
 
-import RSocketTcpClient from 'rsocket-tcp-client';
-
-import BrokerInfoServiceClient from '../BrokerInfoServiceClient';
-import ProteusClient from '../ProteusClient';
-
-import {Empty} from '../proteus/core_pb';
+import Proteus from '../Proteus';
 
 import Deferred from 'fbjs/lib/Deferred';
-import WrappingRSocket from '../WrappingRSocket';
+
+import BrokerInfoServiceClient from '../BrokerInfoServiceClient';
+
+import {Empty} from 'proteus-js-core';
+
+import WebSocket from 'ws';
+global.WebSocket = WebSocket;
 
 describe('BrokerInfoServiceClient', () => {
   it('retrieves brokers', async () => {
-    const transport = new RSocketTcpClient(
-      {host: 'localhost', port: 8001},
-      BufferEncoders,
-    );
-    const client = new ProteusClient({
+    const proteus = Proteus.create({
       setup: {
         group: 'group',
         destination: 'destination',
@@ -45,16 +41,15 @@ describe('BrokerInfoServiceClient', () => {
         accessKey: 9007199254740991,
         accessToken: Buffer.from('kTBDVtfRBO4tHOnZzSyY5ym2kfY=', 'base64'),
       },
-      transport,
+      transport: {
+        url: 'ws://localhost:8101/',
+      },
     });
-    const rs = await client.connect();
-    const wrappedRs = WrappingRSocket.group(
-      'group',
-      'destination',
-      'com.netifi.proteus.brokerServices',
-      rs,
+
+    const brokerInfoService = new BrokerInfoServiceClient(
+      proteus.group('com.netifi.proteus.brokerServices'),
     );
-    const brokerInfoService = new BrokerInfoServiceClient(wrappedRs);
+
     const deferred = new Deferred();
     brokerInfoService.brokers(new Empty(), Buffer.alloc(0)).subscribe({
       onComplete() {
@@ -73,7 +68,7 @@ describe('BrokerInfoServiceClient', () => {
       },
     });
     const broker = await deferred;
-    client.close();
+    proteus.close();
     expect(broker).to.not.equal(null);
     expect(broker.brokerid).to.not.equal(undefined);
   });

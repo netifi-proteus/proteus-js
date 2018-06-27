@@ -24,6 +24,8 @@
     "prepublish": "node ../../resources/prepublish.js"
   },
   "dependencies": {
-    "proteus-js-core": "^0.0.1"
+    "proteus-js-core": "^0.0.1",
+    "rsocket-websocket-client": "^0.0.7",
+    "ws": "^2.3.1"
   }
 }
