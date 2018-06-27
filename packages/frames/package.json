@@ -2,9 +2,10 @@
   "name": "proteus-js-frames",
   "repository": "https://github.com/netifi-proteus/proteus-js",
   "version": "0.0.1",
-  "description": "Proteus Java Client",
+  "description": "Proteus JavaScript Frames Definitions",
   "contributors": [
-    "Ryland Degnan <ryland@netifi.com>"
+    "Ryland Degnan <ryland@netifi.com>",
+    "Kyle Bahr <kyle@netifi.com>"
   ],
   "bugs": {
     "url": "https://github.com/netifi-proteus/proteus-js/issues"
