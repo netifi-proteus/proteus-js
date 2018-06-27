@@ -22,7 +22,7 @@ import {Flowable, Single} from 'rsocket-flowable';
 
 import {Broker, Group, Destination, Event} from './proteus/broker_info_pb';
 
-import {Empty} from './proteus/core_pb';
+import {Empty} from 'proteus-js-core';
 
 import {encodeProteusMetadata} from 'proteus-js-frames';
 

@@ -60,6 +60,14 @@ export default class ProteusClient<D, M> {
     this._connection = null;
   }
 
+  group(): string {
+    return this._config.setup.group;
+  }
+
+  destination(): string {
+    return this._config.setup.destination;
+  }
+
   close(): void {
     this._config.transport.close();
   }
