@@ -35,7 +35,6 @@ describe('BrokerInfoServiceClient', () => {
     const proteus = Proteus.create({
       setup: {
         group: 'group',
-        destination: 'destination',
         keepAlive: 1000000, // avoid sending during test
         lifetime: 100000,
         accessKey: 9007199254740991,

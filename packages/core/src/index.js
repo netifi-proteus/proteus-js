@@ -27,6 +27,8 @@ import {Empty} from './proteus/core_pb';
 /**
  * The public API of the `core` package.
  */
+export type {ClientConfig} from './ProteusClient';
+
 export {
   RequestHandlingRSocket,
   UnwrappingRSocket,

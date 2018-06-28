@@ -17,3 +17,13 @@
  */
 
 'use strict';
+
+import BrokerInfoServiceClient from './BrokerInfoServiceClient';
+import Proteus from './Proteus';
+
+/**
+ * The public API of the `client` package.
+ */
+export type {ProteusConfig} from './Proteus';
+
+export {BrokerInfoServiceClient, Proteus};
