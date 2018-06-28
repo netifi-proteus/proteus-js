@@ -38,7 +38,7 @@ describe('BrokerInfoServiceClient', () => {
         keepAlive: 1000000, // avoid sending during test
         lifetime: 100000,
         accessKey: 9007199254740991,
-        accessToken: Buffer.from('kTBDVtfRBO4tHOnZzSyY5ym2kfY=', 'base64'),
+        accessToken: 'kTBDVtfRBO4tHOnZzSyY5ym2kfY=',
       },
       transport: {
         url: 'ws://localhost:8101/',

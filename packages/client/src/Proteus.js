@@ -22,7 +22,12 @@ import {DuplexConnection, Responder, ReactiveSocket} from 'rsocket-types';
 import {Single, Flowable} from 'rsocket-flowable';
 import type {PayloadSerializers} from 'rsocket-core/build/RSocketSerialization';
 import {BufferEncoders} from 'rsocket-core';
-import {ProteusClient, DeferredConnectingRSocket} from 'proteus-js-core';
+import {
+  ProteusClient,
+  DeferredConnectingRSocket,
+  RequestHandlingRSocket,
+  UnwrappingRSocket,
+} from 'proteus-js-core';
 import type {ClientConfig} from 'proteus-js-core';
 import invariant from 'fbjs/lib/invariant';
 
@@ -36,7 +41,7 @@ export type ProteusConfig = {|
     keepAlive?: number,
     lifetime?: number,
     accessKey: number,
-    accessToken: Buffer,
+    accessToken: string,
   |},
   transport: {|
     url?: string,
@@ -51,12 +56,17 @@ export default class Proteus {
   _group: string;
   _destination: string;
   _connect: () => Single<ReactiveSocket<Buffer, Buffer>>;
+  _requestHandler: RequestHandlingRSocket;
 
-  constructor(proteusClient: ProteusClient<Buffer, Buffer>) {
+  constructor(
+    proteusClient: ProteusClient<Buffer, Buffer>,
+    requestHandler: RequestHandlingRSocket,
+  ) {
     this._client = proteusClient;
     this._group = proteusClient.group();
     this._destination = proteusClient.destination();
     this._connect = proteusClient.connect.bind(proteusClient);
+    this._requestHandler = requestHandler;
   }
 
   group(group: string): ReactiveSocket<Buffer, Buffer> {
@@ -79,6 +89,10 @@ export default class Proteus {
       destination,
       this._connect,
     );
+  }
+
+  addService(service: string, handler: Responder<Buffer, Buffer>): void {
+    this._requestHandler.addService(service, handler);
   }
 
   close(): void {
@@ -114,7 +128,7 @@ export default class Proteus {
         ? config.setup.lifetime
         : 360000 /* 360s in ms */;
     const accessKey = config.setup.accessKey;
-    const accessToken = config.setup.accessToken;
+    const accessToken = Buffer.from(config.setup.accessToken, 'base64');
 
     const transport: DuplexConnection =
       config.transport.connection !== undefined
@@ -126,16 +140,20 @@ export default class Proteus {
             BufferEncoders,
           );
 
-    let finalConfig: ClientConfig<Buffer, Buffer> = {
+    const requestHandler = new RequestHandlingRSocket();
+    const responder = new UnwrappingRSocket(requestHandler);
+
+    const finalConfig: ClientConfig<Buffer, Buffer> = {
       setup: {
         group: config.setup.group,
         destination,
         keepAlive,
         lifetime,
-        accessKey: config.setup.accessKey,
-        accessToken: config.setup.accessToken,
+        accessKey,
+        accessToken,
       },
       transport,
+      responder,
     };
 
     if (config.responder !== undefined) {
@@ -148,7 +166,7 @@ export default class Proteus {
 
     const client = new ProteusClient(finalConfig);
 
-    return new Proteus(client);
+    return new Proteus(client, requestHandler);
   }
 }
 
