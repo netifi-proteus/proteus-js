@@ -25,10 +25,10 @@ import {FrameTypes, encodeFrame} from 'proteus-js-frames';
 export default class DeferredConnectingRSocket
   implements ReactiveSocket<Buffer, Buffer> {
   _connect: () => Single<ReactiveSocket<Buffer, Buffer>>;
-  _error: Error;
-  _connected: boolean;
-  _connecting: Single<ReactiveSocket<Buffer, Buffer>>;
-  _connection: ReactiveSocket<Buffer, Buffer>;
+  // _error: Error;
+  // _connected: boolean;
+  // _connecting: Single<ReactiveSocket<Buffer, Buffer>>;
+  // _connection: ReactiveSocket<Buffer, Buffer>;
   _transformer: (Payload<Buffer, Buffer>) => Payload<Buffer, Buffer>;
 
   constructor(
@@ -89,7 +89,7 @@ export default class DeferredConnectingRSocket
 
   fireAndForget(payload: Payload<Buffer, Buffer>): void {
     const transformedPayload = this._transformer(payload);
-    establishConnection(this).subscribe({
+    this._connect().subscribe({
       onComplete: connection => connection.fireAndForget(transformedPayload),
     });
   }
@@ -99,7 +99,7 @@ export default class DeferredConnectingRSocket
   ): Single<Payload<Buffer, Buffer>> {
     const self = this;
     return new Single(subscriber => {
-      establishConnection(self).subscribe({
+      this._connect().subscribe({
         onComplete: connection => {
           try {
             connection
@@ -121,7 +121,7 @@ export default class DeferredConnectingRSocket
   ): Flowable<Payload<Buffer, Buffer>> {
     const self = this;
     return new Flowable(subscriber => {
-      establishConnection(self).subscribe({
+      this._connect().subscribe({
         onComplete: connection => {
           try {
             connection
@@ -143,7 +143,7 @@ export default class DeferredConnectingRSocket
   ): Flowable<Payload<Buffer, Buffer>> {
     const self = this;
     return new Flowable(subscriber => {
-      establishConnection(self).subscribe({
+      this._connect().subscribe({
         onComplete: connection => {
           connection
             .requestChannel(payloads.map(payload => self._transformer(payload)))
@@ -159,7 +159,7 @@ export default class DeferredConnectingRSocket
   metadataPush(payload: Payload<Buffer, Buffer>): Single<void> {
     const self = this;
     return new Single(subscriber => {
-      establishConnection(self).subscribe({
+      this._connect().subscribe({
         onComplete: connection => {
           try {
             connection
@@ -177,7 +177,7 @@ export default class DeferredConnectingRSocket
   }
 
   close(): void {
-    establishConnection(this).subscribe({
+    this._connect().subscribe({
       onComplete: connection => {
         connection.close();
       },
@@ -186,7 +186,7 @@ export default class DeferredConnectingRSocket
 
   connectionStatus(): Flowable<ConnectionStatus> {
     return new Flowable(subscriber => {
-      establishConnection(this).subscribe({
+      this._connect().subscribe({
         onComplete: connection => {
           connection.connectionStatus().subscribe(subscriber);
         },
@@ -198,21 +198,21 @@ export default class DeferredConnectingRSocket
   }
 }
 
-function establishConnection(
-  deferred: DeferredConnectingRSocket,
-): Single<ReactiveSocket<Buffer, Buffer>> {
-  if (deferred._connected) {
-    return Single.of(deferred._connection);
-  } else if (deferred._error) {
-    return Single.error(deferred._error);
-  } else if (deferred._connecting) {
-    return deferred._connecting;
-  } else {
-    deferred._connecting = deferred._connect().flatMap(connection => {
-      deferred._connection = connection;
-      deferred._connected = true;
-      return Single.of(connection);
-    });
-    return deferred._connecting;
-  }
-}
+// function establishConnection(
+//   deferred: DeferredConnectingRSocket,
+// ): Single<ReactiveSocket<Buffer, Buffer>> {
+//   if (deferred._connected) {
+//     return Single.of(deferred._connection);
+//   } else if (deferred._error) {
+//     return Single.error(deferred._error);
+//   } else if (deferred._connecting) {
+//     return deferred._connecting;
+//   } else {
+//     deferred._connecting = deferred._connect().flatMap(connection => {
+//       deferred._connection = connection;
+//       deferred._connected = true;
+//       return Single.of(connection);
+//     });
+//     return deferred._connecting;
+//   }
+// }

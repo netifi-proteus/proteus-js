@@ -56,6 +56,8 @@ export default class Proteus {
   _group: string;
   _destination: string;
   _connect: () => Single<ReactiveSocket<Buffer, Buffer>>;
+  _connecting: Object;
+  _connection: ReactiveSocket<Buffer, Buffer>;
   _requestHandler: RequestHandlingRSocket;
 
   constructor(
@@ -65,8 +67,86 @@ export default class Proteus {
     this._client = proteusClient;
     this._group = proteusClient.group();
     this._destination = proteusClient.destination();
-    this._connect = proteusClient.connect.bind(proteusClient);
+    this._connect = () => {
+      if (this._connection) {
+        return Single.of(this._connection);
+      } else if (this._connecting) {
+        return new Single(subscriber => {
+          this._connecting.subscribe(subscriber);
+        });
+      } else {
+        /*** This is a useful Publisher implementation that wraps could feasibly wrap the Single type ***/
+        /*** Might be useful to clean up and contribute back or put in a utility or something ***/
+        this._connecting = (function() {
+          const _subscribers = [];
+          let _connection: ReactiveSocket<Buffer, Buffer>;
+          let _completed = false;
+          return {
+            onComplete: connection => {
+              //Memoize for future subscribers
+              _completed = true;
+              _connection = connection;
+
+              _subscribers.map(subscriber => {
+                if (subscriber.onComplete) {
+                  subscriber.onComplete(connection);
+                }
+              });
+            },
+
+            onError: error => {
+              _subscribers.map(subscriber => {
+                if (subscriber.onError) {
+                  subscriber.onError(error);
+                }
+              });
+            },
+
+            onSubscribe: cancel => {
+              _subscribers.map(subscriber => {
+                if (subscriber.onSubscribe) {
+                  subscriber.onSubscribe(cancel);
+                }
+              });
+            },
+
+            subscribe: subscriber => {
+              if (_completed) {
+                subscriber.onSubscribe();
+                subscriber.onComplete(_connection);
+              } else {
+                _subscribers.push(subscriber);
+                if (subscriber.onSubscribe) {
+                  subscriber.onSubscribe(() => {
+                    const idx = _subscribers.indexOf(subscriber);
+                    if (idx > -1) {
+                      _subscribers.splice(idx, 1);
+                    }
+                  });
+                }
+              }
+            },
+          };
+        })();
+
+        proteusClient.connect().subscribe(this._connecting);
+        this._connecting.subscribe({
+          onComplete: connection => {
+            this._connection = connection;
+          },
+        });
+        return this._connecting;
+      }
+    };
     this._requestHandler = requestHandler;
+  }
+
+  myGroup(): string {
+    return this._group;
+  }
+
+  myDestination(): string {
+    return this._destination;
   }
 
   group(group: string): ReactiveSocket<Buffer, Buffer> {
