@@ -23,9 +23,9 @@ import Proteus from '../Proteus';
 
 import Deferred from 'fbjs/lib/Deferred';
 
-import BrokerInfoServiceClient from '../BrokerInfoServiceClient';
+import {BrokerInfoServiceClient} from '../proteus/broker_info_proteus_pb';
 
-import {Empty} from 'proteus-js-core';
+import {Empty} from 'google-protobuf/google/protobuf/empty_pb';
 
 import WebSocket from 'ws';
 global.WebSocket = WebSocket;

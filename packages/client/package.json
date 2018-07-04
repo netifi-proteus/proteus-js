@@ -1,7 +1,7 @@
 {
   "name": "proteus-js-client",
   "repository": "https://github.com/netifi-proteus/proteus-js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Proteus JavaScript Client",
   "contributors": [
     "Ryland Degnan <ryland@netifi.com>",
@@ -22,11 +22,16 @@
     "build": "npm run build-js && npm run build-flow",
     "build-js": "babel-node ../../resources/buildJs.js",
     "build-flow": "babel-node ../../resources/buildFlow.js",
-    "prepublish": "node ../../resources/prepublish.js"
+    "prepublish": "node ../../resources/prepublish.js",
+    "protoc": "protoc --proto_path=proto --js_out=import_style=commonjs,binary:src --proteus_out=src --plugin=protoc-gen-proteus=node_modules/.bin/proteus_js_protoc_plugin proto/proteus/*.proto"
+  },
+  "devDependencies": {
+    "proteus-js-protobuf": "^0.0.4",
+    "ws": "^2.3.1"
   },
   "dependencies": {
-    "proteus-js-core": "^0.0.3",
+    "proteus-js-core": "^0.0.4",
     "rsocket-websocket-client": "^0.0.7",
-    "ws": "^2.3.1"
+    "google-protobuf": "^3.6.0"
   }
 }
