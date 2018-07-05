@@ -22,7 +22,6 @@ import RequestHandlingRSocket from './RequestHandlingRSocket';
 import UnwrappingRSocket from './UnwrappingRSocket';
 import ProteusClient from './ProteusClient';
 import DeferredConnectingRSocket from './DeferredConnectingRSocket';
-import {Empty} from './proteus/core_pb';
 
 /**
  * The public API of the `core` package.
@@ -34,5 +33,4 @@ export {
   UnwrappingRSocket,
   ProteusClient,
   DeferredConnectingRSocket,
-  Empty,
 };

@@ -19,6 +19,18 @@
 'use strict';
 
 import Proteus from './Proteus';
+
+import {
+  Broker,
+  Group,
+  Destination,
+  Event,
+} from './proteus/broker_info_pb';
+
+import {
+  Empty
+} from 'google-protobuf/google/protobuf/empty_pb.js';
+
 import {
   BrokerInfoServiceClient,
   BrokerInfoServiceServer,
@@ -39,4 +51,9 @@ export {
   BrokerInfoServiceServer,
   BrokerManagementServiceClient,
   BrokerManagementServiceServer,
+  Broker,
+  Group,
+  Destination,
+  Event,
+  Empty,
 };
