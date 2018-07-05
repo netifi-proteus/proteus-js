@@ -149,6 +149,15 @@ export default class Proteus {
     return this._destination;
   }
 
+  broadcast(group: string): ReactiveSocket<Buffer, Buffer> {
+    return DeferredConnectingRSocket.broadcast(
+      this._group,
+      this._destination,
+      group,
+      this._connect,
+    );
+  }
+
   group(group: string): ReactiveSocket<Buffer, Buffer> {
     return DeferredConnectingRSocket.group(
       this._group,

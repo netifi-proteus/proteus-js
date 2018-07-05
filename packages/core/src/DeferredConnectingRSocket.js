@@ -39,6 +39,29 @@ export default class DeferredConnectingRSocket
     this._connect = connect;
   }
 
+  static broadcast(
+    fromGroup: string,
+    fromDestination: string,
+    toGroup: string,
+    connect: () => Single<ReactiveSocket<Buffer, Buffer>>,
+  ): ReactiveSocket<Buffer, Buffer> {
+    return new DeferredConnectingRSocket(payload => {
+      const metadata = encodeFrame({
+        type: FrameTypes.BROADCAST,
+        majorVersion: null,
+        minorVersion: null,
+        fromGroup,
+        fromDestination,
+        toGroup,
+        metadata: payload.metadata || Buffer.alloc(0),
+      });
+      return {
+        data: payload.data,
+        metadata,
+      };
+    }, connect);
+  }
+
   static group(
     fromGroup: string,
     fromDestination: string,
