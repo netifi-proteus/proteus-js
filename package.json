@@ -17,7 +17,7 @@
     "prepublish": "node resources/prepublish.js",
     "pretty": "node resources/pretty.js",
     "pretty-check": "node resources/pretty.js --check",
-    "proto": "lerna run proto"
+    "protoc": "lerna run protoc"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
