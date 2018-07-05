@@ -1,7 +1,7 @@
 {
   "name": "proteus-js-client",
   "repository": "https://github.com/netifi-proteus/proteus-js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Proteus JavaScript Client",
   "contributors": [
     "Ryland Degnan <ryland@netifi.com>",
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "google-protobuf": "^3.6.0",
-    "proteus-js-core": "^0.0.4",
+    "proteus-js-core": "^0.0.5",
     "rsocket-websocket-client": "^0.0.7"
   }
 }

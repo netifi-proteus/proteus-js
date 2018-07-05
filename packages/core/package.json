@@ -1,7 +1,7 @@
 {
   "name": "proteus-js-core",
   "repository": "https://github.com/netifi-proteus/proteus-js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Proteus JavaScript Core",
   "contributors": [
     "Ryland Degnan <ryland@netifi.com>",
