@@ -466,7 +466,8 @@ proto.io.netifi.proteus.broker.info.Broker.toObject = function(includeInstance, 
     brokerid: jspb.Message.getFieldWithDefault(msg, 1, ""),
     ipaddress: jspb.Message.getFieldWithDefault(msg, 2, ""),
     port: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    clusterport: jspb.Message.getFieldWithDefault(msg, 4, 0)
+    clusterport: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    adminport: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -518,6 +519,10 @@ proto.io.netifi.proteus.broker.info.Broker.deserializeBinaryFromReader = functio
     case 4:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setClusterport(value);
+      break;
+    case 5:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setAdminport(value);
       break;
     default:
       reader.skipField();
@@ -573,6 +578,13 @@ proto.io.netifi.proteus.broker.info.Broker.serializeBinaryToWriter = function(me
   if (f !== 0) {
     writer.writeInt32(
       4,
+      f
+    );
+  }
+  f = message.getAdminport();
+  if (f !== 0) {
+    writer.writeInt32(
+      5,
       f
     );
   }
@@ -636,6 +648,21 @@ proto.io.netifi.proteus.broker.info.Broker.prototype.getClusterport = function()
 /** @param {number} value */
 proto.io.netifi.proteus.broker.info.Broker.prototype.setClusterport = function(value) {
   jspb.Message.setProto3IntField(this, 4, value);
+};
+
+
+/**
+ * optional int32 adminPort = 5;
+ * @return {number}
+ */
+proto.io.netifi.proteus.broker.info.Broker.prototype.getAdminport = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/** @param {number} value */
+proto.io.netifi.proteus.broker.info.Broker.prototype.setAdminport = function(value) {
+  jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
