@@ -14,56 +14,42 @@ var BrokerManagementServiceClient = function () {
   // Shutdowns down a broker process
   BrokerManagementServiceClient.prototype.shutdown = function shutdown(message, metadata) {
     var dataBuf = Buffer.from(message.serializeBinary());
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'shutdown', metadata);
-    return this._rs.requestResponse({
+    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'shutdown', metadata || Buffer.alloc(0));
+    this._rs.fireAndForget({
       data: dataBuf,
       metadata: metadataBuf
-    }).map(function (payload) {
-      if (payload.data == null) {
-        throw new Error('data is null');
-      }
-      return google_protobuf_empty_pb.Empty.deserializeBinary(payload.data);
     });
   };
   // Broker leaves the cluster, but stays running
   BrokerManagementServiceClient.prototype.leave = function leave(message, metadata) {
     var dataBuf = Buffer.from(message.serializeBinary());
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'leave', metadata);
+    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'leave', metadata || Buffer.alloc(0));
     return this._rs.requestResponse({
       data: dataBuf,
       metadata: metadataBuf
     }).map(function (payload) {
-      if (payload.data == null) {
-        throw new Error('data is null');
-      }
       return proteus_broker_mgmt_pb.Ack.deserializeBinary(payload.data);
     });
   };
   // Rejoins the cluster it  has seed information for
   BrokerManagementServiceClient.prototype.rejoin = function rejoin(message, metadata) {
     var dataBuf = Buffer.from(message.serializeBinary());
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'rejoin', metadata);
+    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'rejoin', metadata || Buffer.alloc(0));
     return this._rs.requestResponse({
       data: dataBuf,
       metadata: metadataBuf
     }).map(function (payload) {
-      if (payload.data == null) {
-        throw new Error('data is null');
-      }
       return proteus_broker_mgmt_pb.Ack.deserializeBinary(payload.data);
     });
   };
   // Tells the Broker to join using the provided Brokers
   BrokerManagementServiceClient.prototype.join = function join(message, metadata) {
     var dataBuf = Buffer.from(message.serializeBinary());
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'join', metadata);
+    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'join', metadata || Buffer.alloc(0));
     return this._rs.requestResponse({
       data: dataBuf,
       metadata: metadataBuf
     }).map(function (payload) {
-      if (payload.data == null) {
-        throw new Error('data is null');
-      }
       return proteus_broker_mgmt_pb.Ack.deserializeBinary(payload.data);
     });
   };
@@ -74,7 +60,7 @@ var BrokerManagementServiceClient = function () {
       var dataBuf = Buffer.from(message.serializeBinary());
       if (!once) {
         once = true;
-        var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeDestination', metadata);
+        var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeDestination', metadata || Buffer.alloc(0));
       } else {
         metadataBuf = Buffer.alloc(0);
       }
@@ -83,9 +69,6 @@ var BrokerManagementServiceClient = function () {
         metadata: metadataBuf
       };
     })).map(function (payload) {
-      if (payload.data == null) {
-        throw new Error('data is null');
-      }
       return proteus_broker_mgmt_pb.Ack.deserializeBinary(payload.data);
     });
   };
@@ -96,7 +79,7 @@ var BrokerManagementServiceClient = function () {
       var dataBuf = Buffer.from(message.serializeBinary());
       if (!once) {
         once = true;
-        var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeGroup', metadata);
+        var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeGroup', metadata || Buffer.alloc(0));
       } else {
         metadataBuf = Buffer.alloc(0);
       }
@@ -105,9 +88,6 @@ var BrokerManagementServiceClient = function () {
         metadata: metadataBuf
       };
     })).map(function (payload) {
-      if (payload.data == null) {
-        throw new Error('data is null');
-      }
       return proteus_broker_mgmt_pb.Ack.deserializeBinary(payload.data);
     });
   };
@@ -118,7 +98,7 @@ var BrokerManagementServiceClient = function () {
       var dataBuf = Buffer.from(message.serializeBinary());
       if (!once) {
         once = true;
-        var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeBroker', metadata);
+        var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeBroker', metadata || Buffer.alloc(0));
       } else {
         metadataBuf = Buffer.alloc(0);
       }
@@ -127,51 +107,39 @@ var BrokerManagementServiceClient = function () {
         metadata: metadataBuf
       };
     })).map(function (payload) {
-      if (payload.data == null) {
-        throw new Error('data is null');
-      }
       return proteus_broker_mgmt_pb.Ack.deserializeBinary(payload.data);
     });
   };
   // Closes all connections on the broker - except broker to broker connections
   BrokerManagementServiceClient.prototype.closeDestinations = function closeDestinations(message, metadata) {
     var dataBuf = Buffer.from(message.serializeBinary());
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeDestinations', metadata);
+    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeDestinations', metadata || Buffer.alloc(0));
     return this._rs.requestResponse({
       data: dataBuf,
       metadata: metadataBuf
     }).map(function (payload) {
-      if (payload.data == null) {
-        throw new Error('data is null');
-      }
       return proteus_broker_mgmt_pb.Ack.deserializeBinary(payload.data);
     });
   };
   // Closes connections to all other brokers
   BrokerManagementServiceClient.prototype.closeBrokers = function closeBrokers(message, metadata) {
     var dataBuf = Buffer.from(message.serializeBinary());
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeBrokers', metadata);
+    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeBrokers', metadata || Buffer.alloc(0));
     return this._rs.requestResponse({
       data: dataBuf,
       metadata: metadataBuf
     }).map(function (payload) {
-      if (payload.data == null) {
-        throw new Error('data is null');
-      }
       return proteus_broker_mgmt_pb.Ack.deserializeBinary(payload.data);
     });
   };
   // Closes all connections on the broker including broker to broker connections
   BrokerManagementServiceClient.prototype.closeAll = function closeAll(message, metadata) {
     var dataBuf = Buffer.from(message.serializeBinary());
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeAll', metadata);
+    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeAll', metadata || Buffer.alloc(0));
     return this._rs.requestResponse({
       data: dataBuf,
       metadata: metadataBuf
     }).map(function (payload) {
-      if (payload.data == null) {
-        throw new Error('data is null');
-      }
       return proteus_broker_mgmt_pb.Ack.deserializeBinary(payload.data);
     });
   };
@@ -185,19 +153,17 @@ var BrokerManagementServiceServer = function () {
     this._service = service;
   }
   BrokerManagementServiceServer.prototype.fireAndForget = function fireAndForget(payload) {
-    try {
-      if (payload.metadata == null) {
-        return rsocket_flowable.Single.error(new Error('metadata is empty'));
-      }
-      var method = proteus_js_frames.getMethod(payload.metadata);
-      switch (method) {
-        case 'shutdown':
-          return this._service.shutdown(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata);
-        default:
-          return rsocket_flowable.Single.error(new Error('unknown method'));
-      }
-    } catch (error) {
-      return rsocket_flowable.Single.error(error);
+    if (payload.metadata == null) {
+      throw new Error('metadata is empty');
+    }
+    var method = proteus_js_frames.getMethod(payload.metadata);
+    switch (method) {
+      case 'shutdown':
+        this._service
+          .shutdown(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata);
+        break;
+      default:
+        throw new Error('unknown method');
     }
   };
   BrokerManagementServiceServer.prototype.requestResponse = function requestResponse(payload) {
@@ -208,17 +174,59 @@ var BrokerManagementServiceServer = function () {
       var method = proteus_js_frames.getMethod(payload.metadata);
       switch (method) {
         case 'leave':
-          return this._service.leave(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata);
+          return this._service
+            .leave(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata)
+            .map(function (message) {
+              return {
+                data: Buffer.from(message.serializeBinary()),
+                metadata: Buffer.alloc(0)
+              }
+            });
         case 'rejoin':
-          return this._service.rejoin(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata);
+          return this._service
+            .rejoin(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata)
+            .map(function (message) {
+              return {
+                data: Buffer.from(message.serializeBinary()),
+                metadata: Buffer.alloc(0)
+              }
+            });
         case 'join':
-          return this._service.join(proteus_broker_mgmt_pb.Brokers.deserializeBinary(payload.data), payload.metadata);
+          return this._service
+            .join(proteus_broker_mgmt_pb.Brokers.deserializeBinary(payload.data), payload.metadata)
+            .map(function (message) {
+              return {
+                data: Buffer.from(message.serializeBinary()),
+                metadata: Buffer.alloc(0)
+              }
+            });
         case 'closeDestinations':
-          return this._service.closeDestinations(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata);
+          return this._service
+            .closeDestinations(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata)
+            .map(function (message) {
+              return {
+                data: Buffer.from(message.serializeBinary()),
+                metadata: Buffer.alloc(0)
+              }
+            });
         case 'closeBrokers':
-          return this._service.closeBrokers(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata);
+          return this._service
+            .closeBrokers(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata)
+            .map(function (message) {
+              return {
+                data: Buffer.from(message.serializeBinary()),
+                metadata: Buffer.alloc(0)
+              }
+            });
         case 'closeAll':
-          return this._service.closeAll(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata);
+          return this._service
+            .closeAll(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata)
+            .map(function (message) {
+              return {
+                data: Buffer.from(message.serializeBinary()),
+                metadata: Buffer.alloc(0)
+              }
+            });
         default:
           return rsocket_flowable.Single.error(new Error('unknown method'));
       }
