@@ -19,6 +19,9 @@
     "pretty-check": "node resources/pretty.js --check",
     "protoc": "lerna run protoc"
   },
+  "resolutions": {
+    "eslint-scope": "3.7.1"
+  },
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-eslint": "8.1.2",
