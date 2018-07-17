@@ -20,16 +20,9 @@
 
 import Proteus from './Proteus';
 
-import {
-  Broker,
-  Group,
-  Destination,
-  Event,
-} from './proteus/broker_info_pb';
+import {Broker, Group, Destination, Event} from './proteus/broker_info_pb';
 
-import {
-  Empty
-} from 'google-protobuf/google/protobuf/empty_pb.js';
+import {Empty} from 'google-protobuf/google/protobuf/empty_pb.js';
 
 import {
   BrokerInfoServiceClient,
