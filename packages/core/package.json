@@ -25,9 +25,11 @@
     "prepublish": "node ../../resources/prepublish.js"
   },
   "devDependencies": {
-    "rsocket-tcp-client": "^0.0.7"
+    "rsocket-tcp-client": "^0.0.7",
+    "rxjs-compat": "6"
   },
   "dependencies": {
-    "proteus-js-frames": "^0.0.1"
+    "proteus-js-frames": "^0.0.1",
+    "rxjs": "^6.2.2"
   }
 }
