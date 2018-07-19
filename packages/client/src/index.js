@@ -20,16 +20,9 @@
 
 import Proteus from './Proteus';
 
-import {
-  Broker,
-  Group,
-  Destination,
-  Event,
-} from './proteus/broker_info_pb';
+import {Broker, Group, Destination, Event} from './proteus/broker_info_pb';
 
-import {
-  Empty
-} from 'google-protobuf/google/protobuf/empty_pb.js';
+import {Empty} from 'google-protobuf/google/protobuf/empty_pb.js';
 
 import {
   BrokerInfoServiceClient,
@@ -40,6 +33,8 @@ import {
   BrokerManagementServiceServer,
 } from './proteus/broker_mgmt_proteus_pb';
 
+import toObservable from './rx/FlowableAdapter';
+
 /**
  * The public API of the `client` package.
  */
@@ -47,6 +42,7 @@ export type {ProteusConfig} from './Proteus';
 
 export {
   Proteus,
+  toObservable,
   BrokerInfoServiceClient,
   BrokerInfoServiceServer,
   BrokerManagementServiceClient,
