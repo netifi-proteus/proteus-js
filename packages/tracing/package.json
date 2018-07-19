@@ -1,10 +1,9 @@
 {
-  "name": "proteus-js-client",
+  "name": "proteus-js-tracing",
   "repository": "https://github.com/netifi-proteus/proteus-js",
-  "version": "0.0.7",
-  "description": "Proteus JavaScript Client",
+  "version": "0.0.1",
+  "description": "Proteus JavaScript Tracing Support",
   "contributors": [
-    "Ryland Degnan <ryland@netifi.com>",
     "Kyle Bahr <kyle@netifi.com>"
   ],
   "bugs": {
@@ -22,17 +21,13 @@
     "build": "npm run build-js && npm run build-flow",
     "build-js": "babel-node ../../resources/buildJs.js",
     "build-flow": "babel-node ../../resources/buildFlow.js",
-    "prepublish": "node ../../resources/prepublish.js",
-    "protoc": "protoc --proto_path=proto --js_out=import_style=commonjs,binary:src --proteus_out=src --plugin=protoc-gen-proteus=node_modules/.bin/proteus_js_protoc_plugin proto/proteus/*.proto"
-  },
-  "devDependencies": {
-    "proteus-js-protobuf": "^0.0.6",
-    "ws": "^2.3.1"
+    "prepublish": "node ../../resources/prepublish.js"
   },
   "dependencies": {
     "google-protobuf": "^3.6.0",
     "opentracing": "^0.14.3",
-    "proteus-js-core": "^0.0.7",
-    "rsocket-websocket-client": "^0.0.7"
+    "rsocket-core": "^0.0.7",
+    "rsocket-flowable": "^0.0.7",
+    "rsocket-types": "^0.0.7"
   }
 }

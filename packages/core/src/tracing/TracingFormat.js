@@ -1,1 +1,0 @@
-export type TracingFormat = "TEXT_MAP", "HTTP_HEADERS", "BINARY";

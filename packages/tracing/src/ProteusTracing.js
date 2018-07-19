@@ -1,25 +1,23 @@
 import {UTF8Encoder, BufferEncoder, createBuffer} from 'rsocket-core';
-import {Flowable} from 'rsocket-flowable';
+import {Flowable, Single} from 'rsocket-flowable';
 
-import Tag from './Tag';
 import {SpanSubscriber} from './SpanSubscriber';
-import {SpanContext} from './SpanContext';
-import {Tracer} from './Tracer';
+import {SpanContext, Tracer, Reference} from 'opentracing';
 
 export function mapToBuffer(map: Object): Buffer {
   if (!map || Object.keys(map).length <= 0) {
-    return Buffer.alloc(0);
+    return createBuffer(0);
   }
 
   const aggregatedTags = Object.keys(map).reduce(
     (aggregate, key) => {
       const val = map[key];
       const keyLen = UTF8Encoder.byteLength(key);
-      const keyBuf = Buffer.alloc(keyLen);
+      const keyBuf = createBuffer(keyLen);
       UTF8Encoder.encode(key, keyBuf, 0, keyLen);
 
       const valLen = UTF8Encoder.byteLength(val);
-      const valBuf = Buffer.alloc(valLen);
+      const valBuf = createBuffer(valLen);
       UTF8Encoder.encode(val, valBuf, 0, valLen);
 
       const newEntries = aggregate.entries;
@@ -35,7 +33,7 @@ export function mapToBuffer(map: Object): Buffer {
   );
 
   let offset = 0;
-  const resultBuf = Buffer.alloc(aggregatedTags.totalSize);
+  const resultBuf = createBuffer(aggregatedTags.totalSize);
   aggregatedTags.entries.forEach(entry => {
     resultBuf.writeUInt16BE(entry.keyLen, offset);
     offset += 2; //2 bytes for key length
@@ -87,41 +85,91 @@ export function bufferToMap(buffer: Buffer): Object {
 }
 
 export function trace<T>(
-  tracer: Tracer,
-  name: String,
-  ...tags: Tag
+  tracer?: Tracer,
+  name?: String,
+  metadata: Object,
+  ...tags: Object
 ): Object => (Flowable<T>) => Flowable<T> {
   if (tracer && name) {
-    return (map: Object) => {
+    return (metadata: Object) => {
       (flowable: Flowable<T>) => {
         flowable.lift((subscriber: ISubscriber<T>) => {
-          new SpanSubscriber(subscriber, null, tracer, map, name, tags);
+          if (metadata) {
+            if (!tags) {
+              tags = [];
+            }
+            Object.keys(metadata).forEach(key => {
+              const val = {};
+              val[key] = map[key];
+              tags.push(val);
+            });
+          }
+          return new SpanSubscriber(subscriber, tracer, name, null, tags);
         });
       };
     };
   } else {
-    return (map: Object) => {
-      (publisher: Flowable<T>) => publisher;
-    };
+    return (map: Object) => (publisher: Flowable<T>) => publisher;
   }
 }
 
 export function traceAsChild<T>(
-  tracer: Tracer,
-  name: String,
-  ...tags: Tag
+  tracer?: Tracer,
+  name?: String,
+  ...tags: Object
 ): SpanContext => (Flowable<T>) => Flowable<T> {
   if (tracer && name) {
     return (context: SpanContext) => {
       return (flowable: Flowable<T>) => {
         flowable.lift((subscriber: ISubscriber<T>) => {
-          new SpanSubscriber(subscriber, context, tracer, null, name, tags);
+          return new SpanSubscriber(subscriber, tracer, name, context, tags);
         });
       };
     };
   } else {
-    return (context: SpanContext) => {
-      (publisher: Flowable<T>) => publisher;
+    return (context: SpanContext) => (publisher: Flowable<T>) => publisher;
+  }
+}
+
+export function traceSingle<T>(
+  tracer?: Tracer,
+  name?: String,
+  metadata?: Object,
+  ...tags: Object
+): Object => (Single<T>) => Single<T> {
+  if (tracer && name) {
+    return (metadata: Object) => {
+      (single: Single<T>) => {
+        if (metadata) {
+          if (!tags) {
+            tags = [];
+          }
+          Object.keys(metadata).forEach(key => {
+            const val = {};
+            val[key] = map[key];
+            tags.push(val);
+          });
+        }
+        return new SpanSingle(single, tracer, name, null, tags);
+      };
     };
+  } else {
+    return (map: Object) => (single: Single<T>) => single;
+  }
+}
+
+export function traceSingleAsChild<T>(
+  tracer?: Tracer,
+  name?: String,
+  ...tags: Object
+): SpanContext => (Single<T>) => Single<T> {
+  if (tracer && name) {
+    return (context: SpanContext) => {
+      return (flowable: Flowable<T>) => {
+        return new SpanSingle(single, tracer, name, null, tags);
+      };
+    };
+  } else {
+    return (context: SpanContext) => (single: Single<T>) => single;
   }
 }

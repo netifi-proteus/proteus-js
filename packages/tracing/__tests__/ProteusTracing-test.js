@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {describe, it} from 'mocha';
 
-import {mapToBuffer, bufferToMap} from '../tracing/ProteusTracing';
+import {mapToBuffer, bufferToMap} from '../src/ProteusTracing';
 
 function generateMap() {
   const size = Math.floor(Math.random() * 100) + 20;

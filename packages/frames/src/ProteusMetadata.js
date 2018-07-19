@@ -46,7 +46,7 @@ export function encodeProteusMetadata(
   // We can't overload the method call directly and the code generator currently only populates
   // the first 3 parameters
   if (undefined === tracing) {
-    tracing = Buffer.alloc(0);
+    tracing = createBuffer(0);
   }
   const tracingLength = BufferEncoder.byteLength(tracing);
 
