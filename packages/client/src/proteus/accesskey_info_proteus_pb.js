@@ -2,73 +2,111 @@
 
 'use strict';
 var proteus_js_frames = require('proteus-js-frames');
+var proteus_tracing = require('proteus-js-tracing');
 var rsocket_flowable = require('rsocket-flowable');
 var proteus_accesskey_info_pb = require('../proteus/accesskey_info_pb.js');
 var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js');
 
 var AccessKeyInfoServiceClient = function () {
-  function AccessKeyInfoServiceClient(rs) {
+  function AccessKeyInfoServiceClient(rs, tracer) {
     this._rs = rs;
+    this._tracer = tracer;
+    this.addAccessKeyTrace = proteus_tracing.traceSingle(tracer, "AccessKeyInfoService.addAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
+    this.removeAccessKeyTrace = proteus_tracing.traceSingle(tracer, "AccessKeyInfoService.removeAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
+    this.disableAccessKeyTrace = proteus_tracing.traceSingle(tracer, "AccessKeyInfoService.disableAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
+    this.enableAccessKeyTrace = proteus_tracing.traceSingle(tracer, "AccessKeyInfoService.enableAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
+    this.getAccessKeyTrace = proteus_tracing.traceSingle(tracer, "AccessKeyInfoService.getAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
+    this.getAccessKeysTrace = proteus_tracing.trace(tracer, "AccessKeyInfoService.getAccessKeys", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
   }
   AccessKeyInfoServiceClient.prototype.addAccessKey = function addAccessKey(message, metadata) {
-    var dataBuf = Buffer.from(message.serializeBinary());
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'AddAccessKey', metadata || Buffer.alloc(0));
-    return this._rs.requestResponse({
-      data: dataBuf,
-      metadata: metadataBuf
-    }).map(function (payload) {
-      return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
-    });
+    const map = {};
+    return this.addAccessKeyTrace(map)(new rsocket_flowable.Single(subscriber => {
+      var dataBuf = Buffer.from(message.serializeBinary());
+      var tracingMetadata = proteus_tracing.mapToBuffer(map);
+      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'AddAccessKey', tracingMetadata, metadata || Buffer.alloc(0));
+        this._rs.requestResponse({
+          data: dataBuf,
+          metadata: metadataBuf
+        }).map(function (payload) {
+          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
+        }).subscribe(subscriber);
+      })
+    );
   };
   AccessKeyInfoServiceClient.prototype.removeAccessKey = function removeAccessKey(message, metadata) {
-    var dataBuf = Buffer.from(message.serializeBinary());
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'RemoveAccessKey', metadata || Buffer.alloc(0));
-    return this._rs.requestResponse({
-      data: dataBuf,
-      metadata: metadataBuf
-    }).map(function (payload) {
-      return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
-    });
+    const map = {};
+    return this.removeAccessKeyTrace(map)(new rsocket_flowable.Single(subscriber => {
+      var dataBuf = Buffer.from(message.serializeBinary());
+      var tracingMetadata = proteus_tracing.mapToBuffer(map);
+      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'RemoveAccessKey', tracingMetadata, metadata || Buffer.alloc(0));
+        this._rs.requestResponse({
+          data: dataBuf,
+          metadata: metadataBuf
+        }).map(function (payload) {
+          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
+        }).subscribe(subscriber);
+      })
+    );
   };
   AccessKeyInfoServiceClient.prototype.disableAccessKey = function disableAccessKey(message, metadata) {
-    var dataBuf = Buffer.from(message.serializeBinary());
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'DisableAccessKey', metadata || Buffer.alloc(0));
-    return this._rs.requestResponse({
-      data: dataBuf,
-      metadata: metadataBuf
-    }).map(function (payload) {
-      return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
-    });
+    const map = {};
+    return this.disableAccessKeyTrace(map)(new rsocket_flowable.Single(subscriber => {
+      var dataBuf = Buffer.from(message.serializeBinary());
+      var tracingMetadata = proteus_tracing.mapToBuffer(map);
+      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'DisableAccessKey', tracingMetadata, metadata || Buffer.alloc(0));
+        this._rs.requestResponse({
+          data: dataBuf,
+          metadata: metadataBuf
+        }).map(function (payload) {
+          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
+        }).subscribe(subscriber);
+      })
+    );
   };
   AccessKeyInfoServiceClient.prototype.enableAccessKey = function enableAccessKey(message, metadata) {
-    var dataBuf = Buffer.from(message.serializeBinary());
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'EnableAccessKey', metadata || Buffer.alloc(0));
-    return this._rs.requestResponse({
-      data: dataBuf,
-      metadata: metadataBuf
-    }).map(function (payload) {
-      return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
-    });
+    const map = {};
+    return this.enableAccessKeyTrace(map)(new rsocket_flowable.Single(subscriber => {
+      var dataBuf = Buffer.from(message.serializeBinary());
+      var tracingMetadata = proteus_tracing.mapToBuffer(map);
+      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'EnableAccessKey', tracingMetadata, metadata || Buffer.alloc(0));
+        this._rs.requestResponse({
+          data: dataBuf,
+          metadata: metadataBuf
+        }).map(function (payload) {
+          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
+        }).subscribe(subscriber);
+      })
+    );
   };
   AccessKeyInfoServiceClient.prototype.getAccessKey = function getAccessKey(message, metadata) {
-    var dataBuf = Buffer.from(message.serializeBinary());
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'GetAccessKey', metadata || Buffer.alloc(0));
-    return this._rs.requestResponse({
-      data: dataBuf,
-      metadata: metadataBuf
-    }).map(function (payload) {
-      return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
-    });
+    const map = {};
+    return this.getAccessKeyTrace(map)(new rsocket_flowable.Single(subscriber => {
+      var dataBuf = Buffer.from(message.serializeBinary());
+      var tracingMetadata = proteus_tracing.mapToBuffer(map);
+      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'GetAccessKey', tracingMetadata, metadata || Buffer.alloc(0));
+        this._rs.requestResponse({
+          data: dataBuf,
+          metadata: metadataBuf
+        }).map(function (payload) {
+          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
+        }).subscribe(subscriber);
+      })
+    );
   };
   AccessKeyInfoServiceClient.prototype.getAccessKeys = function getAccessKeys(message, metadata) {
-    var dataBuf = Buffer.from(message.serializeBinary());
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'GetAccessKeys', metadata || Buffer.alloc(0));
-    return this._rs.requestStream({
-      data: dataBuf,
-      metadata: metadataBuf
-    }).map(function (payload) {
-      return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
-    });
+    const map = {};
+    return this.getAccessKeysTrace(map)(new rsocket_flowable.Flowable(subscriber => {
+      var dataBuf = Buffer.from(message.serializeBinary());
+      var tracingMetadata = proteus_tracing.mapToBuffer(map);
+      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'GetAccessKeys', tracingMetadata, metadata || Buffer.alloc(0));
+        this._rs.requestStream({
+          data: dataBuf,
+          metadata: metadataBuf
+        }).map(function (payload) {
+          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
+        }).subscribe(subscriber);
+      })
+    );
   };
   return AccessKeyInfoServiceClient;
 }();
@@ -76,8 +114,15 @@ var AccessKeyInfoServiceClient = function () {
 exports.AccessKeyInfoServiceClient = AccessKeyInfoServiceClient;
 
 var AccessKeyInfoServiceServer = function () {
-  function AccessKeyInfoServiceServer(service) {
+  function AccessKeyInfoServiceServer(service, tracer) {
     this._service = service;
+    this._tracer = tracer;
+    this.addAccessKeyTrace = proteus_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.addAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
+    this.removeAccessKeyTrace = proteus_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.removeAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
+    this.disableAccessKeyTrace = proteus_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.disableAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
+    this.enableAccessKeyTrace = proteus_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.enableAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
+    this.getAccessKeyTrace = proteus_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.getAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
+    this.getAccessKeysTrace = proteus_tracing.traceAsChild(tracer, "AccessKeyInfoService.getAccessKeys", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
   }
   AccessKeyInfoServiceServer.prototype.fireAndForget = function fireAndForget(payload) {
     throw new Error('fireAndForget() is not implemented');
@@ -88,52 +133,63 @@ var AccessKeyInfoServiceServer = function () {
         return rsocket_flowable.Single.error(new Error('metadata is empty'));
       }
       var method = proteus_js_frames.getMethod(payload.metadata);
+      var spanContext = proteus_tracing.deserializeTraceData(this._tracer, payload.metadata);
       switch (method) {
         case 'AddAccessKey':
-          return this._service
+          return this.addAccessKeyTrace(spanContext)(
+            this._service
             .addAccessKey(proteus_accesskey_info_pb.AccessToken.deserializeBinary(payload.data), payload.metadata)
             .map(function (message) {
               return {
                 data: Buffer.from(message.serializeBinary()),
                 metadata: Buffer.alloc(0)
               }
-            });
+            })
+          );
         case 'RemoveAccessKey':
-          return this._service
+          return this.removeAccessKeyTrace(spanContext)(
+            this._service
             .removeAccessKey(proteus_accesskey_info_pb.AccessKey.deserializeBinary(payload.data), payload.metadata)
             .map(function (message) {
               return {
                 data: Buffer.from(message.serializeBinary()),
                 metadata: Buffer.alloc(0)
               }
-            });
+            })
+          );
         case 'DisableAccessKey':
-          return this._service
+          return this.disableAccessKeyTrace(spanContext)(
+            this._service
             .disableAccessKey(proteus_accesskey_info_pb.AccessKey.deserializeBinary(payload.data), payload.metadata)
             .map(function (message) {
               return {
                 data: Buffer.from(message.serializeBinary()),
                 metadata: Buffer.alloc(0)
               }
-            });
+            })
+          );
         case 'EnableAccessKey':
-          return this._service
+          return this.enableAccessKeyTrace(spanContext)(
+            this._service
             .enableAccessKey(proteus_accesskey_info_pb.AccessKey.deserializeBinary(payload.data), payload.metadata)
             .map(function (message) {
               return {
                 data: Buffer.from(message.serializeBinary()),
                 metadata: Buffer.alloc(0)
               }
-            });
+            })
+          );
         case 'GetAccessKey':
-          return this._service
+          return this.getAccessKeyTrace(spanContext)(
+            this._service
             .getAccessKey(proteus_accesskey_info_pb.AccessKey.deserializeBinary(payload.data), payload.metadata)
             .map(function (message) {
               return {
                 data: Buffer.from(message.serializeBinary()),
                 metadata: Buffer.alloc(0)
               }
-            });
+            })
+          );
         default:
           return rsocket_flowable.Single.error(new Error('unknown method'));
       }
@@ -147,16 +203,19 @@ var AccessKeyInfoServiceServer = function () {
         return rsocket_flowable.Flowable.error(new Error('metadata is empty'));
       }
       var method = proteus_js_frames.getMethod(payload.metadata);
+      var spanContext = proteus_tracing.deserializeTraceData(this._tracer, payload.metadata);
       switch (method) {
         case 'GetAccessKeys':
-          return this._service
-            .getAccessKeys(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata)
-            .map(function (message) {
-              return {
-                data: Buffer.from(message.serializeBinary()),
-                metadata: Buffer.alloc(0)
-              }
-            });
+          return this.getAccessKeysTrace(spanContext)(
+            this._service
+              .getAccessKeys(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata)
+              .map(function (message) {
+                return {
+                  data: Buffer.from(message.serializeBinary()),
+                  metadata: Buffer.alloc(0)
+                }
+              })
+            );
         default:
           return rsocket_flowable.Flowable.error(new Error('unknown method'));
       }

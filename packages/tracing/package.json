@@ -27,8 +27,8 @@
   "devDependencies": {
     "http": "^0.0.0",
     "lodash.clone": "^4.5.0",
-    "proteus-js-protobuf": "^0.0.8",
-    "rsocket-tcp-client": "^0.0.7"
+    "rsocket-tcp-client": "^0.0.7",
+    "proteus-js-protobuf": "^0.0.8"
   },
   "dependencies": {
     "google-protobuf": "^3.6.0",
