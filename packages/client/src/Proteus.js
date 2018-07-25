@@ -140,7 +140,8 @@ export default class Proteus {
             this._connection = connection;
           },
           onError: err => {
-            console.warn('An error has occurred while connecting:' + err);
+            console.warn('An error has occurred while connecting:');
+            console.warn(err);
           },
           onSubscribe: cancel => {
             //do nothing

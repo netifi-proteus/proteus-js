@@ -29,6 +29,6 @@
   },
   "dependencies": {
     "proteus-js-frames": "^0.0.1",
-    "rsocket-types": "^0.0.8"
+    "rsocket-types": "^0.0.7"
   }
 }
