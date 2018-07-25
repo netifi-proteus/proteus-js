@@ -80,6 +80,7 @@ export default class Proteus {
         this._connecting = (function() {
           const _subscribers = [];
           let _connection: ReactiveSocket<Buffer, Buffer>;
+          let _error: Error;
           let _completed = false;
           return {
             onComplete: connection => {
@@ -95,6 +96,8 @@ export default class Proteus {
             },
 
             onError: error => {
+              _completed = true;
+              _error = error;
               _subscribers.map(subscriber => {
                 if (subscriber.onError) {
                   subscriber.onError(error);
@@ -114,6 +117,9 @@ export default class Proteus {
               if (_completed) {
                 subscriber.onSubscribe();
                 subscriber.onComplete(_connection);
+              } else if (_error) {
+                subscriber.onSubscribe();
+                subscriber.onError(_error);
               } else {
                 _subscribers.push(subscriber);
                 if (subscriber.onSubscribe) {
@@ -129,12 +135,19 @@ export default class Proteus {
           };
         })();
 
-        proteusClient.connect().subscribe(this._connecting);
         this._connecting.subscribe({
           onComplete: connection => {
             this._connection = connection;
           },
+          onError: err => {
+            console.warn('An error has occurred while connecting:');
+            console.warn(err);
+          },
+          onSubscribe: cancel => {
+            //do nothing
+          },
         });
+        proteusClient.connect().subscribe(this._connecting);
         return this._connecting;
       }
     };

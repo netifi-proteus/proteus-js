@@ -1,10 +1,9 @@
 {
-  "name": "proteus-js-client",
+  "name": "proteus-js-tracing",
   "repository": "https://github.com/netifi-proteus/proteus-js",
-  "version": "0.0.7",
-  "description": "Proteus JavaScript Client",
+  "version": "0.0.1",
+  "description": "Proteus JavaScript Tracing Support",
   "contributors": [
-    "Ryland Degnan <ryland@netifi.com>",
     "Kyle Bahr <kyle@netifi.com>"
   ],
   "bugs": {
@@ -23,19 +22,21 @@
     "build-js": "babel-node ../../resources/buildJs.js",
     "build-flow": "babel-node ../../resources/buildFlow.js",
     "prepublish": "node ../../resources/prepublish.js",
-    "protoc": "protoc --proto_path=proto --js_out=import_style=commonjs,binary:src --proteus_out=src --plugin=protoc-gen-proteus=node_modules/.bin/proteus_js_protoc_plugin proto/proteus/*.proto"
+    "protoc": "protoc --proto_path=proto --js_out=import_style=commonjs,binary:src --proteus_out=src --plugin=protoc-gen-proteus=node_modules/.bin/proteus_js_protoc_plugin proto/**/*.proto proto/**/**/*.proto"
   },
   "devDependencies": {
-    "proteus-js-protobuf": "0.0.8",
-    "rxjs-compat": "^6.2.2",
-    "ws": "^2.3.1"
+    "http": "^0.0.0",
+    "lodash.clone": "^4.5.0",
+    "rsocket-tcp-client": "^0.0.7",
+    "proteus-js-protobuf": "^0.0.8"
   },
   "dependencies": {
     "google-protobuf": "^3.6.0",
+    "long": "^4.0.0",
     "opentracing": "^0.14.3",
-    "proteus-js-core": "^0.0.7",
-    "proteus-js-tracing": "^0.0.1",
-    "rsocket-websocket-client": "^0.0.7",
-    "rxjs": "^6.2.2"
+    "proteus-js-frames": "^0.0.1",
+    "rsocket-core": "^0.0.7",
+    "rsocket-flowable": "^0.0.7",
+    "rsocket-types": "^0.0.7"
   }
 }

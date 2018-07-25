@@ -16,7 +16,6 @@
 
 import {from, of, pipe} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
-//import {ObservableFlowable, ObservableSingle} from '../rx/FlowableAdapter';
 import toObservable from '../rx/FlowableAdapter';
 import {Flowable, Single} from 'rsocket-flowable';
 import {expect} from 'chai';

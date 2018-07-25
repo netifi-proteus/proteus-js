@@ -16,17 +16,28 @@
  * @flow
  */
 
-export * from './ProteusTypes';
+'use strict';
 
-export {FrameTypes, getFrameTypeName} from './ProteusFrame';
+import {
+  trace,
+  traceAsChild,
+  traceSingle,
+  traceSingleAsChild,
+  mapToBuffer,
+  deserializeTraceData,
+  bufferToMap,
+} from './ProteusTracing';
 
-export {encodeFrame, decodeFrame} from './ProteusBinaryFraming';
+('use strict');
+import {BasicTracer} from './basic-tracing/tracer';
 
 export {
-  encodeProteusMetadata,
-  getVersion,
-  getService,
-  getMethod,
-  getMetadata,
-  getTracing,
-} from './ProteusMetadata';
+  BasicTracer,
+  trace,
+  traceAsChild,
+  traceSingle,
+  traceSingleAsChild,
+  mapToBuffer,
+  deserializeTraceData,
+  bufferToMap,
+};
