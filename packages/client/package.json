@@ -35,5 +35,6 @@
     "proteus-js-core": "^0.0.7",
     "proteus-js-tracing": "^0.0.1",
     "rsocket-websocket-client": "^0.0.7"
+    "rxjs": "^6.2.2"
   }
 }

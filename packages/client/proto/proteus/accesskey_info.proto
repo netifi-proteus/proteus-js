@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package io.netifi.proteus.broker.access;
+
+import "google/protobuf/empty.proto";
+
+option java_package = "io.netifi.proteus.broker.access";
+option java_outer_classname = "AccessKeyInfo";
+option java_multiple_files = true;
+
+message AccessKey {
+  int64 key = 1;
+}
+
+message AccessToken {
+  int64 key = 1;
+  bytes accessToken = 2;
+  string description = 3;
+}
+
+message AccessTokenInfo {
+  int64 key = 1;
+  bytes accessTokenHash = 2;
+  bytes accessTokenSalt = 3;
+  string accessKeyAlgo = 4;
+  string description = 5;
+  bool disabled = 6;
+}
+
+service AccessKeyInfoService {
+  rpc AddAccessKey (AccessToken) returns (AccessTokenInfo) {}
+  rpc RemoveAccessKey (AccessKey) returns (AccessTokenInfo) {}
+  rpc DisableAccessKey (AccessKey) returns (AccessTokenInfo) {}
+  rpc EnableAccessKey (AccessKey) returns (AccessTokenInfo) {}
+  rpc GetAccessKey (AccessKey) returns (AccessTokenInfo) {}
+  rpc GetAccessKeys (google.protobuf.Empty) returns (stream AccessTokenInfo) {}
+}

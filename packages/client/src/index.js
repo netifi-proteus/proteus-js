@@ -33,6 +33,8 @@ import {
   BrokerManagementServiceServer,
 } from './proteus/broker_mgmt_proteus_pb';
 
+import toObservable from './rx/FlowableAdapter';
+
 /**
  * The public API of the `client` package.
  */
@@ -40,6 +42,7 @@ export type {ProteusConfig} from './Proteus';
 
 export {
   Proteus,
+  toObservable,
   BrokerInfoServiceClient,
   BrokerInfoServiceServer,
   BrokerManagementServiceClient,
