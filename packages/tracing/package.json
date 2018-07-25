@@ -27,7 +27,7 @@
   "devDependencies": {
     "http": "^0.0.0",
     "lodash.clone": "^4.5.0",
-    "proteus-js-protobuf": "^0.0.7",
+    "proteus-js-protobuf": "^0.0.8",
     "rsocket-tcp-client": "^0.0.7"
   },
   "dependencies": {
@@ -35,7 +35,6 @@
     "long": "^4.0.0",
     "opentracing": "^0.14.3",
     "proteus-js-frames": "^0.0.1",
-    "proteus-js-protobuf": "0.0.7",
     "rsocket-core": "^0.0.7",
     "rsocket-flowable": "^0.0.7",
     "rsocket-types": "^0.0.7"

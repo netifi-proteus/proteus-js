@@ -1505,8 +1505,8 @@ expand-template@^1.0.2:
   resolved "https://registry.yarnpkg.com/expand-template/-/expand-template-1.1.1.tgz#981f188c0c3a87d2e28f559bc541426ff94f21dd"
 
 extend@~3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.1.tgz#a755ea7bc1adfcc5a31ce7e762dbaadc5e636444"
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
 
 external-editor@^2.0.4:
   version "2.2.0"
@@ -2725,8 +2725,8 @@ npm-bundled@^1.0.1:
   resolved "https://registry.yarnpkg.com/npm-bundled/-/npm-bundled-1.0.3.tgz#7e71703d973af3370a9591bafe3a63aca0be2308"
 
 npm-packlist@^1.1.6:
-  version "1.1.10"
-  resolved "https://registry.yarnpkg.com/npm-packlist/-/npm-packlist-1.1.10.tgz#1039db9e985727e464df066f4cf0ab6ef85c398a"
+  version "1.1.11"
+  resolved "https://registry.yarnpkg.com/npm-packlist/-/npm-packlist-1.1.11.tgz#84e8c683cbe7867d34b1d357d893ce29e28a02de"
   dependencies:
     ignore-walk "^3.0.1"
     npm-bundled "^1.0.1"
@@ -3037,9 +3037,9 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-proteus-js-protobuf@^0.0.6, proteus-js-protobuf@^0.0.7:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/proteus-js-protobuf/-/proteus-js-protobuf-0.0.6.tgz#69da9c2457636fdd7634d8c3290a4d0db40348f8"
+proteus-js-protobuf@0.0.8, proteus-js-protobuf@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/proteus-js-protobuf/-/proteus-js-protobuf-0.0.8.tgz#edd49a3a15135d619873ba22563ad1463b7fd416"
   dependencies:
     cmake-js "^3.6.2"
     prebuild-install "^4.0.0"
@@ -3337,15 +3337,6 @@ rsocket-core@^0.0.7:
     rsocket-flowable "^0.0.7"
     rsocket-types "^0.0.7"
 
-rsocket-core@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rsocket-core/-/rsocket-core-0.0.8.tgz#12835b1770f9d021a6889e6998969dbfc13e3840"
-  dependencies:
-    buffer "^5.0.6"
-    fbjs "^0.8.12"
-    rsocket-flowable "^0.0.8"
-    rsocket-types "^0.0.8"
-
 rsocket-flowable@^0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/rsocket-flowable/-/rsocket-flowable-0.0.7.tgz#3eff179dac4986f5e065b98ac1ee1f35865051f4"
@@ -3365,14 +3356,6 @@ rsocket-tcp-client@^0.0.7:
     fbjs "^0.8.12"
     rsocket-core "^0.0.7"
     rsocket-flowable "^0.0.7"
-
-rsocket-tcp-client@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rsocket-tcp-client/-/rsocket-tcp-client-0.0.8.tgz#b86814d3fce8500135a934218c8e0c24517ffc82"
-  dependencies:
-    fbjs "^0.8.12"
-    rsocket-core "^0.0.8"
-    rsocket-flowable "^0.0.8"
 
 rsocket-types@^0.0.7:
   version "0.0.7"
