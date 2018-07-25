@@ -24,14 +24,20 @@ import {
   traceSingle,
   traceSingleAsChild,
   mapToBuffer,
+  deserializeTraceData,
   bufferToMap,
 } from './ProteusTracing';
 
+('use strict');
+import {BasicTracer} from './basic-tracing/tracer';
+
 export {
+  BasicTracer,
   trace,
   traceAsChild,
   traceSingle,
   traceSingleAsChild,
   mapToBuffer,
+  deserializeTraceData,
   bufferToMap,
 };

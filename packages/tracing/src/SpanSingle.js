@@ -1,50 +1,60 @@
 import {Single, IFutureSubscriber} from 'rsocket-flowable';
-import {
-  Tracer,
-  Span,
-  SpanContext,
-  Reference,
-  FORMAT_BINARY,
-  BinaryCarrier,
-} from 'opentracing';
+import {Tracer, Span, SpanContext, FORMAT_TEXT_MAP} from 'opentracing';
 
-export class SpanSubscriber<T> extends Single<T>
-  implements IFutureSubscriber<T> {
+export function createSpanSingle(
+  single: Single<T>,
+  tracer: Tracer,
+  name: string,
+  context?: SpanContext | Span,
+  metadata?: Object,
+  ...tags: Object
+) {
+  return new Single(subscriber => {
+    const spanSubscriber = new SpanSingleSubscriber(
+      subscriber,
+      tracer,
+      name,
+      context,
+      metadata,
+      ...tags,
+    );
+    single.subscribe(spanSubscriber);
+  });
+}
+
+class SpanSingleSubscriber implements IFutureSubscriber<T> {
   _span: Span;
-  _rootSpan: Span;
   _subscriber: IFutureSubscriber<T>;
   _tracer: Tracer;
   _cancel: () => void;
 
   constructor(
-    single: Single<T>,
+    subscriber: IFutureSubscriber<T>,
     tracer: Tracer,
     name: string,
     context?: SpanContext | Span,
+    metadata?: Object,
     ...tags: Object
   ) {
-    super(subscriber => {
-      this._subscriber = subscriber;
-      single.subscribe(this);
-    });
+    this._subscriber = subscriber;
+
     this._tracer = tracer;
-    //this._single = single;
 
     let options = {};
 
     if (context) {
       options.childOf = context;
-    } else if (this._rootSpan) {
-      options.childOf = context;
     }
 
     if (tags) {
       const finalTags = {};
-      for (var tag in tags) {
-        Object.keys(tag).forEach(key => {
-          finalTags[key] = tag[key];
+      tags.forEach(tagArr => {
+        tagArr.forEach(tag => {
+          Object.keys(tag).forEach(key => {
+            finalTags[key] = tag[key];
+          });
         });
-      }
+      });
       options.tags = finalTags;
     }
 
@@ -53,15 +63,15 @@ export class SpanSubscriber<T> extends Single<T>
     //   options.references = references;
     // }
     //
-    // if (startTime) {
-    //   options.startTime = startTime;
-    // }
+    options.startTime = Date.now() * 1000;
 
-    this._span = tracer.startSpan(name, options);
-    this._rootSpan = this._rootSpan || this._span;
+    this._span = this._tracer.startSpan(name, options);
 
-    const adapter = new BinaryCarrier();
-    tracer.inject(this._span.context(), FORMAT_BINARY, adapter);
+    this._tracer.inject(
+      this._span.context(),
+      FORMAT_TEXT_MAP,
+      metadata === undefined || metadata === null ? {} : metadata,
+    );
   }
 
   cleanup() {

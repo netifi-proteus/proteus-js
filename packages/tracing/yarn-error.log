@@ -1,0 +1,71 @@
+Arguments: 
+  /usr/local/Cellar/node/10.5.0_1/bin/node /usr/local/Cellar/yarn/1.7.0/libexec/bin/yarn.js protoc
+
+PATH: 
+  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+Yarn version: 
+  1.7.0
+
+Node version: 
+  10.5.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  SyntaxError: /Users/kylebahr/Projects/proteus-js/packages/tracing/package.json: Unexpected token / in JSON at position 735
+      at JSON.parse (<anonymous>)
+      at /usr/local/Cellar/yarn/1.7.0/libexec/lib/cli.js:1130:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.7.0/libexec/lib/cli.js:98:30)
+      at /usr/local/Cellar/yarn/1.7.0/libexec/lib/cli.js:109:13
+
+npm manifest: 
+  {
+    "name": "proteus-js-tracing",
+    "repository": "https://github.com/netifi-proteus/proteus-js",
+    "version": "0.0.1",
+    "description": "Proteus JavaScript Tracing Support",
+    "contributors": [
+      "Kyle Bahr <kyle@netifi.com>"
+    ],
+    "bugs": {
+      "url": "https://github.com/netifi-proteus/proteus-js/issues"
+    },
+    "files": [
+      "dist"
+    ],
+    "keywords": [
+      "rsocket"
+    ],
+    "main": "dist/index.js",
+    "scripts": {
+      "test": "echo 'Please run `npm test` from the root of the repo' && exit 1",
+      "build": "npm run build-js && npm run build-flow",
+      "build-js": "babel-node ../../resources/buildJs.js",
+      "build-flow": "babel-node ../../resources/buildFlow.js",
+      "prepublish": "node ../../resources/prepublish.js",
+      //"protoc": "protoc --proto_path=proto --js_out=import_style=commonjs,binary:src --proteus_out=src --plugin=protoc-gen-proteus=node_modules/.bin/proteus_js_protoc_plugin proto/**/*.proto"
+      "protoc": "protoc --proto_path=proto --js_out=import_style=commonjs,binary:src --proteus_out=src --plugin=protoc-gen-proteus=/Users/kylebahr/Projects/proteus-js-protobuf/build/Release/proteus_js_plugin proto/**/*.proto"
+    },
+    "devDependencies": {
+      "lodash.clone": "^4.5.0",
+      "long": "^4.0.0",
+      "proteus-js-protobuf": "^0.0.7"
+    },
+    "dependencies": {
+      "google-protobuf": "^3.6.0",
+      "opentracing": "^0.14.3",
+      "proteus-js-frames": "^0.0.1",
+      "rsocket-core": "^0.0.7",
+      "rsocket-flowable": "^0.0.7",
+      "rsocket-types": "^0.0.7"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

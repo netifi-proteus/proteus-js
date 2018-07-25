@@ -28,4 +28,5 @@ export {
   getService,
   getMethod,
   getMetadata,
+  getTracing,
 } from './ProteusMetadata';

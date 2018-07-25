@@ -114,6 +114,10 @@ export default class DeferredConnectingRSocket
     const transformedPayload = this._transformer(payload);
     this._connect().subscribe({
       onComplete: connection => connection.fireAndForget(transformedPayload),
+      onError: err => console.warn('Failed to connect:' + JSON.stringify(err)),
+      onSubscribe: cancel => {
+        /*not sure we would ever cancel*/
+      },
     });
   }
 
@@ -134,6 +138,9 @@ export default class DeferredConnectingRSocket
         },
         onError: error => {
           subscriber.onError(error);
+        },
+        onSubscribe: cancel => {
+          /*not sure we would ever cancel*/
         },
       });
     });
@@ -157,6 +164,9 @@ export default class DeferredConnectingRSocket
         onError: error => {
           subscriber.onError(error);
         },
+        onSubscribe: cancel => {
+          /*not sure we would ever cancel*/
+        },
       });
     });
   }
@@ -168,12 +178,21 @@ export default class DeferredConnectingRSocket
     return new Flowable(subscriber => {
       this._connect().subscribe({
         onComplete: connection => {
-          connection
-            .requestChannel(payloads.map(payload => self._transformer(payload)))
-            .subscribe(subscriber);
+          try {
+            connection
+              .requestChannel(
+                payloads.map(payload => self._transformer(payload)),
+              )
+              .subscribe(subscriber);
+          } catch (err) {
+            subscriber.onError(err);
+          }
         },
         onError: error => {
           subscriber.onError(error);
+        },
+        onSubscribe: cancel => {
+          /*not sure we would ever cancel*/
         },
       });
     });
@@ -195,6 +214,9 @@ export default class DeferredConnectingRSocket
         onError: error => {
           subscriber.onError(error);
         },
+        onSubscribe: cancel => {
+          /*not sure we would ever cancel*/
+        },
       });
     });
   }
@@ -203,6 +225,9 @@ export default class DeferredConnectingRSocket
     this._connect().subscribe({
       onComplete: connection => {
         connection.close();
+      },
+      onSubscribe: cancel => {
+        /*not sure we would ever cancel*/
       },
     });
   }
@@ -216,26 +241,10 @@ export default class DeferredConnectingRSocket
         onError: error => {
           subscriber.onError(error);
         },
+        onSubscribe: cancel => {
+          subscriber.onSubscribe(cancel);
+        },
       });
     });
   }
 }
-
-// function establishConnection(
-//   deferred: DeferredConnectingRSocket,
-// ): Single<ReactiveSocket<Buffer, Buffer>> {
-//   if (deferred._connected) {
-//     return Single.of(deferred._connection);
-//   } else if (deferred._error) {
-//     return Single.error(deferred._error);
-//   } else if (deferred._connecting) {
-//     return deferred._connecting;
-//   } else {
-//     deferred._connecting = deferred._connect().flatMap(connection => {
-//       deferred._connection = connection;
-//       deferred._connected = true;
-//       return Single.of(connection);
-//     });
-//     return deferred._connecting;
-//   }
-// }

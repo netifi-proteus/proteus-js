@@ -1,12 +1,5 @@
 import {ISubscriber, ISubscription} from 'rsocket-types';
-import {
-  Tracer,
-  Span,
-  SpanContext,
-  Reference,
-  FORMAT_BINARY,
-  BinaryCarrier,
-} from 'opentracing';
+import {Tracer, Span, SpanContext, FORMAT_TEXT_MAP} from 'opentracing';
 
 export class SpanSubscriber<T> implements ISubscriber<T>, ISubscription {
   _span: Span;
@@ -14,32 +7,37 @@ export class SpanSubscriber<T> implements ISubscriber<T>, ISubscription {
   _subscriber: ISubscriber;
   _tracer: Tracer;
   _subscription: ISubscription;
+  _nextCount: number;
+  _requestCount: number;
 
   constructor(
     subscriber: ISubscriber<T>,
     tracer: Tracer,
     name: string,
     context?: SpanContext | Span,
+    metadata?: Object,
     ...tags: Object
   ) {
     this._tracer = tracer;
     this._subscriber = subscriber;
+    this._nextCount = 0;
+    this._requestCount = 0;
 
     let options = {};
 
     if (context) {
       options.childOf = context;
-    } else if (this._rootSpan) {
-      options.childOf = context;
     }
 
     if (tags) {
       const finalTags = {};
-      for (var tag in tags) {
-        Object.keys(tag).forEach(key => {
-          finalTags[key] = tag[key];
+      tags.forEach(tagArr => {
+        tagArr.forEach(tag => {
+          Object.keys(tag).forEach(key => {
+            finalTags[key] = tag[key];
+          });
         });
-      }
+      });
       options.tags = finalTags;
     }
 
@@ -48,15 +46,17 @@ export class SpanSubscriber<T> implements ISubscriber<T>, ISubscription {
     //   options.references = references;
     // }
     //
-    // if (startTime) {
-    //   options.startTime = startTime;
-    // }
+
+    options.startTime = Date.now() * 1000;
 
     this._span = tracer.startSpan(name, options);
     this._rootSpan = this._rootSpan || this._span;
 
-    const adapter = new BinaryCarrier();
-    tracer.inject(this._span.context(), FORMAT_BINARY, adapter);
+    tracer.inject(
+      this._span.context(),
+      FORMAT_TEXT_MAP,
+      metadata === undefined || metadata === null ? {} : metadata,
+    );
   }
 
   cleanup() {
@@ -70,7 +70,10 @@ export class SpanSubscriber<T> implements ISubscriber<T>, ISubscription {
   }
 
   request(n: number) {
-    this._span.log('request', timeInMicros());
+    this._span.log(
+      'request#' + ++this._requestCount + ': ' + n + ' items',
+      timeInMicros(),
+    );
     this._subscription && this._subscription.request(n);
   }
 
@@ -84,7 +87,7 @@ export class SpanSubscriber<T> implements ISubscriber<T>, ISubscription {
   }
 
   onNext(value: T) {
-    this._span.log('onNext', timeInMicros());
+    this._span.log('onNext#' + ++this._nextCount, timeInMicros());
     this._subscriber.onNext(value);
   }
 

@@ -2,7 +2,24 @@ import {UTF8Encoder, BufferEncoder, createBuffer} from 'rsocket-core';
 import {Flowable, Single} from 'rsocket-flowable';
 
 import {SpanSubscriber} from './SpanSubscriber';
-import {SpanContext, Tracer, Reference} from 'opentracing';
+import {createSpanSingle} from './SpanSingle';
+import {SpanContext, Tracer, FORMAT_TEXT_MAP} from 'opentracing';
+
+import {getTracing} from 'proteus-js-frames';
+
+export function deserializeTraceData(tracer, metadata) {
+  if (!tracer) {
+    return null;
+  }
+
+  const tracingData = getTracing(metadata);
+
+  if (BufferEncoder.byteLength(tracingData) <= 0) {
+    return null;
+  }
+
+  return tracer.extract(FORMAT_TEXT_MAP, bufferToMap(tracingData));
+}
 
 export function mapToBuffer(map: Object): Buffer {
   if (!map || Object.keys(map).length <= 0) {
@@ -87,24 +104,20 @@ export function bufferToMap(buffer: Buffer): Object {
 export function trace<T>(
   tracer?: Tracer,
   name?: String,
-  metadata: Object,
   ...tags: Object
 ): Object => (Flowable<T>) => Flowable<T> {
   if (tracer && name) {
     return (metadata: Object) => {
-      (flowable: Flowable<T>) => {
-        flowable.lift((subscriber: ISubscriber<T>) => {
-          if (metadata) {
-            if (!tags) {
-              tags = [];
-            }
-            Object.keys(metadata).forEach(key => {
-              const val = {};
-              val[key] = map[key];
-              tags.push(val);
-            });
-          }
-          return new SpanSubscriber(subscriber, tracer, name, null, tags);
+      return (flowable: Flowable<T>) => {
+        return flowable.lift((subscriber: ISubscriber<T>) => {
+          return new SpanSubscriber(
+            subscriber,
+            tracer,
+            name,
+            null,
+            metadata,
+            tags,
+          );
         });
       };
     };
@@ -121,8 +134,15 @@ export function traceAsChild<T>(
   if (tracer && name) {
     return (context: SpanContext) => {
       return (flowable: Flowable<T>) => {
-        flowable.lift((subscriber: ISubscriber<T>) => {
-          return new SpanSubscriber(subscriber, tracer, name, context, tags);
+        return flowable.lift((subscriber: ISubscriber<T>) => {
+          return new SpanSubscriber(
+            subscriber,
+            tracer,
+            name,
+            context,
+            null,
+            tags,
+          );
         });
       };
     };
@@ -134,23 +154,12 @@ export function traceAsChild<T>(
 export function traceSingle<T>(
   tracer?: Tracer,
   name?: String,
-  metadata?: Object,
   ...tags: Object
 ): Object => (Single<T>) => Single<T> {
   if (tracer && name) {
     return (metadata: Object) => {
-      (single: Single<T>) => {
-        if (metadata) {
-          if (!tags) {
-            tags = [];
-          }
-          Object.keys(metadata).forEach(key => {
-            const val = {};
-            val[key] = map[key];
-            tags.push(val);
-          });
-        }
-        return new SpanSingle(single, tracer, name, null, tags);
+      return (single: Single<T>) => {
+        return createSpanSingle(single, tracer, name, null, metadata, tags);
       };
     };
   } else {
@@ -165,8 +174,8 @@ export function traceSingleAsChild<T>(
 ): SpanContext => (Single<T>) => Single<T> {
   if (tracer && name) {
     return (context: SpanContext) => {
-      return (flowable: Flowable<T>) => {
-        return new SpanSingle(single, tracer, name, null, tags);
+      return (single: Flowable<T>) => {
+        return createSpanSingle(single, tracer, name, context, null, tags);
       };
     };
   } else {
