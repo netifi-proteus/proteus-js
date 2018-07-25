@@ -33,6 +33,7 @@
     "google-protobuf": "^3.6.0",
     "opentracing": "^0.14.3",
     "proteus-js-core": "^0.0.7",
+    "proteus-js-protobuf": "0.0.7",
     "proteus-js-tracing": "^0.0.1",
     "rsocket-websocket-client": "^0.0.7"
   }

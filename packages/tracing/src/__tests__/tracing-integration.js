@@ -199,16 +199,16 @@ setTimeout(() => {
   console.log('single ping, client one');
   outerPing(clientOne, clientOneId);
   console.log('fnf ping, client one');
-  //outerFnf(clientOne, clientOneId);
+  outerFnf(clientOne, clientOneId);
   console.log('stream ping, client one');
-  //outerStream(clientOne, clientOneId);
+  outerStream(clientOne, clientOneId);
 
   console.log('single ping, client two');
-  //outerPing(clientTwo, clientTwoId);
+  outerPing(clientTwo, clientTwoId);
   console.log('fnf ping, client two');
-  //outerFnf(clientTwo, clientTwoId);
+  outerFnf(clientTwo, clientTwoId);
   console.log('stream ping, client two');
-  //outerStream(clientTwo, clientTwoId);
+  outerStream(clientTwo, clientTwoId);
 }, 2500);
 
 const http = require('http');
