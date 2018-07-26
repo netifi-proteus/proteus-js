@@ -20,10 +20,14 @@
 
 import Proteus from './Proteus';
 
+import {AccessKey, AccessToken, AccessTokenInfo} from './proteus/accesskey_info_pb';
+
 import {Broker, Group, Destination, Event} from './proteus/broker_info_pb';
 
-import {Empty} from 'google-protobuf/google/protobuf/empty_pb.js';
-
+import {
+  AccessKeyInfoServiceClient,
+  AccessKeyInfoServiceServer,
+} from './proteus/accesskey_info_proteus_pb';
 import {
   BrokerInfoServiceClient,
   BrokerInfoServiceServer,
@@ -45,11 +49,15 @@ export {
   toObservable,
   BrokerInfoServiceClient,
   BrokerInfoServiceServer,
+  AccessKeyInfoServiceClient,
+  AccessKeyInfoServiceServer,
   BrokerManagementServiceClient,
   BrokerManagementServiceServer,
+  AccessKey,
+  AccessToken,
+  AccessTokenInfo,
   Broker,
   Group,
   Destination,
   Event,
-  Empty,
 };
