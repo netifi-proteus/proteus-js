@@ -6,6 +6,7 @@ var proteus_tracing = require('proteus-js-tracing');
 var rsocket_flowable = require('rsocket-flowable');
 var proteus_accesskey_info_pb = require('../proteus/accesskey_info_pb.js');
 var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js');
+var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
 
 var AccessKeyInfoServiceClient = function () {
   function AccessKeyInfoServiceClient(rs, tracer) {

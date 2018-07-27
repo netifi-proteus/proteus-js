@@ -12,6 +12,7 @@ var goog = jspb;
 var global = Function('return this')();
 
 var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js');
+var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
 goog.exportSymbol('proto.io.netifi.proteus.broker.access.AccessKey', null, global);
 goog.exportSymbol('proto.io.netifi.proteus.broker.access.AccessToken', null, global);
 goog.exportSymbol('proto.io.netifi.proteus.broker.access.AccessTokenInfo', null, global);
@@ -429,7 +430,8 @@ proto.io.netifi.proteus.broker.access.AccessTokenInfo.toObject = function(includ
     accesstokensalt: msg.getAccesstokensalt_asB64(),
     accesskeyalgo: jspb.Message.getFieldWithDefault(msg, 4, ""),
     description: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    disabled: jspb.Message.getFieldWithDefault(msg, 6, false)
+    disabled: jspb.Message.getFieldWithDefault(msg, 6, false),
+    timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -489,6 +491,11 @@ proto.io.netifi.proteus.broker.access.AccessTokenInfo.deserializeBinaryFromReade
     case 6:
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setDisabled(value);
+      break;
+    case 7:
+      var value = new google_protobuf_timestamp_pb.Timestamp;
+      reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
+      msg.setTimestamp(value);
       break;
     default:
       reader.skipField();
@@ -559,6 +566,14 @@ proto.io.netifi.proteus.broker.access.AccessTokenInfo.serializeBinaryToWriter = 
     writer.writeBool(
       6,
       f
+    );
+  }
+  f = message.getTimestamp();
+  if (f != null) {
+    writer.writeMessage(
+      7,
+      f,
+      google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
   }
 };
@@ -701,6 +716,36 @@ proto.io.netifi.proteus.broker.access.AccessTokenInfo.prototype.getDisabled = fu
 /** @param {boolean} value */
 proto.io.netifi.proteus.broker.access.AccessTokenInfo.prototype.setDisabled = function(value) {
   jspb.Message.setProto3BooleanField(this, 6, value);
+};
+
+
+/**
+ * optional google.protobuf.Timestamp timestamp = 7;
+ * @return {?proto.google.protobuf.Timestamp}
+ */
+proto.io.netifi.proteus.broker.access.AccessTokenInfo.prototype.getTimestamp = function() {
+  return /** @type{?proto.google.protobuf.Timestamp} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 7));
+};
+
+
+/** @param {?proto.google.protobuf.Timestamp|undefined} value */
+proto.io.netifi.proteus.broker.access.AccessTokenInfo.prototype.setTimestamp = function(value) {
+  jspb.Message.setWrapperField(this, 7, value);
+};
+
+
+proto.io.netifi.proteus.broker.access.AccessTokenInfo.prototype.clearTimestamp = function() {
+  this.setTimestamp(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.io.netifi.proteus.broker.access.AccessTokenInfo.prototype.hasTimestamp = function() {
+  return jspb.Message.getField(this, 7) != null;
 };
 
 
