@@ -70,13 +70,10 @@ export class SpanSubscriber<T> implements ISubscriber<T>, ISubscription {
   }
 
   request(n: number) {
-    if(!this._requestOnce){
+    if (!this._requestOnce) {
       this._requestOnce = true;
 
-      this._span.log(
-        'request issued',
-        timeInMicros(),
-      );
+      this._span.log('request issued', timeInMicros());
     }
 
     this._subscription && this._subscription.request(n);
