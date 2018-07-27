@@ -8,7 +8,7 @@ export class SpanSubscriber<T> implements ISubscriber<T>, ISubscription {
   _tracer: Tracer;
   _subscription: ISubscription;
   _nextCount: number;
-  _requestCount: number;
+  _requestOnce: boolean;
 
   constructor(
     subscriber: ISubscriber<T>,
@@ -21,7 +21,7 @@ export class SpanSubscriber<T> implements ISubscriber<T>, ISubscription {
     this._tracer = tracer;
     this._subscriber = subscriber;
     this._nextCount = 0;
-    this._requestCount = 0;
+    this._requestOnce = false;
 
     let options = {};
 
@@ -70,10 +70,15 @@ export class SpanSubscriber<T> implements ISubscriber<T>, ISubscription {
   }
 
   request(n: number) {
-    this._span.log(
-      'request#' + ++this._requestCount + ': ' + n + ' items',
-      timeInMicros(),
-    );
+    if(!this._requestOnce){
+      this._requestOnce = true;
+
+      this._span.log(
+        'request issued',
+        timeInMicros(),
+      );
+    }
+
     this._subscription && this._subscription.request(n);
   }
 
@@ -87,7 +92,6 @@ export class SpanSubscriber<T> implements ISubscriber<T>, ISubscription {
   }
 
   onNext(value: T) {
-    this._span.log('onNext#' + ++this._nextCount, timeInMicros());
     this._subscriber.onNext(value);
   }
 
