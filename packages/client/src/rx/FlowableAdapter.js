@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Subscriber, Subscribable, Unsubscribable} from 'rxjs/Rx';
+import {Subscriber, from} from 'rxjs';
 import {Subscription} from 'rsocket-types';
 import {
   Flowable,
@@ -22,7 +22,14 @@ import {
   IPartialFutureSubscriber,
   IPartialSubscriber,
 } from 'rsocket-flowable';
-import {from} from 'rxjs';
+
+interface Unsubscribable {
+  unsubscribe: () => void;
+}
+
+interface Subscribable<T> {
+  subscribe: (Subscriber<T>) => Unsubscribable;
+}
 
 export default function toObservable(
   rsocketType: Flowable<T> | Single<T>,

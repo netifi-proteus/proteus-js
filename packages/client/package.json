@@ -35,7 +35,7 @@
     "opentracing": "^0.14.3",
     "proteus-js-core": "^0.0.8",
     "proteus-js-frames": "^0.0.3",
-    "proteus-js-tracing": "^0.0.2",
+    "proteus-js-tracing": "^0.0.6",
     "rsocket-websocket-client": "^0.0.7",
     "rxjs": "^6.2.2"
   }
