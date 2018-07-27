@@ -20,7 +20,11 @@
 
 import Proteus from './Proteus';
 
-import {AccessKey, AccessToken, AccessTokenInfo} from './proteus/accesskey_info_pb';
+import {
+  AccessKey,
+  AccessToken,
+  AccessTokenInfo,
+} from './proteus/accesskey_info_pb';
 
 import {Broker, Group, Destination, Event} from './proteus/broker_info_pb';
 
