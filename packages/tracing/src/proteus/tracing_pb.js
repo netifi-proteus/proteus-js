@@ -12,6 +12,7 @@ var goog = jspb;
 var global = Function('return this')();
 
 var zipkin_proto3_zipkin_pb = require('../zipkin/proto3/zipkin_pb.js');
+goog.object.extend(proto, zipkin_proto3_zipkin_pb);
 goog.exportSymbol('proto.io.netifi.proteus.tracing.Ack', null, global);
 
 /**

@@ -12,7 +12,9 @@ var goog = jspb;
 var global = Function('return this')();
 
 var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js');
+goog.object.extend(proto, google_protobuf_empty_pb);
 var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
+goog.object.extend(proto, google_protobuf_timestamp_pb);
 goog.exportSymbol('proto.io.netifi.proteus.broker.access.AccessKey', null, global);
 goog.exportSymbol('proto.io.netifi.proteus.broker.access.AccessToken', null, global);
 goog.exportSymbol('proto.io.netifi.proteus.broker.access.AccessTokenInfo', null, global);

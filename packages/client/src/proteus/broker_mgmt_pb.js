@@ -12,7 +12,9 @@ var goog = jspb;
 var global = Function('return this')();
 
 var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js');
+goog.object.extend(proto, google_protobuf_empty_pb);
 var proteus_broker_info_pb = require('../proteus/broker_info_pb.js');
+goog.object.extend(proto, proteus_broker_info_pb);
 goog.exportSymbol('proto.io.netifi.proteus.broker.info.Ack', null, global);
 goog.exportSymbol('proto.io.netifi.proteus.broker.info.Brokers', null, global);
 

@@ -26,7 +26,7 @@
     "protoc": "protoc --proto_path=proto --js_out=import_style=commonjs,binary:src --proteus_out=src --plugin=protoc-gen-proteus=node_modules/.bin/proteus_js_protoc_plugin proto/proteus/*.proto"
   },
   "devDependencies": {
-    "proteus-js-protobuf": "0.0.8",
+    "proteus-js-protobuf": "0.0.9",
     "rxjs-compat": "^6.2.2",
     "ws": "^2.3.1"
   },
