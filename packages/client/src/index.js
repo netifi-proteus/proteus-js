@@ -22,7 +22,7 @@ import Proteus from './Proteus';
 
 import {
   AccessKey,
-  AccessToken,
+  AccessKeyParameters,
   AccessTokenInfo,
 } from './proteus/accesskey_info_pb';
 
@@ -58,7 +58,7 @@ export {
   BrokerManagementServiceClient,
   BrokerManagementServiceServer,
   AccessKey,
-  AccessToken,
+  AccessKeyParameters,
   AccessTokenInfo,
   Broker,
   Group,
