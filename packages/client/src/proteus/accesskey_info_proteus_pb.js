@@ -29,7 +29,7 @@ var AccessKeyInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
+          return proteus_accesskey_info_pb.AccessToken.deserializeBinary(payload.data);
         }).subscribe(subscriber);
       })
     );
