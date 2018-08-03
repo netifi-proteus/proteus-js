@@ -47,17 +47,18 @@ var PingPongServiceClient = function () {
   };
   PingPongServiceClient.prototype.pingFireAndForget = function pingFireAndForget(message, metadata) {
     const map = {};
-    this.pingFireAndForgetTrace(map)(new rsocket_flowable.Single(function (subscriber) {
-      subscriber.onSubscribe();
-      subscriber.onComplete();
-    })).subscribe({ onSubscribe: function onSubscribe() {}, onComplete: function onComplete() {} });
-    var dataBuf = Buffer.from(message.serializeBinary());
-    var tracingMetadata = proteus_tracing.mapToBuffer(map);
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.tracing.PingPongService', 'pingFireAndForget', tracingMetadata, metadata || Buffer.alloc(0));
-    this._rs.fireAndForget({
-      data: dataBuf,
-      metadata: metadataBuf
-    });
+    return this.pingFireAndForgetTrace(map)(new rsocket_flowable.Single(subscriber => {
+      var dataBuf = Buffer.from(message.serializeBinary());
+      var tracingMetadata = proteus_tracing.mapToBuffer(map);
+      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.tracing.PingPongService', 'pingFireAndForget', tracingMetadata, metadata || Buffer.alloc(0));
+        this._rs.requestResponse({
+          data: dataBuf,
+          metadata: metadataBuf
+        }).map(function (payload) {
+          return google_protobuf_empty_pb.Empty.deserializeBinary(payload.data);
+        }).subscribe(subscriber);
+      })
+    );
   };
   return PingPongServiceClient;
 }();
@@ -73,22 +74,7 @@ var PingPongServiceServer = function () {
     this.pingFireAndForgetTrace = proteus_tracing.traceSingleAsChild(tracer, "PingPongService.pingFireAndForget", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "server"});
   }
   PingPongServiceServer.prototype.fireAndForget = function fireAndForget(payload) {
-    if (payload.metadata == null) {
-      throw new Error('metadata is empty');
-    }
-    var method = proteus_js_frames.getMethod(payload.metadata);
-    var spanContext = proteus_tracing.deserializeTraceData(this._tracer, payload.metadata);
-    switch (method) {
-      case 'pingFireAndForget':
-        this.pingFireAndForgetTrace(spanContext)(new rsocket_flowable.Single(function (subscriber) {
-          subscriber.onSubscribe();
-          subscriber.onComplete();
-          })).subscribe({ onSubscribe: function onSubscribe() {}, onComplete: function onComplete() {} });
-        this._service.pingFireAndForget(proteus_ping$pong_pb.Ping.deserializeBinary(payload.data), payload.metadata)
-        break;
-      default:
-        throw new Error('unknown method');
-    }
+    throw new Error('fireAndForget() is not implemented');
   };
   PingPongServiceServer.prototype.requestResponse = function requestResponse(payload) {
     try {
@@ -102,6 +88,17 @@ var PingPongServiceServer = function () {
           return this.pingTrace(spanContext)(
             this._service
             .ping(proteus_ping$pong_pb.Ping.deserializeBinary(payload.data), payload.metadata)
+            .map(function (message) {
+              return {
+                data: Buffer.from(message.serializeBinary()),
+                metadata: Buffer.alloc(0)
+              }
+            })
+          );
+        case 'pingFireAndForget':
+          return this.pingFireAndForgetTrace(spanContext)(
+            this._service
+            .pingFireAndForget(proteus_ping$pong_pb.Ping.deserializeBinary(payload.data), payload.metadata)
             .map(function (message) {
               return {
                 data: Buffer.from(message.serializeBinary()),

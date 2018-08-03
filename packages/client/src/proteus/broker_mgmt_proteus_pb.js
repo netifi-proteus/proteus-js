@@ -26,17 +26,18 @@ var BrokerManagementServiceClient = function () {
   // Shutdowns down a broker process
   BrokerManagementServiceClient.prototype.shutdown = function shutdown(message, metadata) {
     const map = {};
-    this.shutdownTrace(map)(new rsocket_flowable.Single(function (subscriber) {
-      subscriber.onSubscribe();
-      subscriber.onComplete();
-    })).subscribe({ onSubscribe: function onSubscribe() {}, onComplete: function onComplete() {} });
-    var dataBuf = Buffer.from(message.serializeBinary());
-    var tracingMetadata = proteus_tracing.mapToBuffer(map);
-    var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'shutdown', tracingMetadata, metadata || Buffer.alloc(0));
-    this._rs.fireAndForget({
-      data: dataBuf,
-      metadata: metadataBuf
-    });
+    return this.shutdownTrace(map)(new rsocket_flowable.Single(subscriber => {
+      var dataBuf = Buffer.from(message.serializeBinary());
+      var tracingMetadata = proteus_tracing.mapToBuffer(map);
+      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'shutdown', tracingMetadata, metadata || Buffer.alloc(0));
+        this._rs.requestResponse({
+          data: dataBuf,
+          metadata: metadataBuf
+        }).map(function (payload) {
+          return google_protobuf_empty_pb.Empty.deserializeBinary(payload.data);
+        }).subscribe(subscriber);
+      })
+    );
   };
   // Broker leaves the cluster, but stays running
   BrokerManagementServiceClient.prototype.leave = function leave(message, metadata) {
@@ -233,22 +234,7 @@ var BrokerManagementServiceServer = function () {
     this.closeAllTrace = proteus_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeAll", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
   }
   BrokerManagementServiceServer.prototype.fireAndForget = function fireAndForget(payload) {
-    if (payload.metadata == null) {
-      throw new Error('metadata is empty');
-    }
-    var method = proteus_js_frames.getMethod(payload.metadata);
-    var spanContext = proteus_tracing.deserializeTraceData(this._tracer, payload.metadata);
-    switch (method) {
-      case 'shutdown':
-        this.shutdownTrace(spanContext)(new rsocket_flowable.Single(function (subscriber) {
-          subscriber.onSubscribe();
-          subscriber.onComplete();
-          })).subscribe({ onSubscribe: function onSubscribe() {}, onComplete: function onComplete() {} });
-        this._service.shutdown(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata)
-        break;
-      default:
-        throw new Error('unknown method');
-    }
+    throw new Error('fireAndForget() is not implemented');
   };
   BrokerManagementServiceServer.prototype.requestResponse = function requestResponse(payload) {
     try {
@@ -258,6 +244,17 @@ var BrokerManagementServiceServer = function () {
       var method = proteus_js_frames.getMethod(payload.metadata);
       var spanContext = proteus_tracing.deserializeTraceData(this._tracer, payload.metadata);
       switch (method) {
+        case 'shutdown':
+          return this.shutdownTrace(spanContext)(
+            this._service
+            .shutdown(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata)
+            .map(function (message) {
+              return {
+                data: Buffer.from(message.serializeBinary()),
+                metadata: Buffer.alloc(0)
+              }
+            })
+          );
         case 'leave':
           return this.leaveTrace(spanContext)(
             this._service

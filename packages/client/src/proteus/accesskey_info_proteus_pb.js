@@ -12,19 +12,19 @@ var AccessKeyInfoServiceClient = function () {
   function AccessKeyInfoServiceClient(rs, tracer) {
     this._rs = rs;
     this._tracer = tracer;
-    this.addAccessKeyTrace = proteus_tracing.traceSingle(tracer, "AccessKeyInfoService.addAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
+    this.createAccessKeyTrace = proteus_tracing.traceSingle(tracer, "AccessKeyInfoService.createAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
     this.removeAccessKeyTrace = proteus_tracing.traceSingle(tracer, "AccessKeyInfoService.removeAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
     this.disableAccessKeyTrace = proteus_tracing.traceSingle(tracer, "AccessKeyInfoService.disableAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
     this.enableAccessKeyTrace = proteus_tracing.traceSingle(tracer, "AccessKeyInfoService.enableAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
     this.getAccessKeyTrace = proteus_tracing.traceSingle(tracer, "AccessKeyInfoService.getAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
     this.getAccessKeysTrace = proteus_tracing.trace(tracer, "AccessKeyInfoService.getAccessKeys", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
   }
-  AccessKeyInfoServiceClient.prototype.addAccessKey = function addAccessKey(message, metadata) {
+  AccessKeyInfoServiceClient.prototype.createAccessKey = function createAccessKey(message, metadata) {
     const map = {};
-    return this.addAccessKeyTrace(map)(new rsocket_flowable.Single(subscriber => {
+    return this.createAccessKeyTrace(map)(new rsocket_flowable.Single(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
       var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'AddAccessKey', tracingMetadata, metadata || Buffer.alloc(0));
+      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'CreateAccessKey', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestResponse({
           data: dataBuf,
           metadata: metadataBuf
@@ -118,7 +118,7 @@ var AccessKeyInfoServiceServer = function () {
   function AccessKeyInfoServiceServer(service, tracer) {
     this._service = service;
     this._tracer = tracer;
-    this.addAccessKeyTrace = proteus_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.addAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
+    this.createAccessKeyTrace = proteus_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.createAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
     this.removeAccessKeyTrace = proteus_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.removeAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
     this.disableAccessKeyTrace = proteus_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.disableAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
     this.enableAccessKeyTrace = proteus_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.enableAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
@@ -136,10 +136,10 @@ var AccessKeyInfoServiceServer = function () {
       var method = proteus_js_frames.getMethod(payload.metadata);
       var spanContext = proteus_tracing.deserializeTraceData(this._tracer, payload.metadata);
       switch (method) {
-        case 'AddAccessKey':
-          return this.addAccessKeyTrace(spanContext)(
+        case 'CreateAccessKey':
+          return this.createAccessKeyTrace(spanContext)(
             this._service
-            .addAccessKey(proteus_accesskey_info_pb.AccessToken.deserializeBinary(payload.data), payload.metadata)
+            .createAccessKey(proteus_accesskey_info_pb.AccessKeyParameters.deserializeBinary(payload.data), payload.metadata)
             .map(function (message) {
               return {
                 data: Buffer.from(message.serializeBinary()),

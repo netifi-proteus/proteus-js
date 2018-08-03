@@ -1,7 +1,7 @@
 {
   "name": "proteus-js-frames",
   "repository": "https://github.com/netifi-proteus/proteus-js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Proteus JavaScript Frames Definitions",
   "contributors": [
     "Ryland Degnan <ryland@netifi.com>",
@@ -25,6 +25,6 @@
     "prepublish": "node ../../resources/prepublish.js"
   },
   "dependencies": {
-    "rsocket-core": "^0.0.7"
+    "rsocket-core": "^0.0.8"
   }
 }

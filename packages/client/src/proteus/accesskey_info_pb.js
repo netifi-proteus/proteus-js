@@ -12,11 +12,9 @@ var goog = jspb;
 var global = Function('return this')();
 
 var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js');
-goog.object.extend(proto, google_protobuf_empty_pb);
 var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
-goog.object.extend(proto, google_protobuf_timestamp_pb);
 goog.exportSymbol('proto.io.netifi.proteus.broker.access.AccessKey', null, global);
-goog.exportSymbol('proto.io.netifi.proteus.broker.access.AccessToken', null, global);
+goog.exportSymbol('proto.io.netifi.proteus.broker.access.AccessKeyParameters', null, global);
 goog.exportSymbol('proto.io.netifi.proteus.broker.access.AccessTokenInfo', null, global);
 
 /**
@@ -171,12 +169,12 @@ proto.io.netifi.proteus.broker.access.AccessKey.prototype.setKey = function(valu
  * @extends {jspb.Message}
  * @constructor
  */
-proto.io.netifi.proteus.broker.access.AccessToken = function(opt_data) {
+proto.io.netifi.proteus.broker.access.AccessKeyParameters = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.io.netifi.proteus.broker.access.AccessToken, jspb.Message);
+goog.inherits(proto.io.netifi.proteus.broker.access.AccessKeyParameters, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.io.netifi.proteus.broker.access.AccessToken.displayName = 'proto.io.netifi.proteus.broker.access.AccessToken';
+  proto.io.netifi.proteus.broker.access.AccessKeyParameters.displayName = 'proto.io.netifi.proteus.broker.access.AccessKeyParameters';
 }
 
 
@@ -191,8 +189,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.io.netifi.proteus.broker.access.AccessToken.prototype.toObject = function(opt_includeInstance) {
-  return proto.io.netifi.proteus.broker.access.AccessToken.toObject(opt_includeInstance, this);
+proto.io.netifi.proteus.broker.access.AccessKeyParameters.prototype.toObject = function(opt_includeInstance) {
+  return proto.io.netifi.proteus.broker.access.AccessKeyParameters.toObject(opt_includeInstance, this);
 };
 
 
@@ -201,15 +199,13 @@ proto.io.netifi.proteus.broker.access.AccessToken.prototype.toObject = function(
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.io.netifi.proteus.broker.access.AccessToken} msg The msg instance to transform.
+ * @param {!proto.io.netifi.proteus.broker.access.AccessKeyParameters} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.io.netifi.proteus.broker.access.AccessToken.toObject = function(includeInstance, msg) {
+proto.io.netifi.proteus.broker.access.AccessKeyParameters.toObject = function(includeInstance, msg) {
   var f, obj = {
-    key: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    accesstoken: msg.getAccesstoken_asB64(),
-    description: jspb.Message.getFieldWithDefault(msg, 3, "")
+    description: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -223,23 +219,23 @@ proto.io.netifi.proteus.broker.access.AccessToken.toObject = function(includeIns
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.io.netifi.proteus.broker.access.AccessToken}
+ * @return {!proto.io.netifi.proteus.broker.access.AccessKeyParameters}
  */
-proto.io.netifi.proteus.broker.access.AccessToken.deserializeBinary = function(bytes) {
+proto.io.netifi.proteus.broker.access.AccessKeyParameters.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.io.netifi.proteus.broker.access.AccessToken;
-  return proto.io.netifi.proteus.broker.access.AccessToken.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.io.netifi.proteus.broker.access.AccessKeyParameters;
+  return proto.io.netifi.proteus.broker.access.AccessKeyParameters.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.io.netifi.proteus.broker.access.AccessToken} msg The message object to deserialize into.
+ * @param {!proto.io.netifi.proteus.broker.access.AccessKeyParameters} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.io.netifi.proteus.broker.access.AccessToken}
+ * @return {!proto.io.netifi.proteus.broker.access.AccessKeyParameters}
  */
-proto.io.netifi.proteus.broker.access.AccessToken.deserializeBinaryFromReader = function(msg, reader) {
+proto.io.netifi.proteus.broker.access.AccessKeyParameters.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -247,14 +243,6 @@ proto.io.netifi.proteus.broker.access.AccessToken.deserializeBinaryFromReader = 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setKey(value);
-      break;
-    case 2:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.setAccesstoken(value);
-      break;
-    case 3:
       var value = /** @type {string} */ (reader.readString());
       msg.setDescription(value);
       break;
@@ -271,9 +259,9 @@ proto.io.netifi.proteus.broker.access.AccessToken.deserializeBinaryFromReader = 
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.io.netifi.proteus.broker.access.AccessToken.prototype.serializeBinary = function() {
+proto.io.netifi.proteus.broker.access.AccessKeyParameters.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.io.netifi.proteus.broker.access.AccessToken.serializeBinaryToWriter(this, writer);
+  proto.io.netifi.proteus.broker.access.AccessKeyParameters.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -281,102 +269,34 @@ proto.io.netifi.proteus.broker.access.AccessToken.prototype.serializeBinary = fu
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.io.netifi.proteus.broker.access.AccessToken} message
+ * @param {!proto.io.netifi.proteus.broker.access.AccessKeyParameters} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.io.netifi.proteus.broker.access.AccessToken.serializeBinaryToWriter = function(message, writer) {
+proto.io.netifi.proteus.broker.access.AccessKeyParameters.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getKey();
-  if (f !== 0) {
-    writer.writeInt64(
+  f = message.getDescription();
+  if (f.length > 0) {
+    writer.writeString(
       1,
       f
     );
   }
-  f = message.getAccesstoken_asU8();
-  if (f.length > 0) {
-    writer.writeBytes(
-      2,
-      f
-    );
-  }
-  f = message.getDescription();
-  if (f.length > 0) {
-    writer.writeString(
-      3,
-      f
-    );
-  }
 };
 
 
 /**
- * optional int64 key = 1;
- * @return {number}
- */
-proto.io.netifi.proteus.broker.access.AccessToken.prototype.getKey = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
-};
-
-
-/** @param {number} value */
-proto.io.netifi.proteus.broker.access.AccessToken.prototype.setKey = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
-};
-
-
-/**
- * optional bytes accessToken = 2;
- * @return {!(string|Uint8Array)}
- */
-proto.io.netifi.proteus.broker.access.AccessToken.prototype.getAccesstoken = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * optional bytes accessToken = 2;
- * This is a type-conversion wrapper around `getAccesstoken()`
+ * optional string description = 1;
  * @return {string}
  */
-proto.io.netifi.proteus.broker.access.AccessToken.prototype.getAccesstoken_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getAccesstoken()));
-};
-
-
-/**
- * optional bytes accessToken = 2;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getAccesstoken()`
- * @return {!Uint8Array}
- */
-proto.io.netifi.proteus.broker.access.AccessToken.prototype.getAccesstoken_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getAccesstoken()));
-};
-
-
-/** @param {!(string|Uint8Array)} value */
-proto.io.netifi.proteus.broker.access.AccessToken.prototype.setAccesstoken = function(value) {
-  jspb.Message.setProto3BytesField(this, 2, value);
-};
-
-
-/**
- * optional string description = 3;
- * @return {string}
- */
-proto.io.netifi.proteus.broker.access.AccessToken.prototype.getDescription = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+proto.io.netifi.proteus.broker.access.AccessKeyParameters.prototype.getDescription = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /** @param {string} value */
-proto.io.netifi.proteus.broker.access.AccessToken.prototype.setDescription = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+proto.io.netifi.proteus.broker.access.AccessKeyParameters.prototype.setDescription = function(value) {
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
