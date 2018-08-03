@@ -1,7 +1,7 @@
 {
   "name": "proteus-js-tracing",
   "repository": "https://github.com/netifi-proteus/proteus-js",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Proteus JavaScript Tracing Support",
   "contributors": [
     "Kyle Bahr <kyle@netifi.com>"
