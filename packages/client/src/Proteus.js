@@ -45,6 +45,7 @@ export type ProteusConfig = {|
   |},
   transport: {|
     url?: string,
+    wsCreator?: (url: string) => WebSocket,
     //encoder?: Encoders<*>, *** Right now only BufferEncoder is supported for WebSocket so do not allow passing it in if using a URL ***
     connection?: DuplexConnection,
   |},
@@ -238,6 +239,7 @@ export default class Proteus {
         : new RSocketWebSocketClient(
             {
               url: config.transport.url ? config.transport.url : 'ws://',
+              wsCreator: config.transport.wsCreator,
             },
             BufferEncoders,
           );
