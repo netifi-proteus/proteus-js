@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "http": "^0.0.0",
-    "rsocket-rpc-protobuf": "^0.0.2",
+    "rsocket-rpc-protobuf": "^0.0.3",
     "rsocket-tcp-client": "^0.0.9",
     "rxjs-compat": "^6.2.2",
     "ws": "^2.3.1"
@@ -35,11 +35,9 @@
   "dependencies": {
     "google-protobuf": "^3.6.0",
     "opentracing": "^0.14.3",
-    "rsocket-core": "^0.0.9",
-    "rsocket-flowable": "^0.0.9",
-    "rsocket-rpc-core": "^0.0.1",
-    "rsocket-rpc-frames": "^0.0.1",
-    "rsocket-rpc-tracing": "^0.0.1",
+    "rsocket-rpc-core": "^0.0.2",
+    "rsocket-rpc-frames": "^0.0.2",
+    "rsocket-rpc-tracing": "^0.0.2",
     "rsocket-websocket-client": "^0.0.9",
     "rxjs": "^6.2.2"
   }
