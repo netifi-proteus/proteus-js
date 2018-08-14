@@ -1,6 +1,6 @@
 # Netifi Proteus JavaScript
 
-<a href='https://travis-ci.org/netifi-proteus/proteus-js'><img src='https://travis-ci.org/netifi-proteus/proteus-js.svg?branch=master'></a>
+[![Join the chat at https://gitter.im/netifi/general](https://badges.gitter.im/netifi/general.svg)](https://gitter.im/netifi/general) <a href='https://travis-ci.org/netifi-proteus/proteus-js'><img src='https://travis-ci.org/netifi-proteus/proteus-js.svg?branch=master'></a>
 
 ## Documentation
 
