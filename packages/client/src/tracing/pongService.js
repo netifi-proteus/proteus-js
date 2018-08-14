@@ -1,7 +1,7 @@
 'use strict';
 
 import {http} from 'http';
-import {Ping, Pong, Empty} from '../proteus/ping-pong_pb';
+import {Ping, Pong, Empty} from '../proteus/testing/ping-pong_pb';
 import {Single, Flowable} from 'rsocket-flowable';
 
 export class PongService {

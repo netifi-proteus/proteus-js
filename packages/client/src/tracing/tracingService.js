@@ -2,7 +2,7 @@
 
 import http from 'http';
 import {Span} from '../zipkin/proto3/zipkin_pb';
-import {Ack} from '../proteus/tracing_pb';
+import {Ack} from '../proteus/testing/tracing_pb';
 import {Single} from 'rsocket-flowable';
 
 export class ZipkinTracingService {

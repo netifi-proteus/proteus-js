@@ -3040,13 +3040,6 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-proteus-js-protobuf@0.0.10, proteus-js-protobuf@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/proteus-js-protobuf/-/proteus-js-protobuf-0.0.10.tgz#cbab70ab39b8eb2915cf0f0557a16f3d18551b5e"
-  dependencies:
-    cmake-js "^3.6.2"
-    prebuild-install "^4.0.0"
-
 pseudomap@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
@@ -3331,6 +3324,15 @@ rimraf@2, rimraf@^2.2.8, rimraf@^2.6.1:
   dependencies:
     glob "^7.0.5"
 
+rsocket-core@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/rsocket-core/-/rsocket-core-0.0.7.tgz#5d80749ca434d2a6f76ee012392573b5f77c1a7e"
+  dependencies:
+    buffer "^5.0.6"
+    fbjs "^0.8.12"
+    rsocket-flowable "^0.0.7"
+    rsocket-types "^0.0.7"
+
 rsocket-core@^0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/rsocket-core/-/rsocket-core-0.0.8.tgz#12835b1770f9d021a6889e6998969dbfc13e3840"
@@ -3340,11 +3342,50 @@ rsocket-core@^0.0.8:
     rsocket-flowable "^0.0.8"
     rsocket-types "^0.0.8"
 
+rsocket-flowable@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/rsocket-flowable/-/rsocket-flowable-0.0.7.tgz#3eff179dac4986f5e065b98ac1ee1f35865051f4"
+  dependencies:
+    fbjs "^0.8.12"
+
 rsocket-flowable@^0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/rsocket-flowable/-/rsocket-flowable-0.0.8.tgz#20276e9a26e3c12dc84744c88f92fad9d01c8d46"
   dependencies:
     fbjs "^0.8.12"
+
+rsocket-rpc-core@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-core/-/rsocket-rpc-core-0.0.1.tgz#7adeddfc6d834725dbf00595ccf2f2ad6fc4d343"
+  dependencies:
+    rsocket-rpc-frames "^0.0.1"
+    rsocket-types "^0.0.7"
+
+rsocket-rpc-frames@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-frames/-/rsocket-rpc-frames-0.0.1.tgz#31761e49ed47327566c7eba70d3a5184f2ff41b3"
+  dependencies:
+    rsocket-core "^0.0.7"
+
+rsocket-rpc-protobuf@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-protobuf/-/rsocket-rpc-protobuf-0.0.2.tgz#5251d5aa0544720c2cff6495285040dcd4d1f061"
+  dependencies:
+    cmake-js "^3.6.2"
+    prebuild-install "^4.0.0"
+
+rsocket-rpc-tracing@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-tracing/-/rsocket-rpc-tracing-0.0.1.tgz#8d4770ff882eab5065249366709f54544ec30ce5"
+  dependencies:
+    lodash.clone "^4.5.0"
+    long "^4.0.0"
+    opentracing "^0.14.3"
+    rsocket-core "^0.0.7"
+    rsocket-flowable "^0.0.7"
+    rsocket-rpc-core "^0.0.1"
+    rsocket-rpc-frames "^0.0.1"
+    rsocket-types "^0.0.7"
 
 rsocket-tcp-client@^0.0.8:
   version "0.0.8"
@@ -3353,6 +3394,14 @@ rsocket-tcp-client@^0.0.8:
     fbjs "^0.8.12"
     rsocket-core "^0.0.8"
     rsocket-flowable "^0.0.8"
+
+rsocket-types@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/rsocket-types/-/rsocket-types-0.0.7.tgz#c1f1db14900cec9c4f6125fb49e382ee45541492"
+  dependencies:
+    buffer "^5.0.6"
+    fbjs "^0.8.12"
+    rsocket-flowable "^0.0.7"
 
 rsocket-types@^0.0.8:
   version "0.0.8"

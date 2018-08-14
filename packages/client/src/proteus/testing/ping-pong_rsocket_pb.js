@@ -1,31 +1,31 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 'use strict';
-var proteus_js_frames = require('proteus-js-frames');
-var proteus_tracing = require('proteus-js-tracing');
+var rsocket_rpc_frames = require('rsocket-rpc-frames');
+var rsocket_rpc_tracing = require('rsocket-rpc-tracing');
 var rsocket_flowable = require('rsocket-flowable');
-var proteus_ping$pong_pb = require('../proteus/ping-pong_pb.js');
+var proteus_testing_ping$pong_pb = require('../../proteus/testing/ping-pong_pb.js');
 var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js');
 
 var PingPongServiceClient = function () {
   function PingPongServiceClient(rs, tracer) {
     this._rs = rs;
     this._tracer = tracer;
-    this.pingTrace = proteus_tracing.traceSingle(tracer, "PingPongService.ping", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "client"});
-    this.pingStreamTrace = proteus_tracing.trace(tracer, "PingPongService.pingStream", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "client"});
-    this.pingFireAndForgetTrace = proteus_tracing.traceSingle(tracer, "PingPongService.pingFireAndForget", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "client"});
+    this.pingTrace = rsocket_rpc_tracing.traceSingle(tracer, "PingPongService.ping", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "client"});
+    this.pingStreamTrace = rsocket_rpc_tracing.trace(tracer, "PingPongService.pingStream", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "client"});
+    this.pingFireAndForgetTrace = rsocket_rpc_tracing.traceSingle(tracer, "PingPongService.pingFireAndForget", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "client"});
   }
   PingPongServiceClient.prototype.ping = function ping(message, metadata) {
     const map = {};
     return this.pingTrace(map)(new rsocket_flowable.Single(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
-      var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.tracing.PingPongService', 'ping', tracingMetadata, metadata || Buffer.alloc(0));
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.tracing.PingPongService', 'ping', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestResponse({
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_ping$pong_pb.Pong.deserializeBinary(payload.data);
+          return proteus_testing_ping$pong_pb.Pong.deserializeBinary(payload.data);
         }).subscribe(subscriber);
       })
     );
@@ -34,13 +34,13 @@ var PingPongServiceClient = function () {
     const map = {};
     return this.pingStreamTrace(map)(new rsocket_flowable.Flowable(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
-      var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.tracing.PingPongService', 'pingStream', tracingMetadata, metadata || Buffer.alloc(0));
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.tracing.PingPongService', 'pingStream', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestStream({
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_ping$pong_pb.Pong.deserializeBinary(payload.data);
+          return proteus_testing_ping$pong_pb.Pong.deserializeBinary(payload.data);
         }).subscribe(subscriber);
       })
     );
@@ -49,8 +49,8 @@ var PingPongServiceClient = function () {
     const map = {};
     return this.pingFireAndForgetTrace(map)(new rsocket_flowable.Single(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
-      var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.tracing.PingPongService', 'pingFireAndForget', tracingMetadata, metadata || Buffer.alloc(0));
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.tracing.PingPongService', 'pingFireAndForget', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestResponse({
           data: dataBuf,
           metadata: metadataBuf
@@ -69,9 +69,9 @@ var PingPongServiceServer = function () {
   function PingPongServiceServer(service, tracer) {
     this._service = service;
     this._tracer = tracer;
-    this.pingTrace = proteus_tracing.traceSingleAsChild(tracer, "PingPongService.ping", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "server"});
-    this.pingStreamTrace = proteus_tracing.traceAsChild(tracer, "PingPongService.pingStream", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "server"});
-    this.pingFireAndForgetTrace = proteus_tracing.traceSingleAsChild(tracer, "PingPongService.pingFireAndForget", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "server"});
+    this.pingTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "PingPongService.ping", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "server"});
+    this.pingStreamTrace = rsocket_rpc_tracing.traceAsChild(tracer, "PingPongService.pingStream", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "server"});
+    this.pingFireAndForgetTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "PingPongService.pingFireAndForget", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "server"});
   }
   PingPongServiceServer.prototype.fireAndForget = function fireAndForget(payload) {
     throw new Error('fireAndForget() is not implemented');
@@ -81,13 +81,13 @@ var PingPongServiceServer = function () {
       if (payload.metadata == null) {
         return rsocket_flowable.Single.error(new Error('metadata is empty'));
       }
-      var method = proteus_js_frames.getMethod(payload.metadata);
-      var spanContext = proteus_tracing.deserializeTraceData(this._tracer, payload.metadata);
+      var method = rsocket_rpc_frames.getMethod(payload.metadata);
+      var spanContext = rsocket_rpc_tracing.deserializeTraceData(this._tracer, payload.metadata);
       switch (method) {
         case 'ping':
           return this.pingTrace(spanContext)(
             this._service
-            .ping(proteus_ping$pong_pb.Ping.deserializeBinary(payload.data), payload.metadata)
+            .ping(proteus_testing_ping$pong_pb.Ping.deserializeBinary(payload.data), payload.metadata)
             .map(function (message) {
               return {
                 data: Buffer.from(message.serializeBinary()),
@@ -98,7 +98,7 @@ var PingPongServiceServer = function () {
         case 'pingFireAndForget':
           return this.pingFireAndForgetTrace(spanContext)(
             this._service
-            .pingFireAndForget(proteus_ping$pong_pb.Ping.deserializeBinary(payload.data), payload.metadata)
+            .pingFireAndForget(proteus_testing_ping$pong_pb.Ping.deserializeBinary(payload.data), payload.metadata)
             .map(function (message) {
               return {
                 data: Buffer.from(message.serializeBinary()),
@@ -118,13 +118,13 @@ var PingPongServiceServer = function () {
       if (payload.metadata == null) {
         return rsocket_flowable.Flowable.error(new Error('metadata is empty'));
       }
-      var method = proteus_js_frames.getMethod(payload.metadata);
-      var spanContext = proteus_tracing.deserializeTraceData(this._tracer, payload.metadata);
+      var method = rsocket_rpc_frames.getMethod(payload.metadata);
+      var spanContext = rsocket_rpc_tracing.deserializeTraceData(this._tracer, payload.metadata);
       switch (method) {
         case 'pingStream':
           return this.pingStreamTrace(spanContext)(
             this._service
-              .pingStream(proteus_ping$pong_pb.Ping.deserializeBinary(payload.data), payload.metadata)
+              .pingStream(proteus_testing_ping$pong_pb.Ping.deserializeBinary(payload.data), payload.metadata)
               .map(function (message) {
                 return {
                   data: Buffer.from(message.serializeBinary()),

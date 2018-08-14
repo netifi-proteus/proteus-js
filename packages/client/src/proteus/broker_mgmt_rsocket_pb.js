@@ -1,8 +1,8 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 'use strict';
-var proteus_js_frames = require('proteus-js-frames');
-var proteus_tracing = require('proteus-js-tracing');
+var rsocket_rpc_frames = require('rsocket-rpc-frames');
+var rsocket_rpc_tracing = require('rsocket-rpc-tracing');
 var rsocket_flowable = require('rsocket-flowable');
 var proteus_broker_mgmt_pb = require('../proteus/broker_mgmt_pb.js');
 var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js');
@@ -12,24 +12,24 @@ var BrokerManagementServiceClient = function () {
   function BrokerManagementServiceClient(rs, tracer) {
     this._rs = rs;
     this._tracer = tracer;
-    this.shutdownTrace = proteus_tracing.traceSingle(tracer, "BrokerManagementService.shutdown", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.leaveTrace = proteus_tracing.traceSingle(tracer, "BrokerManagementService.leave", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.rejoinTrace = proteus_tracing.traceSingle(tracer, "BrokerManagementService.rejoin", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.joinTrace = proteus_tracing.traceSingle(tracer, "BrokerManagementService.join", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.closeDestinationTrace = proteus_tracing.trace(tracer, "BrokerManagementService.closeDestination", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.closeGroupTrace = proteus_tracing.trace(tracer, "BrokerManagementService.closeGroup", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.closeBrokerTrace = proteus_tracing.trace(tracer, "BrokerManagementService.closeBroker", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.closeDestinationsTrace = proteus_tracing.traceSingle(tracer, "BrokerManagementService.closeDestinations", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.closeBrokersTrace = proteus_tracing.traceSingle(tracer, "BrokerManagementService.closeBrokers", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.closeAllTrace = proteus_tracing.traceSingle(tracer, "BrokerManagementService.closeAll", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
+    this.shutdownTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.shutdown", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
+    this.leaveTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.leave", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
+    this.rejoinTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.rejoin", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
+    this.joinTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.join", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
+    this.closeDestinationTrace = rsocket_rpc_tracing.trace(tracer, "BrokerManagementService.closeDestination", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
+    this.closeGroupTrace = rsocket_rpc_tracing.trace(tracer, "BrokerManagementService.closeGroup", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
+    this.closeBrokerTrace = rsocket_rpc_tracing.trace(tracer, "BrokerManagementService.closeBroker", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
+    this.closeDestinationsTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.closeDestinations", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
+    this.closeBrokersTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.closeBrokers", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
+    this.closeAllTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.closeAll", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
   }
   // Shutdowns down a broker process
   BrokerManagementServiceClient.prototype.shutdown = function shutdown(message, metadata) {
     const map = {};
     return this.shutdownTrace(map)(new rsocket_flowable.Single(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
-      var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'shutdown', tracingMetadata, metadata || Buffer.alloc(0));
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'shutdown', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestResponse({
           data: dataBuf,
           metadata: metadataBuf
@@ -44,8 +44,8 @@ var BrokerManagementServiceClient = function () {
     const map = {};
     return this.leaveTrace(map)(new rsocket_flowable.Single(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
-      var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'leave', tracingMetadata, metadata || Buffer.alloc(0));
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'leave', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestResponse({
           data: dataBuf,
           metadata: metadataBuf
@@ -60,8 +60,8 @@ var BrokerManagementServiceClient = function () {
     const map = {};
     return this.rejoinTrace(map)(new rsocket_flowable.Single(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
-      var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'rejoin', tracingMetadata, metadata || Buffer.alloc(0));
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'rejoin', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestResponse({
           data: dataBuf,
           metadata: metadataBuf
@@ -76,8 +76,8 @@ var BrokerManagementServiceClient = function () {
     const map = {};
     return this.joinTrace(map)(new rsocket_flowable.Single(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
-      var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'join', tracingMetadata, metadata || Buffer.alloc(0));
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'join', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestResponse({
           data: dataBuf,
           metadata: metadataBuf
@@ -93,13 +93,13 @@ var BrokerManagementServiceClient = function () {
     const map = {};
     return this.closeDestinationTrace(map)(new rsocket_flowable.Flowable(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
-      var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeDestination', tracingMetadata, metadata || Buffer.alloc(0));
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeDestination', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestChannel(messages.map(function (message) {
           var dataBuf = Buffer.from(message.serializeBinary());
           if (!once) {
             once = true;
-            var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeDestination', Buffer.alloc(0), metadata || Buffer.alloc(0));
+            var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeDestination', Buffer.alloc(0), metadata || Buffer.alloc(0));
           } else {
             metadataBuf = Buffer.alloc(0);
           }
@@ -119,13 +119,13 @@ var BrokerManagementServiceClient = function () {
     const map = {};
     return this.closeGroupTrace(map)(new rsocket_flowable.Flowable(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
-      var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeGroup', tracingMetadata, metadata || Buffer.alloc(0));
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeGroup', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestChannel(messages.map(function (message) {
           var dataBuf = Buffer.from(message.serializeBinary());
           if (!once) {
             once = true;
-            var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeGroup', Buffer.alloc(0), metadata || Buffer.alloc(0));
+            var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeGroup', Buffer.alloc(0), metadata || Buffer.alloc(0));
           } else {
             metadataBuf = Buffer.alloc(0);
           }
@@ -145,13 +145,13 @@ var BrokerManagementServiceClient = function () {
     const map = {};
     return this.closeBrokerTrace(map)(new rsocket_flowable.Flowable(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
-      var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeBroker', tracingMetadata, metadata || Buffer.alloc(0));
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeBroker', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestChannel(messages.map(function (message) {
           var dataBuf = Buffer.from(message.serializeBinary());
           if (!once) {
             once = true;
-            var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeBroker', Buffer.alloc(0), metadata || Buffer.alloc(0));
+            var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeBroker', Buffer.alloc(0), metadata || Buffer.alloc(0));
           } else {
             metadataBuf = Buffer.alloc(0);
           }
@@ -170,8 +170,8 @@ var BrokerManagementServiceClient = function () {
     const map = {};
     return this.closeDestinationsTrace(map)(new rsocket_flowable.Single(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
-      var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeDestinations', tracingMetadata, metadata || Buffer.alloc(0));
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeDestinations', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestResponse({
           data: dataBuf,
           metadata: metadataBuf
@@ -186,8 +186,8 @@ var BrokerManagementServiceClient = function () {
     const map = {};
     return this.closeBrokersTrace(map)(new rsocket_flowable.Single(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
-      var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeBrokers', tracingMetadata, metadata || Buffer.alloc(0));
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeBrokers', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestResponse({
           data: dataBuf,
           metadata: metadataBuf
@@ -202,8 +202,8 @@ var BrokerManagementServiceClient = function () {
     const map = {};
     return this.closeAllTrace(map)(new rsocket_flowable.Single(subscriber => {
       var dataBuf = Buffer.from(message.serializeBinary());
-      var tracingMetadata = proteus_tracing.mapToBuffer(map);
-      var metadataBuf = proteus_js_frames.encodeProteusMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeAll', tracingMetadata, metadata || Buffer.alloc(0));
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeAll', tracingMetadata, metadata || Buffer.alloc(0));
         this._rs.requestResponse({
           data: dataBuf,
           metadata: metadataBuf
@@ -222,16 +222,16 @@ var BrokerManagementServiceServer = function () {
   function BrokerManagementServiceServer(service, tracer) {
     this._service = service;
     this._tracer = tracer;
-    this.shutdownTrace = proteus_tracing.traceSingleAsChild(tracer, "BrokerManagementService.shutdown", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.leaveTrace = proteus_tracing.traceSingleAsChild(tracer, "BrokerManagementService.leave", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.rejoinTrace = proteus_tracing.traceSingleAsChild(tracer, "BrokerManagementService.rejoin", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.joinTrace = proteus_tracing.traceSingleAsChild(tracer, "BrokerManagementService.join", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.closeDestinationTrace = proteus_tracing.traceAsChild(tracer, "BrokerManagementService.closeDestination", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.closeGroupTrace = proteus_tracing.traceAsChild(tracer, "BrokerManagementService.closeGroup", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.closeBrokerTrace = proteus_tracing.traceAsChild(tracer, "BrokerManagementService.closeBroker", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.closeDestinationsTrace = proteus_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeDestinations", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.closeBrokersTrace = proteus_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeBrokers", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.closeAllTrace = proteus_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeAll", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
+    this.shutdownTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.shutdown", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
+    this.leaveTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.leave", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
+    this.rejoinTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.rejoin", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
+    this.joinTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.join", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
+    this.closeDestinationTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerManagementService.closeDestination", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
+    this.closeGroupTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerManagementService.closeGroup", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
+    this.closeBrokerTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerManagementService.closeBroker", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
+    this.closeDestinationsTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeDestinations", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
+    this.closeBrokersTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeBrokers", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
+    this.closeAllTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeAll", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
   }
   BrokerManagementServiceServer.prototype.fireAndForget = function fireAndForget(payload) {
     throw new Error('fireAndForget() is not implemented');
@@ -241,8 +241,8 @@ var BrokerManagementServiceServer = function () {
       if (payload.metadata == null) {
         return rsocket_flowable.Single.error(new Error('metadata is empty'));
       }
-      var method = proteus_js_frames.getMethod(payload.metadata);
-      var spanContext = proteus_tracing.deserializeTraceData(this._tracer, payload.metadata);
+      var method = rsocket_rpc_frames.getMethod(payload.metadata);
+      var spanContext = rsocket_rpc_tracing.deserializeTraceData(this._tracer, payload.metadata);
       switch (method) {
         case 'shutdown':
           return this.shutdownTrace(spanContext)(

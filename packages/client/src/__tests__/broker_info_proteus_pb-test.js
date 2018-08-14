@@ -26,13 +26,14 @@ import ProteusTlsClient from '../ProteusTlsClient';
 
 import Deferred from 'fbjs/lib/Deferred';
 
-import {BrokerInfoServiceClient} from '../proteus/broker_info_proteus_pb';
+import {BrokerInfoServiceClient} from '../proteus/broker_info_rsocket_pb';
 
 import {Empty} from 'google-protobuf/google/protobuf/empty_pb';
 
 import WebSocket from 'ws';
+global.WebSocket = global.WebSocket || WebSocket;
 
-describe.skip('BrokerInfoServiceClient', () => {
+describe('BrokerInfoServiceClient', () => {
   it('retrieves brokers over WebSocket', async () => {
     const proteus = Proteus.create({
       setup: {
@@ -104,6 +105,7 @@ describe.skip('BrokerInfoServiceClient', () => {
     );
 
     const deferred = new Deferred();
+    console.log('Calling broker services');
     brokerInfoService.brokers(new Empty(), Buffer.alloc(0)).subscribe({
       onComplete() {
         console.log('onComplete()');

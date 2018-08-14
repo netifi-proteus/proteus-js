@@ -23,12 +23,12 @@ import {Single, Flowable} from 'rsocket-flowable';
 import type {PayloadSerializers} from 'rsocket-core/build/RSocketSerialization';
 import {BufferEncoders} from 'rsocket-core';
 import {
-  ProteusClient,
+  RpcClient,
   DeferredConnectingRSocket,
   RequestHandlingRSocket,
   UnwrappingRSocket,
-} from 'proteus-js-core';
-import type {ClientConfig} from 'proteus-js-core';
+} from 'rsocket-rpc-core';
+import type {ClientConfig} from 'rsocket-rpc-core';
 import invariant from 'fbjs/lib/invariant';
 
 const RSocketWebSocketClient = require('rsocket-websocket-client').default;
@@ -53,7 +53,7 @@ export type ProteusConfig = {|
 |};
 
 export default class Proteus {
-  _client: ProteusClient<Buffer, Buffer>;
+  _client: RpcClient<Buffer, Buffer>;
   _group: string;
   _destination: string;
   _connect: () => Single<ReactiveSocket<Buffer, Buffer>>;
@@ -62,7 +62,7 @@ export default class Proteus {
   _requestHandler: RequestHandlingRSocket;
 
   constructor(
-    proteusClient: ProteusClient<Buffer, Buffer>,
+    proteusClient: RpcClient<Buffer, Buffer>,
     requestHandler: RequestHandlingRSocket,
   ) {
     this._client = proteusClient;
@@ -268,7 +268,7 @@ export default class Proteus {
       finalConfig.serializers = config.serializers;
     }
 
-    const client = new ProteusClient(finalConfig);
+    const client = new RpcClient(finalConfig);
 
     return new Proteus(client, requestHandler);
   }
