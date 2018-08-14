@@ -13,6 +13,7 @@ var ProteusTracingServiceClient = function () {
     this._rs = rs;
     this._tracer = tracer;
     this.streamSpansTrace = rsocket_rpc_tracing.trace(tracer, "ProteusTracingService.streamSpans", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "client"});
+    this.streamSpansStreamAcksTrace = rsocket_rpc_tracing.trace(tracer, "ProteusTracingService.streamSpansStreamAcks", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "client"});
     this.sendSpanTrace = rsocket_rpc_tracing.traceSingle(tracer, "ProteusTracingService.sendSpan", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "client"});
   }
   ProteusTracingServiceClient.prototype.streamSpans = function streamSpans(messages, metadata) {
@@ -24,6 +25,25 @@ var ProteusTracingServiceClient = function () {
         this._rs.requestChannel(messages.map(function (message) {
           dataBuf = Buffer.from(message.serializeBinary());
           metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.tracing.ProteusTracingService', 'StreamSpans', tracingMetadata, metadata || Buffer.alloc(0));
+          return {
+            data: dataBuf,
+            metadata: metadataBuf
+          };
+        })).map(function (payload) {
+          return proteus_testing_tracing_pb.Ack.deserializeBinary(payload.data);
+        }).subscribe(subscriber);
+      })
+    );
+  };
+  ProteusTracingServiceClient.prototype.streamSpansStreamAcks = function streamSpansStreamAcks(messages, metadata) {
+    const map = {};
+    return this.streamSpansStreamAcksTrace(map)(new rsocket_flowable.Flowable(subscriber => {
+      var dataBuf;
+      var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+      var metadataBuf ;
+        this._rs.requestChannel(messages.map(function (message) {
+          dataBuf = Buffer.from(message.serializeBinary());
+          metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.tracing.ProteusTracingService', 'StreamSpansStreamAcks', tracingMetadata, metadata || Buffer.alloc(0));
           return {
             data: dataBuf,
             metadata: metadataBuf
@@ -59,6 +79,7 @@ var ProteusTracingServiceServer = function () {
     this._service = service;
     this._tracer = tracer;
     this.streamSpansTrace = rsocket_rpc_tracing.traceAsChild(tracer, "ProteusTracingService.streamSpans", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "server"});
+    this.streamSpansStreamAcksTrace = rsocket_rpc_tracing.traceAsChild(tracer, "ProteusTracingService.streamSpansStreamAcks", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "server"});
     this.sendSpanTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "ProteusTracingService.sendSpan", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "server"});
     this._channelSwitch = (payload, restOfMessages) => {
       if (payload.metadata == null) {
@@ -73,6 +94,18 @@ var ProteusTracingServiceServer = function () {
           return this.streamSpansTrace(spanContext)(
             this._service
               .streamSpans(deserializedMessages, payload.metadata)
+              .map(function (message) {
+                return {
+                  data: Buffer.from(message.serializeBinary()),
+                  metadata: Buffer.alloc(0)
+                }
+              })
+            );
+        case 'StreamSpansStreamAcks':
+          deserializedMessages = restOfMessages.map(message => zipkin_proto3_zipkin_pb.Span.deserializeBinary(message));
+          return this.streamSpansStreamAcksTrace(spanContext)(
+            this._service
+              .streamSpansStreamAcks(deserializedMessages, payload.metadata)
               .map(function (message) {
                 return {
                   data: Buffer.from(message.serializeBinary()),

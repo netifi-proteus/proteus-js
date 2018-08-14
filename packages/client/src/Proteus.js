@@ -31,7 +31,7 @@ import {
 import type {ClientConfig} from 'rsocket-rpc-core';
 import invariant from 'fbjs/lib/invariant';
 
-const RSocketWebSocketClient = require('rsocket-websocket-client').default;
+import RSocketWebSocketClient from 'rsocket-websocket-client';
 
 export type ProteusConfig = {|
   serializers?: PayloadSerializers<Buffer, Buffer>,

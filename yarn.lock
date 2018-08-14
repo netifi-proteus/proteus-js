@@ -3333,14 +3333,13 @@ rsocket-core@^0.0.7:
     rsocket-flowable "^0.0.7"
     rsocket-types "^0.0.7"
 
-rsocket-core@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rsocket-core/-/rsocket-core-0.0.8.tgz#12835b1770f9d021a6889e6998969dbfc13e3840"
+rsocket-core@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/rsocket-core/-/rsocket-core-0.0.9.tgz#501f41390b11f50f9c62d38ca4867990de7d9af5"
   dependencies:
-    buffer "^5.0.6"
     fbjs "^0.8.12"
-    rsocket-flowable "^0.0.8"
-    rsocket-types "^0.0.8"
+    rsocket-flowable "^0.0.9"
+    rsocket-types "^0.0.9"
 
 rsocket-flowable@^0.0.7:
   version "0.0.7"
@@ -3348,9 +3347,9 @@ rsocket-flowable@^0.0.7:
   dependencies:
     fbjs "^0.8.12"
 
-rsocket-flowable@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rsocket-flowable/-/rsocket-flowable-0.0.8.tgz#20276e9a26e3c12dc84744c88f92fad9d01c8d46"
+rsocket-flowable@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/rsocket-flowable/-/rsocket-flowable-0.0.9.tgz#d6bc998734b0c03b31a82f4ea10d24019b7ef681"
   dependencies:
     fbjs "^0.8.12"
 
@@ -3387,13 +3386,13 @@ rsocket-rpc-tracing@^0.0.1:
     rsocket-rpc-frames "^0.0.1"
     rsocket-types "^0.0.7"
 
-rsocket-tcp-client@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rsocket-tcp-client/-/rsocket-tcp-client-0.0.8.tgz#b86814d3fce8500135a934218c8e0c24517ffc82"
+rsocket-tcp-client@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/rsocket-tcp-client/-/rsocket-tcp-client-0.0.9.tgz#c66c432171e09ddbdaf6411f11c92b557945965f"
   dependencies:
     fbjs "^0.8.12"
-    rsocket-core "^0.0.8"
-    rsocket-flowable "^0.0.8"
+    rsocket-core "^0.0.9"
+    rsocket-flowable "^0.0.9"
 
 rsocket-types@^0.0.7:
   version "0.0.7"
@@ -3403,22 +3402,22 @@ rsocket-types@^0.0.7:
     fbjs "^0.8.12"
     rsocket-flowable "^0.0.7"
 
-rsocket-types@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rsocket-types/-/rsocket-types-0.0.8.tgz#1d899776089ed9ab55dcd67a10ac68f2459c7a47"
+rsocket-types@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/rsocket-types/-/rsocket-types-0.0.9.tgz#4376fcf512b9d7b923da26602ab93b7a35166d5d"
   dependencies:
     buffer "^5.0.6"
     fbjs "^0.8.12"
-    rsocket-flowable "^0.0.8"
+    rsocket-flowable "^0.0.9"
 
-rsocket-websocket-client@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rsocket-websocket-client/-/rsocket-websocket-client-0.0.8.tgz#0a49f91ac433262a69db6fb735f80485e574c9d1"
+rsocket-websocket-client@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/rsocket-websocket-client/-/rsocket-websocket-client-0.0.9.tgz#6d7c2103389c0f0d599aefafb22814cec3cbef3d"
   dependencies:
     fbjs "^0.8.12"
-    rsocket-core "^0.0.8"
-    rsocket-flowable "^0.0.8"
-    rsocket-types "^0.0.8"
+    rsocket-core "^0.0.9"
+    rsocket-flowable "^0.0.9"
+    rsocket-types "^0.0.9"
 
 rsvp@^3.0.13:
   version "3.6.2"

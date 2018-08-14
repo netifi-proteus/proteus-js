@@ -19,7 +19,7 @@ const WebSocket = require('ws');
 global.WebSocket = WebSocket;
 
 const url = 'ws://localhost:8101/';
-const tcpConnection =  new ProteusTlsClient(
+const tcpConnection = new ProteusTlsClient(
   {
     host: 'localhost',
     port: 8001,
