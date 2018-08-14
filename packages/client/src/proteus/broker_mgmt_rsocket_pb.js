@@ -2,6 +2,7 @@
 
 'use strict';
 var rsocket_rpc_frames = require('rsocket-rpc-frames');
+var rsocket_rpc_core = require('rsocket-rpc-core');
 var rsocket_rpc_tracing = require('rsocket-rpc-tracing');
 var rsocket_flowable = require('rsocket-flowable');
 var proteus_broker_mgmt_pb = require('../proteus/broker_mgmt_pb.js');
@@ -89,20 +90,14 @@ var BrokerManagementServiceClient = function () {
   };
   // Closes connections to a specific set of destinations
   BrokerManagementServiceClient.prototype.closeDestination = function closeDestination(messages, metadata) {
-    var once = false;
     const map = {};
     return this.closeDestinationTrace(map)(new rsocket_flowable.Flowable(subscriber => {
-      var dataBuf = Buffer.from(message.serializeBinary());
+      var dataBuf;
       var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
-      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeDestination', tracingMetadata, metadata || Buffer.alloc(0));
+      var metadataBuf ;
         this._rs.requestChannel(messages.map(function (message) {
-          var dataBuf = Buffer.from(message.serializeBinary());
-          if (!once) {
-            once = true;
-            var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeDestination', Buffer.alloc(0), metadata || Buffer.alloc(0));
-          } else {
-            metadataBuf = Buffer.alloc(0);
-          }
+          dataBuf = Buffer.from(message.serializeBinary());
+          metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeDestination', tracingMetadata, metadata || Buffer.alloc(0));
           return {
             data: dataBuf,
             metadata: metadataBuf
@@ -115,20 +110,14 @@ var BrokerManagementServiceClient = function () {
   };
   // Closes connections to a specific set of groups
   BrokerManagementServiceClient.prototype.closeGroup = function closeGroup(messages, metadata) {
-    var once = false;
     const map = {};
     return this.closeGroupTrace(map)(new rsocket_flowable.Flowable(subscriber => {
-      var dataBuf = Buffer.from(message.serializeBinary());
+      var dataBuf;
       var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
-      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeGroup', tracingMetadata, metadata || Buffer.alloc(0));
+      var metadataBuf ;
         this._rs.requestChannel(messages.map(function (message) {
-          var dataBuf = Buffer.from(message.serializeBinary());
-          if (!once) {
-            once = true;
-            var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeGroup', Buffer.alloc(0), metadata || Buffer.alloc(0));
-          } else {
-            metadataBuf = Buffer.alloc(0);
-          }
+          dataBuf = Buffer.from(message.serializeBinary());
+          metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeGroup', tracingMetadata, metadata || Buffer.alloc(0));
           return {
             data: dataBuf,
             metadata: metadataBuf
@@ -141,20 +130,14 @@ var BrokerManagementServiceClient = function () {
   };
   // Closes connections to a specific set of brokers
   BrokerManagementServiceClient.prototype.closeBroker = function closeBroker(messages, metadata) {
-    var once = false;
     const map = {};
     return this.closeBrokerTrace(map)(new rsocket_flowable.Flowable(subscriber => {
-      var dataBuf = Buffer.from(message.serializeBinary());
+      var dataBuf;
       var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
-      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeBroker', tracingMetadata, metadata || Buffer.alloc(0));
+      var metadataBuf ;
         this._rs.requestChannel(messages.map(function (message) {
-          var dataBuf = Buffer.from(message.serializeBinary());
-          if (!once) {
-            once = true;
-            var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeBroker', Buffer.alloc(0), metadata || Buffer.alloc(0));
-          } else {
-            metadataBuf = Buffer.alloc(0);
-          }
+          dataBuf = Buffer.from(message.serializeBinary());
+          metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeBroker', tracingMetadata, metadata || Buffer.alloc(0));
           return {
             data: dataBuf,
             metadata: metadataBuf
@@ -232,6 +215,54 @@ var BrokerManagementServiceServer = function () {
     this.closeDestinationsTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeDestinations", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
     this.closeBrokersTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeBrokers", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
     this.closeAllTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeAll", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
+    this._channelSwitch = (payload, restOfMessages) => {
+      if (payload.metadata == null) {
+        return rsocket_flowable.Flowable.error(new Error('metadata is empty'));
+      }
+      var method = rsocket_rpc_frames.getMethod(payload.metadata);
+      var spanContext = rsocket_rpc_tracing.deserializeTraceData(this._tracer, payload.metadata);
+      let deserializedMessages;
+      switch(method){
+        case 'closeDestination':
+          deserializedMessages = restOfMessages.map(message => proteus_broker_info_pb.Destination.deserializeBinary(message));
+          return this.closeDestinationTrace(spanContext)(
+            this._service
+              .closeDestination(deserializedMessages, payload.metadata)
+              .map(function (message) {
+                return {
+                  data: Buffer.from(message.serializeBinary()),
+                  metadata: Buffer.alloc(0)
+                }
+              })
+            );
+        case 'closeGroup':
+          deserializedMessages = restOfMessages.map(message => proteus_broker_info_pb.Group.deserializeBinary(message));
+          return this.closeGroupTrace(spanContext)(
+            this._service
+              .closeGroup(deserializedMessages, payload.metadata)
+              .map(function (message) {
+                return {
+                  data: Buffer.from(message.serializeBinary()),
+                  metadata: Buffer.alloc(0)
+                }
+              })
+            );
+        case 'closeBroker':
+          deserializedMessages = restOfMessages.map(message => proteus_broker_info_pb.Broker.deserializeBinary(message));
+          return this.closeBrokerTrace(spanContext)(
+            this._service
+              .closeBroker(deserializedMessages, payload.metadata)
+              .map(function (message) {
+                return {
+                  data: Buffer.from(message.serializeBinary()),
+                  metadata: Buffer.alloc(0)
+                }
+              })
+            );
+        default:
+          return rsocket_flowable.Flowable.error(new Error('unknown method'));
+      }
+    };
   }
   BrokerManagementServiceServer.prototype.fireAndForget = function fireAndForget(payload) {
     throw new Error('fireAndForget() is not implemented');
@@ -331,14 +362,40 @@ var BrokerManagementServiceServer = function () {
   BrokerManagementServiceServer.prototype.requestStream = function requestStream(payload) {
     return rsocket_flowable.Flowable.error(new Error('requestStream() is not implemented'));
   };
-  BrokerManagementServiceServer.prototype.requestChannel = function requestChannel(payload) {
-    return rsocket_flowable.Flowable.error(new Error('requestChannel() is not implemented'));
-  };
-  BrokerManagementServiceServer.prototype.metadataPush = function metadataPush(payload) {
-    return rsocket_flowable.Single.error(new Error('metadataPush() is not implemented'));
-  };
-  return BrokerManagementServiceServer;
-}();
+  BrokerManagementServiceServer.prototype.requestChannel = function requestChannel(payloads) {
+    let once = false;
+    return new rsocket_flowable.Flowable(subscriber => {
+      const payloadProxy = new rsocket_rpc_core.QueuingFlowableProcessor();
+      payloads.subscribe({
+        onNext: payload => {
+          if(!once){
+            once = true;
+            try{
+              let result = this._channelSwitch(payload, payloadProxy);
+              result.subscribe(subscriber);
+            } catch (error){
+              subscriber.onError(error);
+            }
+          }
+          payloadProxy.onNext(payload.data);
+        },
+        onError: error => {
+          payloadProxy.onError(error);
+        },
+        onComplete: () => {
+          payloadProxy.onComplete();
+        },
+        onSubscribe: subscription => {
+          payloadProxy.onSubscribe(subscription);
+        }
+        });
+      });
+    };
+    BrokerManagementServiceServer.prototype.metadataPush = function metadataPush(payload) {
+      return rsocket_flowable.Single.error(new Error('metadataPush() is not implemented'));
+    };
+    return BrokerManagementServiceServer;
+  }();
 
-exports.BrokerManagementServiceServer = BrokerManagementServiceServer;
+  exports.BrokerManagementServiceServer = BrokerManagementServiceServer;
 

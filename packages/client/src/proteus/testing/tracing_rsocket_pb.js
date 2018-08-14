@@ -2,6 +2,7 @@
 
 'use strict';
 var rsocket_rpc_frames = require('rsocket-rpc-frames');
+var rsocket_rpc_core = require('rsocket-rpc-core');
 var rsocket_rpc_tracing = require('rsocket-rpc-tracing');
 var rsocket_flowable = require('rsocket-flowable');
 var proteus_testing_tracing_pb = require('../../proteus/testing/tracing_pb.js');
@@ -15,20 +16,14 @@ var ProteusTracingServiceClient = function () {
     this.sendSpanTrace = rsocket_rpc_tracing.traceSingle(tracer, "ProteusTracingService.sendSpan", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "client"});
   }
   ProteusTracingServiceClient.prototype.streamSpans = function streamSpans(messages, metadata) {
-    var once = false;
     const map = {};
     return this.streamSpansTrace(map)(new rsocket_flowable.Flowable(subscriber => {
-      var dataBuf = Buffer.from(message.serializeBinary());
+      var dataBuf;
       var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
-      var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.tracing.ProteusTracingService', 'StreamSpans', tracingMetadata, metadata || Buffer.alloc(0));
+      var metadataBuf ;
         this._rs.requestChannel(messages.map(function (message) {
-          var dataBuf = Buffer.from(message.serializeBinary());
-          if (!once) {
-            once = true;
-            var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.tracing.ProteusTracingService', 'StreamSpans', Buffer.alloc(0), metadata || Buffer.alloc(0));
-          } else {
-            metadataBuf = Buffer.alloc(0);
-          }
+          dataBuf = Buffer.from(message.serializeBinary());
+          metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.tracing.ProteusTracingService', 'StreamSpans', tracingMetadata, metadata || Buffer.alloc(0));
           return {
             data: dataBuf,
             metadata: metadataBuf
@@ -65,6 +60,30 @@ var ProteusTracingServiceServer = function () {
     this._tracer = tracer;
     this.streamSpansTrace = rsocket_rpc_tracing.traceAsChild(tracer, "ProteusTracingService.streamSpans", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "server"});
     this.sendSpanTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "ProteusTracingService.sendSpan", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "server"});
+    this._channelSwitch = (payload, restOfMessages) => {
+      if (payload.metadata == null) {
+        return rsocket_flowable.Flowable.error(new Error('metadata is empty'));
+      }
+      var method = rsocket_rpc_frames.getMethod(payload.metadata);
+      var spanContext = rsocket_rpc_tracing.deserializeTraceData(this._tracer, payload.metadata);
+      let deserializedMessages;
+      switch(method){
+        case 'StreamSpans':
+          deserializedMessages = restOfMessages.map(message => zipkin_proto3_zipkin_pb.Span.deserializeBinary(message));
+          return this.streamSpansTrace(spanContext)(
+            this._service
+              .streamSpans(deserializedMessages, payload.metadata)
+              .map(function (message) {
+                return {
+                  data: Buffer.from(message.serializeBinary()),
+                  metadata: Buffer.alloc(0)
+                }
+              })
+            );
+        default:
+          return rsocket_flowable.Flowable.error(new Error('unknown method'));
+      }
+    };
   }
   ProteusTracingServiceServer.prototype.fireAndForget = function fireAndForget(payload) {
     throw new Error('fireAndForget() is not implemented');
@@ -98,14 +117,40 @@ var ProteusTracingServiceServer = function () {
   ProteusTracingServiceServer.prototype.requestStream = function requestStream(payload) {
     return rsocket_flowable.Flowable.error(new Error('requestStream() is not implemented'));
   };
-  ProteusTracingServiceServer.prototype.requestChannel = function requestChannel(payload) {
-    return rsocket_flowable.Flowable.error(new Error('requestChannel() is not implemented'));
-  };
-  ProteusTracingServiceServer.prototype.metadataPush = function metadataPush(payload) {
-    return rsocket_flowable.Single.error(new Error('metadataPush() is not implemented'));
-  };
-  return ProteusTracingServiceServer;
-}();
+  ProteusTracingServiceServer.prototype.requestChannel = function requestChannel(payloads) {
+    let once = false;
+    return new rsocket_flowable.Flowable(subscriber => {
+      const payloadProxy = new rsocket_rpc_core.QueuingFlowableProcessor();
+      payloads.subscribe({
+        onNext: payload => {
+          if(!once){
+            once = true;
+            try{
+              let result = this._channelSwitch(payload, payloadProxy);
+              result.subscribe(subscriber);
+            } catch (error){
+              subscriber.onError(error);
+            }
+          }
+          payloadProxy.onNext(payload.data);
+        },
+        onError: error => {
+          payloadProxy.onError(error);
+        },
+        onComplete: () => {
+          payloadProxy.onComplete();
+        },
+        onSubscribe: subscription => {
+          payloadProxy.onSubscribe(subscription);
+        }
+        });
+      });
+    };
+    ProteusTracingServiceServer.prototype.metadataPush = function metadataPush(payload) {
+      return rsocket_flowable.Single.error(new Error('metadataPush() is not implemented'));
+    };
+    return ProteusTracingServiceServer;
+  }();
 
-exports.ProteusTracingServiceServer = ProteusTracingServiceServer;
+  exports.ProteusTracingServiceServer = ProteusTracingServiceServer;
 

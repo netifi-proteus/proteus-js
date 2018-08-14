@@ -2,6 +2,7 @@
 
 'use strict';
 var rsocket_rpc_frames = require('rsocket-rpc-frames');
+var rsocket_rpc_core = require('rsocket-rpc-core');
 var rsocket_rpc_tracing = require('rsocket-rpc-tracing');
 var rsocket_flowable = require('rsocket-flowable');
 var proteus_testing_ping$pong_pb = require('../../proteus/testing/ping-pong_pb.js');
@@ -72,6 +73,18 @@ var PingPongServiceServer = function () {
     this.pingTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "PingPongService.ping", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "server"});
     this.pingStreamTrace = rsocket_rpc_tracing.traceAsChild(tracer, "PingPongService.pingStream", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "server"});
     this.pingFireAndForgetTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "PingPongService.pingFireAndForget", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "server"});
+    this._channelSwitch = (payload, restOfMessages) => {
+      if (payload.metadata == null) {
+        return rsocket_flowable.Flowable.error(new Error('metadata is empty'));
+      }
+      var method = rsocket_rpc_frames.getMethod(payload.metadata);
+      var spanContext = rsocket_rpc_tracing.deserializeTraceData(this._tracer, payload.metadata);
+      let deserializedMessages;
+      switch(method){
+        default:
+          return rsocket_flowable.Flowable.error(new Error('unknown method'));
+      }
+    };
   }
   PingPongServiceServer.prototype.fireAndForget = function fireAndForget(payload) {
     throw new Error('fireAndForget() is not implemented');
@@ -139,14 +152,40 @@ var PingPongServiceServer = function () {
       return rsocket_flowable.Flowable.error(error);
     }
   };
-  PingPongServiceServer.prototype.requestChannel = function requestChannel(payload) {
-    return rsocket_flowable.Flowable.error(new Error('requestChannel() is not implemented'));
-  };
-  PingPongServiceServer.prototype.metadataPush = function metadataPush(payload) {
-    return rsocket_flowable.Single.error(new Error('metadataPush() is not implemented'));
-  };
-  return PingPongServiceServer;
-}();
+  PingPongServiceServer.prototype.requestChannel = function requestChannel(payloads) {
+    let once = false;
+    return new rsocket_flowable.Flowable(subscriber => {
+      const payloadProxy = new rsocket_rpc_core.QueuingFlowableProcessor();
+      payloads.subscribe({
+        onNext: payload => {
+          if(!once){
+            once = true;
+            try{
+              let result = this._channelSwitch(payload, payloadProxy);
+              result.subscribe(subscriber);
+            } catch (error){
+              subscriber.onError(error);
+            }
+          }
+          payloadProxy.onNext(payload.data);
+        },
+        onError: error => {
+          payloadProxy.onError(error);
+        },
+        onComplete: () => {
+          payloadProxy.onComplete();
+        },
+        onSubscribe: subscription => {
+          payloadProxy.onSubscribe(subscription);
+        }
+        });
+      });
+    };
+    PingPongServiceServer.prototype.metadataPush = function metadataPush(payload) {
+      return rsocket_flowable.Single.error(new Error('metadataPush() is not implemented'));
+    };
+    return PingPongServiceServer;
+  }();
 
-exports.PingPongServiceServer = PingPongServiceServer;
+  exports.PingPongServiceServer = PingPongServiceServer;
 

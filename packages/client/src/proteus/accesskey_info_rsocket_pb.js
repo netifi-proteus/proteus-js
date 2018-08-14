@@ -2,6 +2,7 @@
 
 'use strict';
 var rsocket_rpc_frames = require('rsocket-rpc-frames');
+var rsocket_rpc_core = require('rsocket-rpc-core');
 var rsocket_rpc_tracing = require('rsocket-rpc-tracing');
 var rsocket_flowable = require('rsocket-flowable');
 var proteus_accesskey_info_pb = require('../proteus/accesskey_info_pb.js');
@@ -124,6 +125,18 @@ var AccessKeyInfoServiceServer = function () {
     this.enableAccessKeyTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.enableAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
     this.getAccessKeyTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.getAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
     this.getAccessKeysTrace = rsocket_rpc_tracing.traceAsChild(tracer, "AccessKeyInfoService.getAccessKeys", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
+    this._channelSwitch = (payload, restOfMessages) => {
+      if (payload.metadata == null) {
+        return rsocket_flowable.Flowable.error(new Error('metadata is empty'));
+      }
+      var method = rsocket_rpc_frames.getMethod(payload.metadata);
+      var spanContext = rsocket_rpc_tracing.deserializeTraceData(this._tracer, payload.metadata);
+      let deserializedMessages;
+      switch(method){
+        default:
+          return rsocket_flowable.Flowable.error(new Error('unknown method'));
+      }
+    };
   }
   AccessKeyInfoServiceServer.prototype.fireAndForget = function fireAndForget(payload) {
     throw new Error('fireAndForget() is not implemented');
@@ -224,14 +237,40 @@ var AccessKeyInfoServiceServer = function () {
       return rsocket_flowable.Flowable.error(error);
     }
   };
-  AccessKeyInfoServiceServer.prototype.requestChannel = function requestChannel(payload) {
-    return rsocket_flowable.Flowable.error(new Error('requestChannel() is not implemented'));
-  };
-  AccessKeyInfoServiceServer.prototype.metadataPush = function metadataPush(payload) {
-    return rsocket_flowable.Single.error(new Error('metadataPush() is not implemented'));
-  };
-  return AccessKeyInfoServiceServer;
-}();
+  AccessKeyInfoServiceServer.prototype.requestChannel = function requestChannel(payloads) {
+    let once = false;
+    return new rsocket_flowable.Flowable(subscriber => {
+      const payloadProxy = new rsocket_rpc_core.QueuingFlowableProcessor();
+      payloads.subscribe({
+        onNext: payload => {
+          if(!once){
+            once = true;
+            try{
+              let result = this._channelSwitch(payload, payloadProxy);
+              result.subscribe(subscriber);
+            } catch (error){
+              subscriber.onError(error);
+            }
+          }
+          payloadProxy.onNext(payload.data);
+        },
+        onError: error => {
+          payloadProxy.onError(error);
+        },
+        onComplete: () => {
+          payloadProxy.onComplete();
+        },
+        onSubscribe: subscription => {
+          payloadProxy.onSubscribe(subscription);
+        }
+        });
+      });
+    };
+    AccessKeyInfoServiceServer.prototype.metadataPush = function metadataPush(payload) {
+      return rsocket_flowable.Single.error(new Error('metadataPush() is not implemented'));
+    };
+    return AccessKeyInfoServiceServer;
+  }();
 
-exports.AccessKeyInfoServiceServer = AccessKeyInfoServiceServer;
+  exports.AccessKeyInfoServiceServer = AccessKeyInfoServiceServer;
 
