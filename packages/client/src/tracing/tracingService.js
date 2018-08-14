@@ -3,7 +3,8 @@
 import http from 'http';
 import {Span} from '../zipkin/proto3/zipkin_pb';
 import {Ack} from '../proteus/testing/tracing_pb';
-import {Single} from 'rsocket-flowable';
+import {Flowable, Single} from 'rsocket-flowable';
+import {QueuingFlowableProcessor} from 'rsocket-rpc-core';
 
 export class ZipkinTracingService {
   _host: string;
@@ -48,6 +49,122 @@ export class ZipkinTracingService {
       post_req.end();
     });
     return result;
+  }
+
+  streamSpans(spans: Flowable<Span>, metadata: Buffer) {
+    let _subscription;
+    return new Flowable(sub => {
+      let once = false;
+      spans.subscribe({
+        onNext: span => {
+          const post_body = '[' + convertSpan(span) + ']';
+
+          var post_options = {
+            host: this._host,
+            port: this._port,
+            path: this._path,
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          };
+
+          // Set up the request
+          console.log('Posting span...');
+          var post_req = http.request(post_options, function(res) {
+            res.setEncoding('utf8');
+            res.on('data', function(chunk) {
+              console.log('Response chunk: ' + chunk);
+            });
+            res.on('end', function() {
+              console.log('Done!');
+              if (!once) {
+                once = true;
+                sub.onSubscribe();
+                sub.onNext(new Ack());
+                sub.onComplete();
+              }
+              _subscription.request(1);
+            });
+          });
+          console.log('Logging:' + post_body);
+          post_req.write(post_body);
+          post_req.end();
+        },
+        onError: error => {
+          console.log('Source errored:' + error);
+        },
+        onComplete: () => {
+          console.log('Source complete');
+        },
+        onSubscribe: subscription => {
+          _subscription = subscription;
+          _subscription.request(1);
+        },
+      });
+    });
+  }
+
+  streamSpansStreamAcks(spans: Flowable<Span>, metadata: Buffer) {
+    let pending = 0;
+    let done = false;
+    const processor = new QueuingFlowableProcessor();
+    return new Flowable(sub => {
+      let once = false;
+      spans.subscribe({
+        onNext: span => {
+          const post_body = '[' + convertSpan(span) + ']';
+
+          var post_options = {
+            host: this._host,
+            port: this._port,
+            path: this._path,
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          };
+
+          // Set up the request
+          console.log('Posting span...');
+          var post_req = http.request(post_options, function(res) {
+            res.setEncoding('utf8');
+            res.on('data', function(chunk) {
+              console.log('Response chunk: ' + chunk);
+            });
+            res.on('end', function() {
+              console.log('Done!');
+              pending--;
+              if (!once) {
+                once = true;
+                processor.subscribe(sub);
+                //sub.onSubscribe(processor);
+              }
+              processor.onNext(new Ack());
+              //_subscription.request(1);
+              if (done && pending <= 0) {
+                processor.onComplete();
+              }
+            });
+          });
+          console.log('Logging:' + post_body);
+          pending++;
+          post_req.write(post_body);
+          post_req.end();
+        },
+        onError: error => {
+          console.log('Source errored:' + error);
+        },
+        onComplete: () => {
+          console.log('Source complete');
+          done = true;
+        },
+        onSubscribe: subscription => {
+          processor.onSubscribe(subscription);
+          //processor.request(1);
+        },
+      });
+    });
   }
 }
 
