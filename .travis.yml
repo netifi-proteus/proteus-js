@@ -1,13 +1,12 @@
 language: node_js
-
 node_js: stable
-
 before_install:
-  - yarn global add greenkeeper-lockfile@1
-  - npm config set spin false --global
-
+- yarn global add greenkeeper-lockfile@1
+- npm config set spin false --global
 before_script:
-  - greenkeeper-lockfile-update
-
+- greenkeeper-lockfile-update
 after_script:
-  - greenkeeper-lockfile-upload
+- greenkeeper-lockfile-upload
+env:
+  matrix:
+    secure: lzLWZw5yr3ujjwTl/fndIhViRIY6Aqad3pduvLgSnUbwsMK9u0DR4eFjF8QV2Uc/WV2hMbPMp/Q4s0dz4+e3/ISLJ8MYR1amEMwsfC+RM2i9KictzljQZx3aoSlCgZpqxOzlfQhVhGt9DNjxYPXJ2d1Jl0PG0usgI1YHSpDZFq+fMcmTcAHqD2TGkq/uyoo2p298gRPpzM9uxK7s9vuyKGPZzr2GnR0TeYhbyL1E+LhaebvbDY4+7TKpo3Bx2rZuGDhMAaOKJxk7UYj6HmNjAcBtOUO/DGQe2bjuOBysDDPnByntDU9n6lcZaZ7jwbT9ACsgBKpP9V1TJSfGtH670ImBJIKs5rhl6QYeDpWn/2Y0F+Yp3mdm23jR4tL0v3XxmIgWbpHDzZvgyDMuejpY8tjU07Jt+cQaRlm2C6czVS0h2luROaQn6TK4nFCezAqLhNhTUCkPkBleRC39A88jnHblqnkuFA5GUWfb6o7xr5G93Fc+WAzY2qCxx1nND3pIIHEy/BKoXtK1olqvMqwMD5a+7kqUYK2VrJVz/xdr5d0R+XodnUQLCNP82ss9miWRH7CoNHqtNuf7WAUrWSEN0rHiD7yMZbqu7Ab/ek7ndJKC3hmnqPL3YdDHpQZ96vgorhpNd7D44EJ/LxCR4z1qsbwshUYEQvtmbpljfF2iRwk=
