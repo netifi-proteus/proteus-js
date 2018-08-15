@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "http": "^0.0.0",
+    "rsocket-core": "^0.0.9",
     "rsocket-rpc-protobuf": "^0.0.3",
     "rsocket-tcp-client": "^0.0.9",
     "rxjs-compat": "^6.2.2",
