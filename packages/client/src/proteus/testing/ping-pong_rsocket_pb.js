@@ -26,7 +26,9 @@ var PingPongServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_testing_ping$pong_pb.Pong.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_testing_ping$pong_pb.Pong.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -41,7 +43,9 @@ var PingPongServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_testing_ping$pong_pb.Pong.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_testing_ping$pong_pb.Pong.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -56,7 +60,9 @@ var PingPongServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return google_protobuf_empty_pb.Empty.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return google_protobuf_empty_pb.Empty.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );

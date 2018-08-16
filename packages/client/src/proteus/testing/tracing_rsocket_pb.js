@@ -30,7 +30,9 @@ var ProteusTracingServiceClient = function () {
             metadata: metadataBuf
           };
         })).map(function (payload) {
-          return proteus_testing_tracing_pb.Ack.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_testing_tracing_pb.Ack.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -49,7 +51,9 @@ var ProteusTracingServiceClient = function () {
             metadata: metadataBuf
           };
         })).map(function (payload) {
-          return proteus_testing_tracing_pb.Ack.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_testing_tracing_pb.Ack.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -64,7 +68,9 @@ var ProteusTracingServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_testing_tracing_pb.Ack.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_testing_tracing_pb.Ack.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );

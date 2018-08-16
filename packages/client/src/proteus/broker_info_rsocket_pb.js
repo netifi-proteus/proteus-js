@@ -33,7 +33,9 @@ var BrokerInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_broker_info_pb.Broker.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_broker_info_pb.Broker.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -48,7 +50,9 @@ var BrokerInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_broker_info_pb.Group.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_broker_info_pb.Group.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -63,7 +67,9 @@ var BrokerInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_broker_info_pb.Destination.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_broker_info_pb.Destination.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -78,7 +84,9 @@ var BrokerInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_broker_info_pb.Destination.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_broker_info_pb.Destination.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -93,7 +101,9 @@ var BrokerInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_broker_info_pb.Destination.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_broker_info_pb.Destination.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -108,7 +118,9 @@ var BrokerInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_broker_info_pb.Broker.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_broker_info_pb.Broker.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -123,7 +135,9 @@ var BrokerInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_broker_info_pb.Broker.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_broker_info_pb.Broker.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -138,7 +152,9 @@ var BrokerInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_broker_info_pb.Event.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_broker_info_pb.Event.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -153,7 +169,9 @@ var BrokerInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_broker_info_pb.Event.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_broker_info_pb.Event.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -168,7 +186,9 @@ var BrokerInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_broker_info_pb.Event.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_broker_info_pb.Event.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );

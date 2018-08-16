@@ -30,7 +30,9 @@ var AccessKeyInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_accesskey_info_pb.AccessToken.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_accesskey_info_pb.AccessToken.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -45,7 +47,9 @@ var AccessKeyInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -60,7 +64,9 @@ var AccessKeyInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -75,7 +81,9 @@ var AccessKeyInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -90,7 +98,9 @@ var AccessKeyInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -105,7 +115,9 @@ var AccessKeyInfoServiceClient = function () {
           data: dataBuf,
           metadata: metadataBuf
         }).map(function (payload) {
-          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(payload.data);
+          //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );

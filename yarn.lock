@@ -1383,7 +1383,7 @@ eslint-plugin-prefer-object-spread@1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-prefer-object-spread/-/eslint-plugin-prefer-object-spread-1.2.1.tgz#27fb91853690cceb3ae6101d9c8aecc6a67a402c"
 
-eslint-scope@3.7.1, eslint-scope@^3.7.1, eslint-scope@~3.7.1:
+eslint-scope@^3.7.1, eslint-scope@~3.7.1:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-3.7.1.tgz#3d63c3edfda02e06e01a452ad88caacc7cdcb6e8"
   dependencies:
@@ -3351,9 +3351,9 @@ rsocket-rpc-frames@^0.0.2:
   dependencies:
     rsocket-core "^0.0.9"
 
-rsocket-rpc-protobuf@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/rsocket-rpc-protobuf/-/rsocket-rpc-protobuf-0.0.3.tgz#2dfaf2f79e80e72f13409fcc7d3f3a9e99f90f7f"
+rsocket-rpc-protobuf@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-protobuf/-/rsocket-rpc-protobuf-0.0.4.tgz#e9a74dd729828c48e431610986ad27b313144f01"
   dependencies:
     cmake-js "^3.6.2"
     prebuild-install "^4.0.0"
