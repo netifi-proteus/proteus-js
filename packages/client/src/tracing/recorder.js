@@ -1,6 +1,6 @@
 import {Span, Endpoint, Annotation} from '../zipkin/proto3/zipkin_pb';
 import Long from 'long';
-import {ProteusTracingServiceClient} from '../proteus/tracing_proteus_pb';
+import {ProteusTracingServiceClient} from '../proteus/testing/tracing_rsocket_pb';
 
 export class DefaultRecorder {
   /**

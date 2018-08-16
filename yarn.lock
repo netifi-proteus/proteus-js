@@ -3040,13 +3040,6 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-proteus-js-protobuf@0.0.10, proteus-js-protobuf@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/proteus-js-protobuf/-/proteus-js-protobuf-0.0.10.tgz#cbab70ab39b8eb2915cf0f0557a16f3d18551b5e"
-  dependencies:
-    cmake-js "^3.6.2"
-    prebuild-install "^4.0.0"
-
 pseudomap@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
@@ -3331,45 +3324,77 @@ rimraf@2, rimraf@^2.2.8, rimraf@^2.6.1:
   dependencies:
     glob "^7.0.5"
 
-rsocket-core@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rsocket-core/-/rsocket-core-0.0.8.tgz#12835b1770f9d021a6889e6998969dbfc13e3840"
+rsocket-core@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/rsocket-core/-/rsocket-core-0.0.9.tgz#501f41390b11f50f9c62d38ca4867990de7d9af5"
+  dependencies:
+    fbjs "^0.8.12"
+    rsocket-flowable "^0.0.9"
+    rsocket-types "^0.0.9"
+
+rsocket-flowable@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/rsocket-flowable/-/rsocket-flowable-0.0.9.tgz#d6bc998734b0c03b31a82f4ea10d24019b7ef681"
+  dependencies:
+    fbjs "^0.8.12"
+
+rsocket-rpc-core@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-core/-/rsocket-rpc-core-0.0.2.tgz#1d2dc8a900028e3d649976ba941251b96948a842"
+  dependencies:
+    rsocket-rpc-frames "^0.0.2"
+    rsocket-types "^0.0.9"
+
+rsocket-rpc-frames@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-frames/-/rsocket-rpc-frames-0.0.2.tgz#8fed4dd1a44e6536e04b2777e5e37388d262d97d"
+  dependencies:
+    rsocket-core "^0.0.9"
+
+rsocket-rpc-protobuf@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-protobuf/-/rsocket-rpc-protobuf-0.0.3.tgz#2dfaf2f79e80e72f13409fcc7d3f3a9e99f90f7f"
+  dependencies:
+    cmake-js "^3.6.2"
+    prebuild-install "^4.0.0"
+
+rsocket-rpc-tracing@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-tracing/-/rsocket-rpc-tracing-0.0.2.tgz#a38f0400f5260b7393a7b6e0598f7ce3f91050b7"
+  dependencies:
+    lodash.clone "^4.5.0"
+    long "^4.0.0"
+    opentracing "^0.14.3"
+    rsocket-core "^0.0.9"
+    rsocket-flowable "^0.0.9"
+    rsocket-rpc-core "^0.0.2"
+    rsocket-rpc-frames "^0.0.2"
+    rsocket-types "^0.0.9"
+
+rsocket-tcp-client@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/rsocket-tcp-client/-/rsocket-tcp-client-0.0.9.tgz#c66c432171e09ddbdaf6411f11c92b557945965f"
+  dependencies:
+    fbjs "^0.8.12"
+    rsocket-core "^0.0.9"
+    rsocket-flowable "^0.0.9"
+
+rsocket-types@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/rsocket-types/-/rsocket-types-0.0.9.tgz#4376fcf512b9d7b923da26602ab93b7a35166d5d"
   dependencies:
     buffer "^5.0.6"
     fbjs "^0.8.12"
-    rsocket-flowable "^0.0.8"
-    rsocket-types "^0.0.8"
+    rsocket-flowable "^0.0.9"
 
-rsocket-flowable@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rsocket-flowable/-/rsocket-flowable-0.0.8.tgz#20276e9a26e3c12dc84744c88f92fad9d01c8d46"
+rsocket-websocket-client@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/rsocket-websocket-client/-/rsocket-websocket-client-0.0.9.tgz#6d7c2103389c0f0d599aefafb22814cec3cbef3d"
   dependencies:
     fbjs "^0.8.12"
-
-rsocket-tcp-client@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rsocket-tcp-client/-/rsocket-tcp-client-0.0.8.tgz#b86814d3fce8500135a934218c8e0c24517ffc82"
-  dependencies:
-    fbjs "^0.8.12"
-    rsocket-core "^0.0.8"
-    rsocket-flowable "^0.0.8"
-
-rsocket-types@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rsocket-types/-/rsocket-types-0.0.8.tgz#1d899776089ed9ab55dcd67a10ac68f2459c7a47"
-  dependencies:
-    buffer "^5.0.6"
-    fbjs "^0.8.12"
-    rsocket-flowable "^0.0.8"
-
-rsocket-websocket-client@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rsocket-websocket-client/-/rsocket-websocket-client-0.0.8.tgz#0a49f91ac433262a69db6fb735f80485e574c9d1"
-  dependencies:
-    fbjs "^0.8.12"
-    rsocket-core "^0.0.8"
-    rsocket-flowable "^0.0.8"
-    rsocket-types "^0.0.8"
+    rsocket-core "^0.0.9"
+    rsocket-flowable "^0.0.9"
+    rsocket-types "^0.0.9"
 
 rsvp@^3.0.13:
   version "3.6.2"

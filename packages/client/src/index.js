@@ -32,15 +32,15 @@ import {Broker, Group, Destination, Event} from './proteus/broker_info_pb';
 import {
   AccessKeyInfoServiceClient,
   AccessKeyInfoServiceServer,
-} from './proteus/accesskey_info_proteus_pb';
+} from './proteus/accesskey_info_rsocket_pb';
 import {
   BrokerInfoServiceClient,
   BrokerInfoServiceServer,
-} from './proteus/broker_info_proteus_pb';
+} from './proteus/broker_info_rsocket_pb';
 import {
   BrokerManagementServiceClient,
   BrokerManagementServiceServer,
-} from './proteus/broker_mgmt_proteus_pb';
+} from './proteus/broker_mgmt_rsocket_pb';
 
 import toObservable from './rx/FlowableAdapter';
 

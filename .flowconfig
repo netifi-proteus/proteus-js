@@ -14,7 +14,10 @@
 ./flow/
 
 [options]
-module.system=haste
+module.system=node
+module.system.node.resolve_dirname=.
+module.system.node.resolve_dirname=src
+module.system.node.resolve_dirname=node_modules
 
 esproposal.class_static_fields=enable
 esproposal.class_instance_fields=enable

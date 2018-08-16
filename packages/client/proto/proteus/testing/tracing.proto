@@ -13,5 +13,7 @@ message Ack {}
 service ProteusTracingService {
     rpc StreamSpans (stream zipkin.proto3.Span) returns (Ack) {}
 
+    rpc StreamSpansStreamAcks (stream zipkin.proto3.Span) returns (stream Ack) {}
+
     rpc SendSpan (zipkin.proto3.Span) returns (Ack) {}
 }

@@ -23,21 +23,23 @@
     "build-js": "babel-node ../../resources/buildJs.js",
     "build-flow": "babel-node ../../resources/buildFlow.js",
     "prepublish": "node ../../resources/prepublish.js",
-    "protoc": "protoc --proto_path=proto --js_out=import_style=commonjs,binary:src --proteus_out=src --plugin=protoc-gen-proteus=node_modules/.bin/proteus_js_protoc_plugin proto/proteus/*.proto"
+    "protoc": "protoc --proto_path=proto --js_out=import_style=commonjs,binary:src --rsocket_rpc_out=src --plugin=protoc-gen-rsocket_rpc=node_modules/.bin/rsocket_rpc_js_protoc_plugin proto/**/*.proto proto/**/**/*.proto"
   },
   "devDependencies": {
-    "proteus-js-protobuf": "0.0.10",
+    "http": "^0.0.0",
+    "rsocket-core": "^0.0.9",
+    "rsocket-rpc-protobuf": "^0.0.3",
+    "rsocket-tcp-client": "^0.0.9",
     "rxjs-compat": "^6.2.2",
     "ws": "^2.3.1"
   },
   "dependencies": {
     "google-protobuf": "^3.6.0",
     "opentracing": "^0.14.3",
-    "proteus-js-core": "^0.0.9",
-    "proteus-js-frames": "^0.0.4",
-    "proteus-js-tracing": "^0.0.8",
-    "rsocket-tcp-client": "^0.0.8",
-    "rsocket-websocket-client": "^0.0.8",
+    "rsocket-rpc-core": "^0.0.2",
+    "rsocket-rpc-frames": "^0.0.2",
+    "rsocket-rpc-tracing": "^0.0.2",
+    "rsocket-websocket-client": "^0.0.9",
     "rxjs": "^6.2.2"
   }
 }

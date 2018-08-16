@@ -1,27 +1,30 @@
 'use strict';
 
-const {
-  ZipkinTracingService,
-} = require('../../dist/basic-tracing/tracingService');
-const {BasicTracer} = require('../../dist/basic-tracing/tracer');
-const {Ping} = require('../../dist/proteus/ping-pong_pb');
+const {ZipkinTracingService} = require('../../dist/tracing/tracingService');
+const {BasicTracer} = require('../../dist/tracing/tracer');
+const {Ping} = require('../proteus/testing/ping-pong_pb');
 const {
   PingPongServiceClient,
   PingPongServiceServer,
-} = require('../../dist/proteus/ping-pong_proteus_pb');
+} = require('../proteus/testing/ping-pong_rsocket_pb');
 const {
   ProteusTracingServiceServer,
-} = require('../../dist/proteus/tracing_proteus_pb');
-const Proteus = require('../../../client/dist/Proteus').default;
-const {PongService} = require('../../dist/basic-tracing/pongService');
+} = require('../proteus/testing/tracing_rsocket_pb');
+const Proteus = require('../../dist/Proteus').default;
+const {PongService} = require('../../dist/tracing/pongService');
 const {BufferEncoders} = require('rsocket-core');
 const RSocketTcpClient = require('rsocket-tcp-client').default;
+const ProteusTlsClient = require('../../dist/ProteusTlsClient').default;
 const WebSocket = require('ws');
 global.WebSocket = WebSocket;
 
 const url = 'ws://localhost:8101/';
-const tcpConnection = new RSocketTcpClient(
-  {host: 'localhost', port: 8001},
+const tcpConnection = new ProteusTlsClient(
+  {
+    host: 'localhost',
+    port: 8001,
+    rejectUnauthorized: false,
+  },
   BufferEncoders,
 );
 
@@ -32,8 +35,19 @@ let tracingServiceGateway = Proteus.create({
     accessToken: 'kTBDVtfRBO4tHOnZzSyY5ym2kfY=',
   },
   transport: {
-    //connection: tcpConnection,
-    url,
+    connection: new ProteusTlsClient(
+      {
+        host: 'localhost',
+        port: 8001,
+        rejectUnauthorized: false,
+      },
+      BufferEncoders,
+    ),
+    // url,
+    // wsCreator: url =>
+    //   new WebSocket(url, {
+    //     rejectUnauthorized: false,
+    //   }),
   },
 });
 
@@ -64,8 +78,19 @@ let clientGatewayOne = Proteus.create({
     accessToken: 'kTBDVtfRBO4tHOnZzSyY5ym2kfY=',
   },
   transport: {
-    //connection: tcpConnection,
-    url,
+    connection: new ProteusTlsClient(
+      {
+        host: 'localhost',
+        port: 8001,
+        rejectUnauthorized: false,
+      },
+      BufferEncoders,
+    ),
+    // url,
+    // wsCreator: url =>
+    //   new WebSocket(url, {
+    //     rejectUnauthorized: false,
+    //   }),
   },
 });
 
@@ -78,8 +103,19 @@ let clientGatewayTwo = Proteus.create({
     accessToken: 'kTBDVtfRBO4tHOnZzSyY5ym2kfY=',
   },
   transport: {
-    //connection: tcpConnection,
-    url,
+    connection: new ProteusTlsClient(
+      {
+        host: 'localhost',
+        port: 8001,
+        rejectUnauthorized: false,
+      },
+      BufferEncoders,
+    ),
+    // url,
+    // wsCreator: url =>
+    //   new WebSocket(url, {
+    //     rejectUnauthorized: false,
+    //   }),
   },
 });
 
