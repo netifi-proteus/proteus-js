@@ -16,7 +16,7 @@ const RSocketTcpClient = require('rsocket-tcp-client').default;
 const WebSocket = require('ws');
 global.WebSocket = WebSocket;
 
-const url = 'ws://localhost:8101/';
+const url = 'wss://localhost:8101/';
 const tcpConnection = new RSocketTcpClient(
   {host: 'localhost', port: 8001},
   BufferEncoders,
