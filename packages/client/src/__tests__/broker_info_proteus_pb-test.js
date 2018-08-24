@@ -33,7 +33,7 @@ import {Empty} from 'google-protobuf/google/protobuf/empty_pb';
 import WebSocket from 'ws';
 global.WebSocket = global.WebSocket || WebSocket;
 
-describe('BrokerInfoServiceClient', () => {
+describe.skip('BrokerInfoServiceClient', () => {
   it('retrieves brokers over WebSocket', async () => {
     const proteus = Proteus.create({
       setup: {
