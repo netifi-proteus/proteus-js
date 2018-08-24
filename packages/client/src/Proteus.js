@@ -22,14 +22,10 @@ import {DuplexConnection, Responder, ReactiveSocket} from 'rsocket-types';
 import {Single, Flowable} from 'rsocket-flowable';
 import type {PayloadSerializers} from 'rsocket-core/build/RSocketSerialization';
 import {BufferEncoders} from 'rsocket-core';
-import {
-  RpcClient,
-  DeferredConnectingRSocket,
-  RequestHandlingRSocket,
-  UnwrappingRSocket,
-} from 'rsocket-rpc-core';
+import {RpcClient, RequestHandlingRSocket} from 'rsocket-rpc-core';
 import type {ClientConfig} from 'rsocket-rpc-core';
 import invariant from 'fbjs/lib/invariant';
+import {DeferredConnectingRSocket, UnwrappingRSocket} from './rsocket';
 
 import RSocketWebSocketClient from 'rsocket-websocket-client';
 

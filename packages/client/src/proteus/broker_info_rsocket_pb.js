@@ -34,8 +34,9 @@ var BrokerInfoServiceClient = function () {
           metadata: metadataBuf
         }).map(function (payload) {
           //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
-          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
-          return proteus_broker_info_pb.Broker.deserializeBinary(binary);
+          //var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          //return proteus_broker_info_pb.Broker.deserializeBinary(binary);
+          return proteus_broker_info_pb.Broker.deserializeBinary(payload.data);
         }).subscribe(subscriber);
       })
     );
