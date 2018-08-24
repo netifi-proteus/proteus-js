@@ -13,12 +13,12 @@ var AccessKeyInfoServiceClient = function () {
   function AccessKeyInfoServiceClient(rs, tracer) {
     this._rs = rs;
     this._tracer = tracer;
-    this.createAccessKeyTrace = rsocket_rpc_tracing.traceSingle(tracer, "AccessKeyInfoService.createAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
-    this.removeAccessKeyTrace = rsocket_rpc_tracing.traceSingle(tracer, "AccessKeyInfoService.removeAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
-    this.disableAccessKeyTrace = rsocket_rpc_tracing.traceSingle(tracer, "AccessKeyInfoService.disableAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
-    this.enableAccessKeyTrace = rsocket_rpc_tracing.traceSingle(tracer, "AccessKeyInfoService.enableAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
-    this.getAccessKeyTrace = rsocket_rpc_tracing.traceSingle(tracer, "AccessKeyInfoService.getAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
-    this.getAccessKeysTrace = rsocket_rpc_tracing.trace(tracer, "AccessKeyInfoService.getAccessKeys", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "client"});
+    this.createAccessKeyTrace = rsocket_rpc_tracing.traceSingle(tracer, "AccessKeyInfoService.createAccessKey", {"rsocket.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"rsocket.rpc.role": "client"});
+    this.removeAccessKeyTrace = rsocket_rpc_tracing.traceSingle(tracer, "AccessKeyInfoService.removeAccessKey", {"rsocket.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"rsocket.rpc.role": "client"});
+    this.disableAccessKeyTrace = rsocket_rpc_tracing.traceSingle(tracer, "AccessKeyInfoService.disableAccessKey", {"rsocket.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"rsocket.rpc.role": "client"});
+    this.enableAccessKeyTrace = rsocket_rpc_tracing.traceSingle(tracer, "AccessKeyInfoService.enableAccessKey", {"rsocket.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"rsocket.rpc.role": "client"});
+    this.getAccessKeyTrace = rsocket_rpc_tracing.traceSingle(tracer, "AccessKeyInfoService.getAccessKey", {"rsocket.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"rsocket.rpc.role": "client"});
+    this.getAccessKeysTrace = rsocket_rpc_tracing.trace(tracer, "AccessKeyInfoService.getAccessKeys", {"rsocket.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"rsocket.rpc.role": "client"});
   }
   AccessKeyInfoServiceClient.prototype.createAccessKey = function createAccessKey(message, metadata) {
     const map = {};
@@ -131,12 +131,12 @@ var AccessKeyInfoServiceServer = function () {
   function AccessKeyInfoServiceServer(service, tracer) {
     this._service = service;
     this._tracer = tracer;
-    this.createAccessKeyTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.createAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
-    this.removeAccessKeyTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.removeAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
-    this.disableAccessKeyTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.disableAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
-    this.enableAccessKeyTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.enableAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
-    this.getAccessKeyTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.getAccessKey", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
-    this.getAccessKeysTrace = rsocket_rpc_tracing.traceAsChild(tracer, "AccessKeyInfoService.getAccessKeys", {"proteus.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"proteus.type": "server"});
+    this.createAccessKeyTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.createAccessKey", {"rsocket.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"rsocket.rpc.role": "server"});
+    this.removeAccessKeyTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.removeAccessKey", {"rsocket.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"rsocket.rpc.role": "server"});
+    this.disableAccessKeyTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.disableAccessKey", {"rsocket.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"rsocket.rpc.role": "server"});
+    this.enableAccessKeyTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.enableAccessKey", {"rsocket.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"rsocket.rpc.role": "server"});
+    this.getAccessKeyTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService.getAccessKey", {"rsocket.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"rsocket.rpc.role": "server"});
+    this.getAccessKeysTrace = rsocket_rpc_tracing.traceAsChild(tracer, "AccessKeyInfoService.getAccessKeys", {"rsocket.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"rsocket.rpc.role": "server"});
     this._channelSwitch = (payload, restOfMessages) => {
       if (payload.metadata == null) {
         return rsocket_flowable.Flowable.error(new Error('metadata is empty'));

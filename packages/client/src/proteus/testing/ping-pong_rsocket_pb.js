@@ -12,9 +12,9 @@ var PingPongServiceClient = function () {
   function PingPongServiceClient(rs, tracer) {
     this._rs = rs;
     this._tracer = tracer;
-    this.pingTrace = rsocket_rpc_tracing.traceSingle(tracer, "PingPongService.ping", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "client"});
-    this.pingStreamTrace = rsocket_rpc_tracing.trace(tracer, "PingPongService.pingStream", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "client"});
-    this.pingFireAndForgetTrace = rsocket_rpc_tracing.traceSingle(tracer, "PingPongService.pingFireAndForget", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "client"});
+    this.pingTrace = rsocket_rpc_tracing.traceSingle(tracer, "PingPongService.ping", {"rsocket.service": "io.netifi.proteus.tracing.PingPongService"}, {"rsocket.rpc.role": "client"});
+    this.pingStreamTrace = rsocket_rpc_tracing.trace(tracer, "PingPongService.pingStream", {"rsocket.service": "io.netifi.proteus.tracing.PingPongService"}, {"rsocket.rpc.role": "client"});
+    this.pingFireAndForgetTrace = rsocket_rpc_tracing.traceSingle(tracer, "PingPongService.pingFireAndForget", {"rsocket.service": "io.netifi.proteus.tracing.PingPongService"}, {"rsocket.rpc.role": "client"});
   }
   PingPongServiceClient.prototype.ping = function ping(message, metadata) {
     const map = {};
@@ -76,9 +76,9 @@ var PingPongServiceServer = function () {
   function PingPongServiceServer(service, tracer) {
     this._service = service;
     this._tracer = tracer;
-    this.pingTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "PingPongService.ping", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "server"});
-    this.pingStreamTrace = rsocket_rpc_tracing.traceAsChild(tracer, "PingPongService.pingStream", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "server"});
-    this.pingFireAndForgetTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "PingPongService.pingFireAndForget", {"proteus.service": "io.netifi.proteus.tracing.PingPongService"}, {"proteus.type": "server"});
+    this.pingTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "PingPongService.ping", {"rsocket.service": "io.netifi.proteus.tracing.PingPongService"}, {"rsocket.rpc.role": "server"});
+    this.pingStreamTrace = rsocket_rpc_tracing.traceAsChild(tracer, "PingPongService.pingStream", {"rsocket.service": "io.netifi.proteus.tracing.PingPongService"}, {"rsocket.rpc.role": "server"});
+    this.pingFireAndForgetTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "PingPongService.pingFireAndForget", {"rsocket.service": "io.netifi.proteus.tracing.PingPongService"}, {"rsocket.rpc.role": "server"});
     this._channelSwitch = (payload, restOfMessages) => {
       if (payload.metadata == null) {
         return rsocket_flowable.Flowable.error(new Error('metadata is empty'));

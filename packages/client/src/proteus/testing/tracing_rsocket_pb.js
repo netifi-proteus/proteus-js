@@ -12,9 +12,9 @@ var ProteusTracingServiceClient = function () {
   function ProteusTracingServiceClient(rs, tracer) {
     this._rs = rs;
     this._tracer = tracer;
-    this.streamSpansTrace = rsocket_rpc_tracing.trace(tracer, "ProteusTracingService.streamSpans", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "client"});
-    this.streamSpansStreamAcksTrace = rsocket_rpc_tracing.trace(tracer, "ProteusTracingService.streamSpansStreamAcks", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "client"});
-    this.sendSpanTrace = rsocket_rpc_tracing.traceSingle(tracer, "ProteusTracingService.sendSpan", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "client"});
+    this.streamSpansTrace = rsocket_rpc_tracing.trace(tracer, "ProteusTracingService.streamSpans", {"rsocket.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"rsocket.rpc.role": "client"});
+    this.streamSpansStreamAcksTrace = rsocket_rpc_tracing.trace(tracer, "ProteusTracingService.streamSpansStreamAcks", {"rsocket.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"rsocket.rpc.role": "client"});
+    this.sendSpanTrace = rsocket_rpc_tracing.traceSingle(tracer, "ProteusTracingService.sendSpan", {"rsocket.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"rsocket.rpc.role": "client"});
   }
   ProteusTracingServiceClient.prototype.streamSpans = function streamSpans(messages, metadata) {
     const map = {};
@@ -84,9 +84,9 @@ var ProteusTracingServiceServer = function () {
   function ProteusTracingServiceServer(service, tracer) {
     this._service = service;
     this._tracer = tracer;
-    this.streamSpansTrace = rsocket_rpc_tracing.traceAsChild(tracer, "ProteusTracingService.streamSpans", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "server"});
-    this.streamSpansStreamAcksTrace = rsocket_rpc_tracing.traceAsChild(tracer, "ProteusTracingService.streamSpansStreamAcks", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "server"});
-    this.sendSpanTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "ProteusTracingService.sendSpan", {"proteus.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"proteus.type": "server"});
+    this.streamSpansTrace = rsocket_rpc_tracing.traceAsChild(tracer, "ProteusTracingService.streamSpans", {"rsocket.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"rsocket.rpc.role": "server"});
+    this.streamSpansStreamAcksTrace = rsocket_rpc_tracing.traceAsChild(tracer, "ProteusTracingService.streamSpansStreamAcks", {"rsocket.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"rsocket.rpc.role": "server"});
+    this.sendSpanTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "ProteusTracingService.sendSpan", {"rsocket.service": "io.netifi.proteus.tracing.ProteusTracingService"}, {"rsocket.rpc.role": "server"});
     this._channelSwitch = (payload, restOfMessages) => {
       if (payload.metadata == null) {
         return rsocket_flowable.Flowable.error(new Error('metadata is empty'));

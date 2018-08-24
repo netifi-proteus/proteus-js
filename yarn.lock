@@ -1383,7 +1383,7 @@ eslint-plugin-prefer-object-spread@1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-prefer-object-spread/-/eslint-plugin-prefer-object-spread-1.2.1.tgz#27fb91853690cceb3ae6101d9c8aecc6a67a402c"
 
-eslint-scope@^3.7.1, eslint-scope@~3.7.1:
+eslint-scope@3.7.1, eslint-scope@^3.7.1, eslint-scope@~3.7.1:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-3.7.1.tgz#3d63c3edfda02e06e01a452ad88caacc7cdcb6e8"
   dependencies:
@@ -3338,37 +3338,37 @@ rsocket-flowable@^0.0.9:
   dependencies:
     fbjs "^0.8.12"
 
-rsocket-rpc-core@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/rsocket-rpc-core/-/rsocket-rpc-core-0.0.2.tgz#1d2dc8a900028e3d649976ba941251b96948a842"
+rsocket-rpc-core@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-core/-/rsocket-rpc-core-0.0.3.tgz#b0e5f8e488634221b7011f5810e91fa3e92feff4"
   dependencies:
-    rsocket-rpc-frames "^0.0.2"
+    rsocket-rpc-frames "^0.0.3"
     rsocket-types "^0.0.9"
 
-rsocket-rpc-frames@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/rsocket-rpc-frames/-/rsocket-rpc-frames-0.0.2.tgz#8fed4dd1a44e6536e04b2777e5e37388d262d97d"
+rsocket-rpc-frames@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-frames/-/rsocket-rpc-frames-0.0.3.tgz#59a045cd60bf2cbb1b8834b4605b108b6b32eb52"
   dependencies:
     rsocket-core "^0.0.9"
 
-rsocket-rpc-protobuf@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/rsocket-rpc-protobuf/-/rsocket-rpc-protobuf-0.0.4.tgz#e9a74dd729828c48e431610986ad27b313144f01"
+rsocket-rpc-protobuf@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-protobuf/-/rsocket-rpc-protobuf-0.0.5.tgz#a10e647d754f536629ad6ac77d8c9e98fa8d164c"
   dependencies:
     cmake-js "^3.6.2"
     prebuild-install "^4.0.0"
 
-rsocket-rpc-tracing@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/rsocket-rpc-tracing/-/rsocket-rpc-tracing-0.0.2.tgz#a38f0400f5260b7393a7b6e0598f7ce3f91050b7"
+rsocket-rpc-tracing@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-tracing/-/rsocket-rpc-tracing-0.0.3.tgz#f2b72e923b6abd06a1714cf6d3ada5e85c542a05"
   dependencies:
     lodash.clone "^4.5.0"
     long "^4.0.0"
     opentracing "^0.14.3"
     rsocket-core "^0.0.9"
     rsocket-flowable "^0.0.9"
-    rsocket-rpc-core "^0.0.2"
-    rsocket-rpc-frames "^0.0.2"
+    rsocket-rpc-core "^0.0.3"
+    rsocket-rpc-frames "^0.0.3"
     rsocket-types "^0.0.9"
 
 rsocket-tcp-client@^0.0.9:

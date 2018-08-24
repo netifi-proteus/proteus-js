@@ -12,16 +12,16 @@ var BrokerInfoServiceClient = function () {
   function BrokerInfoServiceClient(rs, tracer) {
     this._rs = rs;
     this._tracer = tracer;
-    this.brokersTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.brokers", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "client"});
-    this.groupsTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.groups", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "client"});
-    this.destinationsTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.destinations", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "client"});
-    this.destinationsByBrokerAndGroupTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.destinationsByBrokerAndGroup", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "client"});
-    this.destinationsByGroupTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.destinationsByGroup", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "client"});
-    this.brokersWithGroupTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.brokersWithGroup", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "client"});
-    this.brokerWithDestinationTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerInfoService.brokerWithDestination", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "client"});
-    this.streamGroupEventsTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.streamGroupEvents", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "client"});
-    this.streamDestinationEventsTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.streamDestinationEvents", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "client"});
-    this.streamBrokerEventsTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.streamBrokerEvents", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "client"});
+    this.brokersTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.brokers", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "client"});
+    this.groupsTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.groups", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "client"});
+    this.destinationsTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.destinations", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "client"});
+    this.destinationsByBrokerAndGroupTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.destinationsByBrokerAndGroup", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "client"});
+    this.destinationsByGroupTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.destinationsByGroup", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "client"});
+    this.brokersWithGroupTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.brokersWithGroup", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "client"});
+    this.brokerWithDestinationTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerInfoService.brokerWithDestination", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "client"});
+    this.streamGroupEventsTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.streamGroupEvents", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "client"});
+    this.streamDestinationEventsTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.streamDestinationEvents", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "client"});
+    this.streamBrokerEventsTrace = rsocket_rpc_tracing.trace(tracer, "BrokerInfoService.streamBrokerEvents", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "client"});
   }
   BrokerInfoServiceClient.prototype.brokers = function brokers(message, metadata) {
     const map = {};
@@ -34,9 +34,8 @@ var BrokerInfoServiceClient = function () {
           metadata: metadataBuf
         }).map(function (payload) {
           //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
-          //var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
-          //return proteus_broker_info_pb.Broker.deserializeBinary(binary);
-          return proteus_broker_info_pb.Broker.deserializeBinary(payload.data);
+          var binary = payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+          return proteus_broker_info_pb.Broker.deserializeBinary(binary);
         }).subscribe(subscriber);
       })
     );
@@ -203,16 +202,16 @@ var BrokerInfoServiceServer = function () {
   function BrokerInfoServiceServer(service, tracer) {
     this._service = service;
     this._tracer = tracer;
-    this.brokersTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.brokers", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "server"});
-    this.groupsTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.groups", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "server"});
-    this.destinationsTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.destinations", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "server"});
-    this.destinationsByBrokerAndGroupTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.destinationsByBrokerAndGroup", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "server"});
-    this.destinationsByGroupTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.destinationsByGroup", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "server"});
-    this.brokersWithGroupTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.brokersWithGroup", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "server"});
-    this.brokerWithDestinationTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerInfoService.brokerWithDestination", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "server"});
-    this.streamGroupEventsTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.streamGroupEvents", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "server"});
-    this.streamDestinationEventsTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.streamDestinationEvents", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "server"});
-    this.streamBrokerEventsTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.streamBrokerEvents", {"proteus.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"proteus.type": "server"});
+    this.brokersTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.brokers", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "server"});
+    this.groupsTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.groups", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "server"});
+    this.destinationsTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.destinations", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "server"});
+    this.destinationsByBrokerAndGroupTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.destinationsByBrokerAndGroup", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "server"});
+    this.destinationsByGroupTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.destinationsByGroup", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "server"});
+    this.brokersWithGroupTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.brokersWithGroup", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "server"});
+    this.brokerWithDestinationTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerInfoService.brokerWithDestination", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "server"});
+    this.streamGroupEventsTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.streamGroupEvents", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "server"});
+    this.streamDestinationEventsTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.streamDestinationEvents", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "server"});
+    this.streamBrokerEventsTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerInfoService.streamBrokerEvents", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerInfoService"}, {"rsocket.rpc.role": "server"});
     this._channelSwitch = (payload, restOfMessages) => {
       if (payload.metadata == null) {
         return rsocket_flowable.Flowable.error(new Error('metadata is empty'));

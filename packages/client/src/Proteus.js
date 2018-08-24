@@ -26,6 +26,7 @@ import {RpcClient, RequestHandlingRSocket} from 'rsocket-rpc-core';
 import type {ClientConfig} from 'rsocket-rpc-core';
 import invariant from 'fbjs/lib/invariant';
 import {DeferredConnectingRSocket, UnwrappingRSocket} from './rsocket';
+import {FrameTypes, encodeFrame} from './frames';
 
 import RSocketWebSocketClient from 'rsocket-websocket-client';
 
@@ -58,12 +59,14 @@ export default class Proteus {
   _requestHandler: RequestHandlingRSocket;
 
   constructor(
+    group: string,
+    destination: string,
     proteusClient: RpcClient<Buffer, Buffer>,
     requestHandler: RequestHandlingRSocket,
   ) {
     this._client = proteusClient;
-    this._group = proteusClient.group();
-    this._destination = proteusClient.destination();
+    this._group = group;
+    this._destination = destination;
     this._connect = () => {
       if (this._connection) {
         return Single.of(this._connection);
@@ -243,14 +246,21 @@ export default class Proteus {
     const requestHandler = new RequestHandlingRSocket();
     const responder = new UnwrappingRSocket(requestHandler);
 
+    const metadata = encodeFrame({
+      type: FrameTypes.DESTINATION_SETUP,
+      majorVersion: null,
+      minorVersion: null,
+      destination,
+      group: config.setup.group,
+      accessKey,
+      accessToken,
+    });
+
     const finalConfig: ClientConfig<Buffer, Buffer> = {
       setup: {
-        group: config.setup.group,
-        destination,
         keepAlive,
         lifetime,
-        accessKey,
-        accessToken,
+        metadata,
       },
       transport,
       responder,
@@ -266,7 +276,7 @@ export default class Proteus {
 
     const client = new RpcClient(finalConfig);
 
-    return new Proteus(client, requestHandler);
+    return new Proteus(config.setup.group, destination, client, requestHandler);
   }
 }
 

@@ -13,16 +13,16 @@ var BrokerManagementServiceClient = function () {
   function BrokerManagementServiceClient(rs, tracer) {
     this._rs = rs;
     this._tracer = tracer;
-    this.shutdownTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.shutdown", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.leaveTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.leave", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.rejoinTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.rejoin", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.joinTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.join", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.closeDestinationTrace = rsocket_rpc_tracing.trace(tracer, "BrokerManagementService.closeDestination", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.closeGroupTrace = rsocket_rpc_tracing.trace(tracer, "BrokerManagementService.closeGroup", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.closeBrokerTrace = rsocket_rpc_tracing.trace(tracer, "BrokerManagementService.closeBroker", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.closeDestinationsTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.closeDestinations", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.closeBrokersTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.closeBrokers", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
-    this.closeAllTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.closeAll", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "client"});
+    this.shutdownTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.shutdown", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "client"});
+    this.leaveTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.leave", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "client"});
+    this.rejoinTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.rejoin", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "client"});
+    this.joinTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.join", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "client"});
+    this.closeDestinationTrace = rsocket_rpc_tracing.trace(tracer, "BrokerManagementService.closeDestination", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "client"});
+    this.closeGroupTrace = rsocket_rpc_tracing.trace(tracer, "BrokerManagementService.closeGroup", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "client"});
+    this.closeBrokerTrace = rsocket_rpc_tracing.trace(tracer, "BrokerManagementService.closeBroker", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "client"});
+    this.closeDestinationsTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.closeDestinations", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "client"});
+    this.closeBrokersTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.closeBrokers", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "client"});
+    this.closeAllTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService.closeAll", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "client"});
   }
   // Shutdowns down a broker process
   BrokerManagementServiceClient.prototype.shutdown = function shutdown(message, metadata) {
@@ -225,16 +225,16 @@ var BrokerManagementServiceServer = function () {
   function BrokerManagementServiceServer(service, tracer) {
     this._service = service;
     this._tracer = tracer;
-    this.shutdownTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.shutdown", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.leaveTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.leave", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.rejoinTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.rejoin", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.joinTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.join", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.closeDestinationTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerManagementService.closeDestination", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.closeGroupTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerManagementService.closeGroup", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.closeBrokerTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerManagementService.closeBroker", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.closeDestinationsTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeDestinations", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.closeBrokersTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeBrokers", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
-    this.closeAllTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeAll", {"proteus.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"proteus.type": "server"});
+    this.shutdownTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.shutdown", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "server"});
+    this.leaveTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.leave", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "server"});
+    this.rejoinTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.rejoin", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "server"});
+    this.joinTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.join", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "server"});
+    this.closeDestinationTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerManagementService.closeDestination", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "server"});
+    this.closeGroupTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerManagementService.closeGroup", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "server"});
+    this.closeBrokerTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerManagementService.closeBroker", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "server"});
+    this.closeDestinationsTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeDestinations", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "server"});
+    this.closeBrokersTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeBrokers", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "server"});
+    this.closeAllTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService.closeAll", {"rsocket.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"rsocket.rpc.role": "server"});
     this._channelSwitch = (payload, restOfMessages) => {
       if (payload.metadata == null) {
         return rsocket_flowable.Flowable.error(new Error('metadata is empty'));
