@@ -6,6 +6,12 @@
 
 For bugs, questions, and discussions please use the [Github Issues](https://github.com/netifi-proteus/proteus-js/issues).
 
+## Installation
+
+`yarn add proteus-js-client` OR
+
+`npm install proteus-js-client`
+
 ## Basic Use
 
 Proteus JavaScript presumes the use of the Proteus RPC routing model.
@@ -149,6 +155,24 @@ proteus.addService('io.proteus.demo.random-string-service', randomStringService)
 
 
 Now our gateway can generate RSockets for the purpose of reaching out to the network and can register handlers so that others on the network can use our services!
+
+
+## Observables
+
+We also provide a utility method to convert the `rsocket-flowable` types to the more familiar `Observable`.
+
+```angular2html
+
+const {Single, Flowable} = require('rsocket-flowable');
+const {toObservable} = require('proteus-js-client');
+
+const monoObservable = toObservable(Single.of("some value"));
+
+const manyObservable = toObservable(Flowable.just(...[1, 2, 3, 4]));
+
+```
+
+This loses the semantic of backpressure (i.e. `onSubscribe` and an `ISubscription` with `request n`/`cancel` methods), but may be more palatable to developers with an existing RxJS codebase. 
 
 ## License
 Copyright 2017 Netifi Inc.
