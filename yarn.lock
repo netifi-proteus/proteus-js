@@ -1383,7 +1383,7 @@ eslint-plugin-prefer-object-spread@1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-prefer-object-spread/-/eslint-plugin-prefer-object-spread-1.2.1.tgz#27fb91853690cceb3ae6101d9c8aecc6a67a402c"
 
-eslint-scope@3.7.1, eslint-scope@^3.7.1, eslint-scope@~3.7.1:
+eslint-scope@^3.7.1, eslint-scope@~3.7.1:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-3.7.1.tgz#3d63c3edfda02e06e01a452ad88caacc7cdcb6e8"
   dependencies:
@@ -2982,9 +2982,9 @@ pluralize@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
 
-prebuild-install@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/prebuild-install/-/prebuild-install-4.0.0.tgz#206ce8106ce5efa4b6cf062fc8a0a7d93c17f3a8"
+prebuild-install@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/prebuild-install/-/prebuild-install-5.1.0.tgz#799cf2e443065eaff4880ecfa32b4d1a4a3ad000"
   dependencies:
     detect-libc "^1.0.3"
     expand-template "^1.0.2"
@@ -2996,7 +2996,7 @@ prebuild-install@^4.0.0:
     npmlog "^4.0.1"
     os-homedir "^1.0.1"
     pump "^2.0.1"
-    rc "^1.1.6"
+    rc "^1.2.7"
     simple-get "^2.7.0"
     tar-fs "^1.13.0"
     tunnel-agent "^0.6.0"
@@ -3351,12 +3351,19 @@ rsocket-rpc-frames@^0.0.3:
   dependencies:
     rsocket-core "^0.0.9"
 
-rsocket-rpc-protobuf@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/rsocket-rpc-protobuf/-/rsocket-rpc-protobuf-0.0.5.tgz#a10e647d754f536629ad6ac77d8c9e98fa8d164c"
+rsocket-rpc-metrics@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-metrics/-/rsocket-rpc-metrics-0.0.1.tgz#f2ac78ceebc6a00e715d836004fc651bd5e3fb7f"
+  dependencies:
+    rsocket-flowable "^0.0.9"
+    rsocket-types "^0.0.9"
+
+rsocket-rpc-protobuf@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-protobuf/-/rsocket-rpc-protobuf-0.0.8.tgz#31bd528b489ab9e6d4ae94d446859c3206dd5798"
   dependencies:
     cmake-js "^3.6.2"
-    prebuild-install "^4.0.0"
+    prebuild-install "^5.1.0"
 
 rsocket-rpc-tracing@^0.0.3:
   version "0.0.3"
