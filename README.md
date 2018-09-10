@@ -85,7 +85,7 @@ brokerServices.brokers(new Empty(), Buffer.alloc(0)).subscribe({
 
     console.log("Scanning destinations connected to broker", broker);
   
-    // Get Stream of All Destinations on Broker, defined in the router services
+    // Get Stream of All Destinations on Broker, defined in the router services protobuf
     // rpc Destinations (Broker) returns (stream Destination) {}
   
     this.brokerInfoService.destinations(broker, Buffer.alloc(0)).subscribe({

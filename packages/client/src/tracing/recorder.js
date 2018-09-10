@@ -1,6 +1,7 @@
 import {Span, Endpoint, Annotation} from '../zipkin/proto3/zipkin_pb';
 import Long from 'long';
 import {ProteusTracingServiceClient} from '../proteus/testing/tracing_rsocket_pb';
+import {QueuingFlowableProcessor} from 'rsocket-rpc-core';
 
 export class DefaultRecorder {
   /**
@@ -30,7 +31,9 @@ export class ZipkinRecorder extends DefaultRecorder {
   _destination: string;
   _service: string;
   _shared: boolean;
+  _once: boolean;
   _client: ProteusTracingServiceClient;
+  _inputSpans: QueuingFlowableProcessor<Span>;
 
   constructor(
     proteusGateway,
@@ -45,10 +48,12 @@ export class ZipkinRecorder extends DefaultRecorder {
     this._localService = localService;
     this._remoteService = remoteService;
     this._shared = shared;
+    this._once = false;
     if (proteusGateway) {
       this._client = new ProteusTracingServiceClient(
         proteusGateway.group('com.netifi.proteus.tracing'),
       );
+      this._inputSpans = new QueuingFlowableProcessor();
     }
   }
 
@@ -64,19 +69,28 @@ export class ZipkinRecorder extends DefaultRecorder {
           this._service,
           this._shared,
         );
-        this._client.sendSpan(loggableSpan, Buffer.alloc(0)).subscribe({
-          onComplete: ack => {
-            //Great, done
-          },
-          onError: err => {
-            console.log(
-              'Failed to log span:' + span.spanId.toString() + ' ' + err,
-            );
-          },
-          onSubscribe: cancel => {
-            //No intention of canceling
-          },
-        });
+        if (!this._once) {
+          this._once = true;
+          this._client
+            .streamSpans(this._inputSpans, Buffer.alloc(0))
+            .subscribe({
+              onNext: ack => {
+                // doesn't matter
+              },
+              onComplete: () => {
+                console.log('recording span complete from tracing service');
+              },
+              onError: err => {
+                console.log(
+                  'Failed to log span:' + span.spanId.toString() + ' ' + err,
+                );
+              },
+              onSubscribe: cancel => {
+                //No intention of canceling
+              },
+            });
+        }
+        this._inputSpans.onNext(loggableSpan);
       } catch (error) {
         console.log('Error occurred while attempting to send trace: ' + error);
       }

@@ -1,3 +1,5 @@
+// @flow
+
 'use strict';
 
 import http from 'http';
@@ -51,7 +53,7 @@ export class ZipkinTracingService {
     return result;
   }
 
-  streamSpans(spans: Flowable<Span>, metadata: Buffer) {
+  streamSpans(spans: Flowable<Span>, metadata: Buffer): Flowable<Ack> {
     let _subscription;
     return new Flowable(sub => {
       let once = false;
@@ -105,7 +107,10 @@ export class ZipkinTracingService {
     });
   }
 
-  streamSpansStreamAcks(spans: Flowable<Span>, metadata: Buffer) {
+  streamSpansStreamAcks(
+    spans: Flowable<Span>,
+    metadata: Buffer,
+  ): Flowable<Ack> {
     let pending = 0;
     let done = false;
     const processor = new QueuingFlowableProcessor();
