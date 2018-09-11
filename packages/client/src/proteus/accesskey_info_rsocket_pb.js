@@ -188,69 +188,84 @@ var AccessKeyInfoServiceServer = function () {
       switch (method) {
         case 'CreateAccessKey':
           return this.createAccessKeyMetrics(
-            this.createAccessKeyTrace(spanContext)(
-              this._service
-              .createAccessKey(proteus_accesskey_info_pb.AccessKeyParameters.deserializeBinary(payload.data), payload.metadata)
-              .map(function (message) {
-                return {
-                  data: Buffer.from(message.serializeBinary()),
-                  metadata: Buffer.alloc(0)
-                }
-              })
+            this.createAccessKeyTrace(spanContext)(new rsocket_flowable.Single(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .createAccessKey(proteus_accesskey_info_pb.AccessKeyParameters.deserializeBinary(binary), payload.metadata)
+                .map(function (message) {
+                  return {
+                    data: Buffer.from(message.serializeBinary()),
+                    metadata: Buffer.alloc(0)
+                  }
+                }).subscribe(subscriber);
+              }
             )
-          );
+          )
+        );
         case 'RemoveAccessKey':
           return this.removeAccessKeyMetrics(
-            this.removeAccessKeyTrace(spanContext)(
-              this._service
-              .removeAccessKey(proteus_accesskey_info_pb.AccessKey.deserializeBinary(payload.data), payload.metadata)
-              .map(function (message) {
-                return {
-                  data: Buffer.from(message.serializeBinary()),
-                  metadata: Buffer.alloc(0)
-                }
-              })
+            this.removeAccessKeyTrace(spanContext)(new rsocket_flowable.Single(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .removeAccessKey(proteus_accesskey_info_pb.AccessKey.deserializeBinary(binary), payload.metadata)
+                .map(function (message) {
+                  return {
+                    data: Buffer.from(message.serializeBinary()),
+                    metadata: Buffer.alloc(0)
+                  }
+                }).subscribe(subscriber);
+              }
             )
-          );
+          )
+        );
         case 'DisableAccessKey':
           return this.disableAccessKeyMetrics(
-            this.disableAccessKeyTrace(spanContext)(
-              this._service
-              .disableAccessKey(proteus_accesskey_info_pb.AccessKey.deserializeBinary(payload.data), payload.metadata)
-              .map(function (message) {
-                return {
-                  data: Buffer.from(message.serializeBinary()),
-                  metadata: Buffer.alloc(0)
-                }
-              })
+            this.disableAccessKeyTrace(spanContext)(new rsocket_flowable.Single(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .disableAccessKey(proteus_accesskey_info_pb.AccessKey.deserializeBinary(binary), payload.metadata)
+                .map(function (message) {
+                  return {
+                    data: Buffer.from(message.serializeBinary()),
+                    metadata: Buffer.alloc(0)
+                  }
+                }).subscribe(subscriber);
+              }
             )
-          );
+          )
+        );
         case 'EnableAccessKey':
           return this.enableAccessKeyMetrics(
-            this.enableAccessKeyTrace(spanContext)(
-              this._service
-              .enableAccessKey(proteus_accesskey_info_pb.AccessKey.deserializeBinary(payload.data), payload.metadata)
-              .map(function (message) {
-                return {
-                  data: Buffer.from(message.serializeBinary()),
-                  metadata: Buffer.alloc(0)
-                }
-              })
+            this.enableAccessKeyTrace(spanContext)(new rsocket_flowable.Single(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .enableAccessKey(proteus_accesskey_info_pb.AccessKey.deserializeBinary(binary), payload.metadata)
+                .map(function (message) {
+                  return {
+                    data: Buffer.from(message.serializeBinary()),
+                    metadata: Buffer.alloc(0)
+                  }
+                }).subscribe(subscriber);
+              }
             )
-          );
+          )
+        );
         case 'GetAccessKey':
           return this.getAccessKeyMetrics(
-            this.getAccessKeyTrace(spanContext)(
-              this._service
-              .getAccessKey(proteus_accesskey_info_pb.AccessKey.deserializeBinary(payload.data), payload.metadata)
-              .map(function (message) {
-                return {
-                  data: Buffer.from(message.serializeBinary()),
-                  metadata: Buffer.alloc(0)
-                }
-              })
+            this.getAccessKeyTrace(spanContext)(new rsocket_flowable.Single(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .getAccessKey(proteus_accesskey_info_pb.AccessKey.deserializeBinary(binary), payload.metadata)
+                .map(function (message) {
+                  return {
+                    data: Buffer.from(message.serializeBinary()),
+                    metadata: Buffer.alloc(0)
+                  }
+                }).subscribe(subscriber);
+              }
             )
-          );
+          )
+        );
         default:
           return rsocket_flowable.Single.error(new Error('unknown method'));
       }
@@ -268,17 +283,20 @@ var AccessKeyInfoServiceServer = function () {
       switch (method) {
         case 'GetAccessKeys':
           return this.getAccessKeysMetrics(
-            this.getAccessKeysTrace(spanContext)(
-              this._service
-                .getAccessKeys(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata)
+            this.getAccessKeysTrace(spanContext)(new rsocket_flowable.Flowable(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .getAccessKeys(google_protobuf_empty_pb.Empty.deserializeBinary(binary), payload.metadata)
                 .map(function (message) {
                   return {
                     data: Buffer.from(message.serializeBinary()),
                     metadata: Buffer.alloc(0)
                   }
-                })
-              )
-            );
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
         default:
           return rsocket_flowable.Flowable.error(new Error('unknown method'));
       }

@@ -279,17 +279,20 @@ var BrokerInfoServiceServer = function () {
       switch (method) {
         case 'BrokerWithDestination':
           return this.brokerWithDestinationMetrics(
-            this.brokerWithDestinationTrace(spanContext)(
-              this._service
-              .brokerWithDestination(proteus_broker_info_pb.Destination.deserializeBinary(payload.data), payload.metadata)
-              .map(function (message) {
-                return {
-                  data: Buffer.from(message.serializeBinary()),
-                  metadata: Buffer.alloc(0)
-                }
-              })
+            this.brokerWithDestinationTrace(spanContext)(new rsocket_flowable.Single(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .brokerWithDestination(proteus_broker_info_pb.Destination.deserializeBinary(binary), payload.metadata)
+                .map(function (message) {
+                  return {
+                    data: Buffer.from(message.serializeBinary()),
+                    metadata: Buffer.alloc(0)
+                  }
+                }).subscribe(subscriber);
+              }
             )
-          );
+          )
+        );
         default:
           return rsocket_flowable.Single.error(new Error('unknown method'));
       }
@@ -307,121 +310,148 @@ var BrokerInfoServiceServer = function () {
       switch (method) {
         case 'Brokers':
           return this.brokersMetrics(
-            this.brokersTrace(spanContext)(
-              this._service
-                .brokers(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata)
+            this.brokersTrace(spanContext)(new rsocket_flowable.Flowable(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .brokers(google_protobuf_empty_pb.Empty.deserializeBinary(binary), payload.metadata)
                 .map(function (message) {
                   return {
                     data: Buffer.from(message.serializeBinary()),
                     metadata: Buffer.alloc(0)
                   }
-                })
-              )
-            );
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
         case 'Groups':
           return this.groupsMetrics(
-            this.groupsTrace(spanContext)(
-              this._service
-                .groups(proteus_broker_info_pb.Broker.deserializeBinary(payload.data), payload.metadata)
+            this.groupsTrace(spanContext)(new rsocket_flowable.Flowable(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .groups(proteus_broker_info_pb.Broker.deserializeBinary(binary), payload.metadata)
                 .map(function (message) {
                   return {
                     data: Buffer.from(message.serializeBinary()),
                     metadata: Buffer.alloc(0)
                   }
-                })
-              )
-            );
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
         case 'Destinations':
           return this.destinationsMetrics(
-            this.destinationsTrace(spanContext)(
-              this._service
-                .destinations(proteus_broker_info_pb.Broker.deserializeBinary(payload.data), payload.metadata)
+            this.destinationsTrace(spanContext)(new rsocket_flowable.Flowable(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .destinations(proteus_broker_info_pb.Broker.deserializeBinary(binary), payload.metadata)
                 .map(function (message) {
                   return {
                     data: Buffer.from(message.serializeBinary()),
                     metadata: Buffer.alloc(0)
                   }
-                })
-              )
-            );
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
         case 'DestinationsByBrokerAndGroup':
           return this.destinationsByBrokerAndGroupMetrics(
-            this.destinationsByBrokerAndGroupTrace(spanContext)(
-              this._service
-                .destinationsByBrokerAndGroup(proteus_broker_info_pb.Group.deserializeBinary(payload.data), payload.metadata)
+            this.destinationsByBrokerAndGroupTrace(spanContext)(new rsocket_flowable.Flowable(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .destinationsByBrokerAndGroup(proteus_broker_info_pb.Group.deserializeBinary(binary), payload.metadata)
                 .map(function (message) {
                   return {
                     data: Buffer.from(message.serializeBinary()),
                     metadata: Buffer.alloc(0)
                   }
-                })
-              )
-            );
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
         case 'DestinationsByGroup':
           return this.destinationsByGroupMetrics(
-            this.destinationsByGroupTrace(spanContext)(
-              this._service
-                .destinationsByGroup(proteus_broker_info_pb.Group.deserializeBinary(payload.data), payload.metadata)
+            this.destinationsByGroupTrace(spanContext)(new rsocket_flowable.Flowable(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .destinationsByGroup(proteus_broker_info_pb.Group.deserializeBinary(binary), payload.metadata)
                 .map(function (message) {
                   return {
                     data: Buffer.from(message.serializeBinary()),
                     metadata: Buffer.alloc(0)
                   }
-                })
-              )
-            );
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
         case 'BrokersWithGroup':
           return this.brokersWithGroupMetrics(
-            this.brokersWithGroupTrace(spanContext)(
-              this._service
-                .brokersWithGroup(proteus_broker_info_pb.Group.deserializeBinary(payload.data), payload.metadata)
+            this.brokersWithGroupTrace(spanContext)(new rsocket_flowable.Flowable(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .brokersWithGroup(proteus_broker_info_pb.Group.deserializeBinary(binary), payload.metadata)
                 .map(function (message) {
                   return {
                     data: Buffer.from(message.serializeBinary()),
                     metadata: Buffer.alloc(0)
                   }
-                })
-              )
-            );
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
         case 'streamGroupEvents':
           return this.streamGroupEventsMetrics(
-            this.streamGroupEventsTrace(spanContext)(
-              this._service
-                .streamGroupEvents(proteus_broker_info_pb.Group.deserializeBinary(payload.data), payload.metadata)
+            this.streamGroupEventsTrace(spanContext)(new rsocket_flowable.Flowable(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .streamGroupEvents(proteus_broker_info_pb.Group.deserializeBinary(binary), payload.metadata)
                 .map(function (message) {
                   return {
                     data: Buffer.from(message.serializeBinary()),
                     metadata: Buffer.alloc(0)
                   }
-                })
-              )
-            );
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
         case 'streamDestinationEvents':
           return this.streamDestinationEventsMetrics(
-            this.streamDestinationEventsTrace(spanContext)(
-              this._service
-                .streamDestinationEvents(proteus_broker_info_pb.Destination.deserializeBinary(payload.data), payload.metadata)
+            this.streamDestinationEventsTrace(spanContext)(new rsocket_flowable.Flowable(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .streamDestinationEvents(proteus_broker_info_pb.Destination.deserializeBinary(binary), payload.metadata)
                 .map(function (message) {
                   return {
                     data: Buffer.from(message.serializeBinary()),
                     metadata: Buffer.alloc(0)
                   }
-                })
-              )
-            );
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
         case 'streamBrokerEvents':
           return this.streamBrokerEventsMetrics(
-            this.streamBrokerEventsTrace(spanContext)(
-              this._service
-                .streamBrokerEvents(google_protobuf_empty_pb.Empty.deserializeBinary(payload.data), payload.metadata)
+            this.streamBrokerEventsTrace(spanContext)(new rsocket_flowable.Flowable(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .streamBrokerEvents(google_protobuf_empty_pb.Empty.deserializeBinary(binary), payload.metadata)
                 .map(function (message) {
                   return {
                     data: Buffer.from(message.serializeBinary()),
                     metadata: Buffer.alloc(0)
                   }
-                })
-              )
-            );
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
         default:
           return rsocket_flowable.Flowable.error(new Error('unknown method'));
       }

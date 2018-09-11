@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package io.netifi.proteus.tracing;
 import "google/protobuf/empty.proto";
+import "rsocket/options.proto";
 
 message Ping {
     string message = 1;
@@ -16,5 +17,9 @@ service PingPongService {
 
     rpc pingStream (Ping) returns (stream Pong) {}
 
-    rpc pingFireAndForget (Ping) returns (google.protobuf.Empty) {}
+    rpc pingFireAndForget (Ping) returns (google.protobuf.Empty) {
+        option (io.rsocket.rpc.options) = {
+                  fire_and_forget: true
+                };
+    }
 }

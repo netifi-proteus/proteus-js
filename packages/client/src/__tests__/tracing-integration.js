@@ -18,7 +18,7 @@ const ProteusTlsClient = require('../../dist/ProteusTlsClient').default;
 const WebSocket = require('ws');
 global.WebSocket = WebSocket;
 
-const url = 'ws://localhost:8101/';
+const url = 'wss://localhost:8101/';
 const tcpConnection = new ProteusTlsClient(
   {
     host: 'localhost',
@@ -28,45 +28,45 @@ const tcpConnection = new ProteusTlsClient(
   BufferEncoders,
 );
 
-let tracingServiceGateway = Proteus.create({
-  setup: {
-    group: 'com.netifi.proteus.tracing',
-    accessKey: 9007199254740991,
-    accessToken: 'kTBDVtfRBO4tHOnZzSyY5ym2kfY=',
-  },
-  transport: {
-    connection: new ProteusTlsClient(
-      {
-        host: 'localhost',
-        port: 8001,
-        rejectUnauthorized: false,
-      },
-      BufferEncoders,
-    ),
-    // url,
-    // wsCreator: url =>
-    //   new WebSocket(url, {
-    //     rejectUnauthorized: false,
-    //   }),
-  },
-});
-
-tracingServiceGateway.addService(
-  'io.netifi.proteus.tracing.ProteusTracingService',
-  new ProteusTracingServiceServer(
-    new ZipkinTracingService('localhost', 9411, '/api/v2/spans'),
-  ),
-);
-console.log('Connecting to localhost for tracing service...');
-tracingServiceGateway._connect().subscribe({
-  onComplete: val => {
-    console.log('Connected:' + val);
-  },
-  onError: err => {
-    console.log('Failed to connect:' + err);
-  },
-  onSubscribe: () => {},
-});
+// let tracingServiceGateway = Proteus.create({
+//   setup: {
+//     group: 'com.netifi.proteus.tracing',
+//     accessKey: 9007199254740991,
+//     accessToken: 'kTBDVtfRBO4tHOnZzSyY5ym2kfY=',
+//   },
+//   transport: {
+//     connection: new ProteusTlsClient(
+//       {
+//         host: 'localhost',
+//         port: 8001,
+//         rejectUnauthorized: false,
+//       },
+//       BufferEncoders,
+//     ),
+//     // url,
+//     // wsCreator: url =>
+//     //   new WebSocket(url, {
+//     //     rejectUnauthorized: false,
+//     //   }),
+//   },
+// });
+//
+// tracingServiceGateway.addService(
+//   'io.netifi.proteus.tracing.ProteusTracingService',
+//   new ProteusTracingServiceServer(
+//     new ZipkinTracingService('localhost', 9411, '/api/v2/spans'),
+//   ),
+// );
+// console.log('Connecting to localhost for tracing service...');
+// tracingServiceGateway._connect().subscribe({
+//   onComplete: val => {
+//     console.log('Connected:' + val);
+//   },
+//   onError: err => {
+//     console.log('Failed to connect:' + err);
+//   },
+//   onSubscribe: () => {},
+// });
 
 //setTimeout(() => {
 const clientOneId = 'thingOne';
@@ -86,11 +86,11 @@ let clientGatewayOne = Proteus.create({
       },
       BufferEncoders,
     ),
-    // url,
-    // wsCreator: url =>
-    //   new WebSocket(url, {
-    //     rejectUnauthorized: false,
-    //   }),
+    url,
+    wsCreator: url =>
+      new WebSocket(url, {
+        rejectUnauthorized: false,
+      }),
   },
 });
 
@@ -111,11 +111,11 @@ let clientGatewayTwo = Proteus.create({
       },
       BufferEncoders,
     ),
-    // url,
-    // wsCreator: url =>
-    //   new WebSocket(url, {
-    //     rejectUnauthorized: false,
-    //   }),
+    url,
+    wsCreator: url =>
+      new WebSocket(url, {
+        rejectUnauthorized: false,
+      }),
   },
 });
 

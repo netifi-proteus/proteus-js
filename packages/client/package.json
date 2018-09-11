@@ -23,12 +23,12 @@
     "build-js": "babel-node ../../resources/buildJs.js",
     "build-flow": "babel-node ../../resources/buildFlow.js",
     "prepublish": "node ../../resources/prepublish.js",
-    "protoc": "protoc --proto_path=proto --js_out=import_style=commonjs,binary:src --rsocket_rpc_out=src --plugin=protoc-gen-rsocket_rpc=node_modules/.bin/rsocket_rpc_js_protoc_plugin proto/**/*.proto proto/**/**/*.proto"
+    "protoc": "protoc --proto_path=proto --proto_path=../../node_modules/rsocket-rpc-protobuf/proto --js_out=import_style=commonjs,binary:src --rsocket_rpc_out=src --plugin=protoc-gen-rsocket_rpc=node_modules/.bin/rsocket_rpc_js_protoc_plugin proto/**/*.proto proto/**/**/*.proto ../../node_modules/rsocket-rpc-protobuf/proto/rsocket/*.proto"
   },
   "devDependencies": {
     "http": "^0.0.0",
     "rsocket-core": "^0.0.9",
-    "rsocket-rpc-protobuf": "^0.0.8",
+    "rsocket-rpc-protobuf": "^0.1.1",
     "rsocket-tcp-client": "^0.0.9",
     "rxjs-compat": "^6.2.2",
     "ws": "^2.3.1"

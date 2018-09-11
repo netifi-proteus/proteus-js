@@ -3358,9 +3358,9 @@ rsocket-rpc-metrics@^0.0.1:
     rsocket-flowable "^0.0.9"
     rsocket-types "^0.0.9"
 
-rsocket-rpc-protobuf@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/rsocket-rpc-protobuf/-/rsocket-rpc-protobuf-0.0.8.tgz#31bd528b489ab9e6d4ae94d446859c3206dd5798"
+rsocket-rpc-protobuf@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/rsocket-rpc-protobuf/-/rsocket-rpc-protobuf-0.1.1.tgz#532885d9ff2e3555d3b27f9ea4e1415fe64c5852"
   dependencies:
     cmake-js "^3.6.2"
     prebuild-install "^5.1.0"

@@ -109,7 +109,10 @@ var ProteusTracingServiceServer = function () {
       let deserializedMessages;
       switch(method){
         case 'StreamSpans':
-          deserializedMessages = restOfMessages.map(message => zipkin_proto3_zipkin_pb.Span.deserializeBinary(message));
+          deserializedMessages = restOfMessages.map(payload => {
+            var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+            return zipkin_proto3_zipkin_pb.Span.deserializeBinary(binary);
+          });
           return this.streamSpansMetrics(
             this.streamSpansTrace(spanContext)(
               this._service
@@ -123,7 +126,10 @@ var ProteusTracingServiceServer = function () {
               )
             );
         case 'StreamSpansStreamAcks':
-          deserializedMessages = restOfMessages.map(message => zipkin_proto3_zipkin_pb.Span.deserializeBinary(message));
+          deserializedMessages = restOfMessages.map(payload => {
+            var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+            return zipkin_proto3_zipkin_pb.Span.deserializeBinary(binary);
+          });
           return this.streamSpansStreamAcksMetrics(
             this.streamSpansStreamAcksTrace(spanContext)(
               this._service
@@ -154,17 +160,20 @@ var ProteusTracingServiceServer = function () {
       switch (method) {
         case 'SendSpan':
           return this.sendSpanMetrics(
-            this.sendSpanTrace(spanContext)(
-              this._service
-              .sendSpan(zipkin_proto3_zipkin_pb.Span.deserializeBinary(payload.data), payload.metadata)
-              .map(function (message) {
-                return {
-                  data: Buffer.from(message.serializeBinary()),
-                  metadata: Buffer.alloc(0)
-                }
-              })
+            this.sendSpanTrace(spanContext)(new rsocket_flowable.Single(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .sendSpan(zipkin_proto3_zipkin_pb.Span.deserializeBinary(binary), payload.metadata)
+                .map(function (message) {
+                  return {
+                    data: Buffer.from(message.serializeBinary()),
+                    metadata: Buffer.alloc(0)
+                  }
+                }).subscribe(subscriber);
+              }
             )
-          );
+          )
+        );
         default:
           return rsocket_flowable.Single.error(new Error('unknown method'));
       }

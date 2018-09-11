@@ -8,6 +8,7 @@ var rsocket_rpc_metrics = require('rsocket-rpc-metrics').Metrics;
 var rsocket_flowable = require('rsocket-flowable');
 var proteus_testing_ping$pong_pb = require('../../proteus/testing/ping-pong_pb.js');
 var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js');
+var rsocket_options_pb = require('../../rsocket/options_pb.js');
 
 var PingPongServiceClient = function () {
   function PingPongServiceClient(rs, tracer, meterRegistry) {
@@ -60,22 +61,19 @@ var PingPongServiceClient = function () {
   };
   PingPongServiceClient.prototype.pingFireAndForget = function pingFireAndForget(message, metadata) {
     const map = {};
-    return this.pingFireAndForgetMetrics(
-      this.pingFireAndForgetTrace(map)(new rsocket_flowable.Single(subscriber => {
+    this.pingFireAndForgetMetrics(new rsocket_flowable.Single(subscriber => {
+      this.pingFireAndForgetTrace(map)(new rsocket_flowable.Single(innerSub => {
         var dataBuf = Buffer.from(message.serializeBinary());
         var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
         var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.tracing.PingPongService', 'pingFireAndForget', tracingMetadata, metadata || Buffer.alloc(0));
-          this._rs.requestResponse({
-            data: dataBuf,
-            metadata: metadataBuf
-          }).map(function (payload) {
-            //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
-            var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
-            return google_protobuf_empty_pb.Empty.deserializeBinary(binary);
-          }).subscribe(subscriber);
-        })
-      )
-    );
+        this._rs.fireAndForget({
+          data: dataBuf,
+          metadata: metadataBuf
+        });
+        innerSub.onSubscribe();
+        innerSub.onComplete();
+      })).subscribe({ onSubscribe: function onSubscribe() {subscriber.onSubscribe();}, onComplete: function onComplete() {subscriber.onComplete();} });
+    })).subscribe({ onSubscribe: function onSubscribe() {}, onComplete: function onComplete() {} });
   };
   return PingPongServiceClient;
 }();
@@ -106,7 +104,25 @@ var PingPongServiceServer = function () {
     };
   }
   PingPongServiceServer.prototype.fireAndForget = function fireAndForget(payload) {
-    throw new Error('fireAndForget() is not implemented');
+    if (payload.metadata == null) {
+      throw new Error('metadata is empty');
+    }
+    var method = rsocket_rpc_frames.getMethod(payload.metadata);
+    var spanContext = rsocket_rpc_tracing.deserializeTraceData(this._tracer, payload.metadata);
+    switch (method) {
+      case 'pingFireAndForget':
+        this.pingFireAndForgetMetrics(new rsocket_flowable.Single(subscriber => {
+          this.pingFireAndForgetTrace(spanContext)(new rsocket_flowable.Single(innerSub => {
+            var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+            this._service.pingFireAndForget(proteus_testing_ping$pong_pb.Ping.deserializeBinary(binary), payload.metadata);
+            innerSub.onSubscribe();
+            innerSub.onComplete();
+          }).subscribe({ onSubscribe: function onSubscribe() {subscriber.onSubscribe();}, onComplete: function onComplete() {subscriber.onComplete();} }));
+        })).subscribe({ onSubscribe: function onSubscribe() {}, onComplete: function onComplete() {} });
+        break;
+      default:
+        throw new Error('unknown method');
+    }
   };
   PingPongServiceServer.prototype.requestResponse = function requestResponse(payload) {
     try {
@@ -118,30 +134,20 @@ var PingPongServiceServer = function () {
       switch (method) {
         case 'ping':
           return this.pingMetrics(
-            this.pingTrace(spanContext)(
-              this._service
-              .ping(proteus_testing_ping$pong_pb.Ping.deserializeBinary(payload.data), payload.metadata)
-              .map(function (message) {
-                return {
-                  data: Buffer.from(message.serializeBinary()),
-                  metadata: Buffer.alloc(0)
-                }
-              })
+            this.pingTrace(spanContext)(new rsocket_flowable.Single(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .ping(proteus_testing_ping$pong_pb.Ping.deserializeBinary(binary), payload.metadata)
+                .map(function (message) {
+                  return {
+                    data: Buffer.from(message.serializeBinary()),
+                    metadata: Buffer.alloc(0)
+                  }
+                }).subscribe(subscriber);
+              }
             )
-          );
-        case 'pingFireAndForget':
-          return this.pingFireAndForgetMetrics(
-            this.pingFireAndForgetTrace(spanContext)(
-              this._service
-              .pingFireAndForget(proteus_testing_ping$pong_pb.Ping.deserializeBinary(payload.data), payload.metadata)
-              .map(function (message) {
-                return {
-                  data: Buffer.from(message.serializeBinary()),
-                  metadata: Buffer.alloc(0)
-                }
-              })
-            )
-          );
+          )
+        );
         default:
           return rsocket_flowable.Single.error(new Error('unknown method'));
       }
@@ -159,17 +165,20 @@ var PingPongServiceServer = function () {
       switch (method) {
         case 'pingStream':
           return this.pingStreamMetrics(
-            this.pingStreamTrace(spanContext)(
-              this._service
-                .pingStream(proteus_testing_ping$pong_pb.Ping.deserializeBinary(payload.data), payload.metadata)
+            this.pingStreamTrace(spanContext)(new rsocket_flowable.Flowable(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .pingStream(proteus_testing_ping$pong_pb.Ping.deserializeBinary(binary), payload.metadata)
                 .map(function (message) {
                   return {
                     data: Buffer.from(message.serializeBinary()),
                     metadata: Buffer.alloc(0)
                   }
-                })
-              )
-            );
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
         default:
           return rsocket_flowable.Flowable.error(new Error('unknown method'));
       }

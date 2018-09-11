@@ -2,6 +2,7 @@ import {Span, Endpoint, Annotation} from '../zipkin/proto3/zipkin_pb';
 import Long from 'long';
 import {ProteusTracingServiceClient} from '../proteus/testing/tracing_rsocket_pb';
 import {QueuingFlowableProcessor} from 'rsocket-rpc-core';
+import {ISubscription} from 'rsocket-types';
 
 export class DefaultRecorder {
   /**
@@ -32,6 +33,7 @@ export class ZipkinRecorder extends DefaultRecorder {
   _service: string;
   _shared: boolean;
   _once: boolean;
+  _sub: ISubscription;
   _client: ProteusTracingServiceClient;
   _inputSpans: QueuingFlowableProcessor<Span>;
 
@@ -75,7 +77,7 @@ export class ZipkinRecorder extends DefaultRecorder {
             .streamSpans(this._inputSpans, Buffer.alloc(0))
             .subscribe({
               onNext: ack => {
-                // doesn't matter
+                this._sub && this._sub.request(1);
               },
               onComplete: () => {
                 console.log('recording span complete from tracing service');
@@ -85,8 +87,10 @@ export class ZipkinRecorder extends DefaultRecorder {
                   'Failed to log span:' + span.spanId.toString() + ' ' + err,
                 );
               },
-              onSubscribe: cancel => {
+              onSubscribe: sub => {
                 //No intention of canceling
+                this._sub = sub;
+                this._sub.request(1);
               },
             });
         }
