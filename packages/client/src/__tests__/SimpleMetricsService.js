@@ -28,7 +28,6 @@ export default class SimpleMetricsService {
   ): Flowable<Skew> {
     let pending = 0;
     let done = false;
-    //const processor = new QueuingFlowableProcessor();
     return new Flowable(sub => {
       sub.onSubscribe({
         request: n => {
