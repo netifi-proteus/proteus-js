@@ -474,33 +474,9 @@ var BrokerManagementServiceServer = function () {
     return rsocket_flowable.Flowable.error(new Error('requestStream() is not implemented'));
   };
   BrokerManagementServiceServer.prototype.requestChannel = function requestChannel(payloads) {
-    let once = false;
-    return new rsocket_flowable.Flowable(subscriber => {
-      const payloadProxy = new rsocket_rpc_core.QueuingFlowableProcessor();
-      payloads.subscribe({
-        onNext: payload => {
-          if(!once){
-            once = true;
-            try{
-              let result = this._channelSwitch(payload, payloadProxy);
-              result.subscribe(subscriber);
-            } catch (error){
-              subscriber.onError(error);
-            }
-          }
-          payloadProxy.onNext(payload.data);
-        },
-        onError: error => {
-          payloadProxy.onError(error);
-        },
-        onComplete: () => {
-          payloadProxy.onComplete();
-        },
-        onSubscribe: subscription => {
-          payloadProxy.onSubscribe(subscription);
-        }
-      });
-    });
+    return new rsocket_flowable.Flowable(s => payloads.subscribe(s)).lift(s =>
+      new rsocket_rpc_core.SwitchTransformOperator(s, (payload, flowable) => this._channelSwitch(payload, flowable)),
+    );
   };
   BrokerManagementServiceServer.prototype.metadataPush = function metadataPush(payload) {
     return rsocket_flowable.Single.error(new Error('metadataPush() is not implemented'));
