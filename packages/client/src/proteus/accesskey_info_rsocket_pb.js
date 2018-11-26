@@ -26,6 +26,8 @@ var AccessKeyInfoServiceClient = function () {
     this.getAccessKeyMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "AccessKeyInfoService", {"service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"method": "getAccessKey"}, {"role": "client"});
     this.getAccessKeysTrace = rsocket_rpc_tracing.trace(tracer, "AccessKeyInfoService", {"rsocket.rpc.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"method": "getAccessKeys"}, {"rsocket.rpc.role": "client"});
     this.getAccessKeysMetrics = rsocket_rpc_metrics.timed(meterRegistry, "AccessKeyInfoService", {"service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"method": "getAccessKeys"}, {"role": "client"});
+    this.getAccessKeyByNameTrace = rsocket_rpc_tracing.traceSingle(tracer, "AccessKeyInfoService", {"rsocket.rpc.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"method": "getAccessKeyByName"}, {"rsocket.rpc.role": "client"});
+    this.getAccessKeyByNameMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "AccessKeyInfoService", {"service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"method": "getAccessKeyByName"}, {"role": "client"});
   }
   AccessKeyInfoServiceClient.prototype.createAccessKey = function createAccessKey(message, metadata) {
     const map = {};
@@ -141,6 +143,25 @@ var AccessKeyInfoServiceClient = function () {
       )
     );
   };
+  AccessKeyInfoServiceClient.prototype.getAccessKeyByName = function getAccessKeyByName(message, metadata) {
+    const map = {};
+    return this.getAccessKeyByNameMetrics(
+      this.getAccessKeyByNameTrace(map)(new rsocket_flowable.Single(subscriber => {
+        var dataBuf = Buffer.from(message.serializeBinary());
+        var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+        var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.access.AccessKeyInfoService', 'GetAccessKeyByName', tracingMetadata, metadata || Buffer.alloc(0));
+          this._rs.requestResponse({
+            data: dataBuf,
+            metadata: metadataBuf
+          }).map(function (payload) {
+            //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+            var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+            return proteus_accesskey_info_pb.AccessTokenInfo.deserializeBinary(binary);
+          }).subscribe(subscriber);
+        })
+      )
+    );
+  };
   return AccessKeyInfoServiceClient;
 }();
 
@@ -162,6 +183,8 @@ var AccessKeyInfoServiceServer = function () {
     this.getAccessKeyMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "AccessKeyInfoService", {"service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"method": "getAccessKey"}, {"role": "server"});
     this.getAccessKeysTrace = rsocket_rpc_tracing.traceAsChild(tracer, "AccessKeyInfoService", {"rsocket.rpc.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"method": "getAccessKeys"}, {"rsocket.rpc.role": "server"});
     this.getAccessKeysMetrics = rsocket_rpc_metrics.timed(meterRegistry, "AccessKeyInfoService", {"service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"method": "getAccessKeys"}, {"role": "server"});
+    this.getAccessKeyByNameTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "AccessKeyInfoService", {"rsocket.rpc.service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"method": "getAccessKeyByName"}, {"rsocket.rpc.role": "server"});
+    this.getAccessKeyByNameMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "AccessKeyInfoService", {"service": "io.netifi.proteus.broker.access.AccessKeyInfoService"}, {"method": "getAccessKeyByName"}, {"role": "server"});
     this._channelSwitch = (payload, restOfMessages) => {
       if (payload.metadata == null) {
         return rsocket_flowable.Flowable.error(new Error('metadata is empty'));
@@ -256,6 +279,22 @@ var AccessKeyInfoServiceServer = function () {
               var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
               return this._service
                 .getAccessKey(proteus_accesskey_info_pb.AccessKey.deserializeBinary(binary), payload.metadata)
+                .map(function (message) {
+                  return {
+                    data: Buffer.from(message.serializeBinary()),
+                    metadata: Buffer.alloc(0)
+                  }
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
+        case 'GetAccessKeyByName':
+          return this.getAccessKeyByNameMetrics(
+            this.getAccessKeyByNameTrace(spanContext)(new rsocket_flowable.Single(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .getAccessKeyByName(proteus_accesskey_info_pb.AccessKeyName.deserializeBinary(binary), payload.metadata)
                 .map(function (message) {
                   return {
                     data: Buffer.from(message.serializeBinary()),
