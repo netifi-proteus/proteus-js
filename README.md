@@ -12,6 +12,12 @@ For bugs, questions, and discussions please use the [Github Issues](https://gith
 
 `npm install proteus-js-client`
 
+## Building the monorepo
+
+Node modules at the root should be installed using `yarn install` exclusively, due to differences between the Yarn and npm registries.
+
+After installation, publish the build by running `lerna publish`.
+
 ## Basic Use
 
 Proteus JavaScript presumes the use of the Proteus RPC routing model.
