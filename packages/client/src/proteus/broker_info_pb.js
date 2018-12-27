@@ -466,8 +466,12 @@ proto.io.netifi.proteus.broker.info.Broker.toObject = function(includeInstance, 
     brokerid: jspb.Message.getFieldWithDefault(msg, 1, ""),
     ipaddress: jspb.Message.getFieldWithDefault(msg, 2, ""),
     port: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    clusteraddress: jspb.Message.getFieldWithDefault(msg, 6, ""),
     clusterport: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    adminport: jspb.Message.getFieldWithDefault(msg, 5, 0)
+    adminaddress: jspb.Message.getFieldWithDefault(msg, 7, ""),
+    adminport: jspb.Message.getFieldWithDefault(msg, 5, 0),
+    websocketaddress: jspb.Message.getFieldWithDefault(msg, 8, ""),
+    websocketport: jspb.Message.getFieldWithDefault(msg, 9, 0)
   };
 
   if (includeInstance) {
@@ -516,13 +520,29 @@ proto.io.netifi.proteus.broker.info.Broker.deserializeBinaryFromReader = functio
       var value = /** @type {number} */ (reader.readInt32());
       msg.setPort(value);
       break;
+    case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setClusteraddress(value);
+      break;
     case 4:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setClusterport(value);
       break;
+    case 7:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setAdminaddress(value);
+      break;
     case 5:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setAdminport(value);
+      break;
+    case 8:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setWebsocketaddress(value);
+      break;
+    case 9:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setWebsocketport(value);
       break;
     default:
       reader.skipField();
@@ -574,6 +594,13 @@ proto.io.netifi.proteus.broker.info.Broker.serializeBinaryToWriter = function(me
       f
     );
   }
+  f = message.getClusteraddress();
+  if (f.length > 0) {
+    writer.writeString(
+      6,
+      f
+    );
+  }
   f = message.getClusterport();
   if (f !== 0) {
     writer.writeInt32(
@@ -581,10 +608,31 @@ proto.io.netifi.proteus.broker.info.Broker.serializeBinaryToWriter = function(me
       f
     );
   }
+  f = message.getAdminaddress();
+  if (f.length > 0) {
+    writer.writeString(
+      7,
+      f
+    );
+  }
   f = message.getAdminport();
   if (f !== 0) {
     writer.writeInt32(
       5,
+      f
+    );
+  }
+  f = message.getWebsocketaddress();
+  if (f.length > 0) {
+    writer.writeString(
+      8,
+      f
+    );
+  }
+  f = message.getWebsocketport();
+  if (f !== 0) {
+    writer.writeInt32(
+      9,
       f
     );
   }
@@ -637,6 +685,21 @@ proto.io.netifi.proteus.broker.info.Broker.prototype.setPort = function(value) {
 
 
 /**
+ * optional string clusterAddress = 6;
+ * @return {string}
+ */
+proto.io.netifi.proteus.broker.info.Broker.prototype.getClusteraddress = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
+};
+
+
+/** @param {string} value */
+proto.io.netifi.proteus.broker.info.Broker.prototype.setClusteraddress = function(value) {
+  jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+/**
  * optional int32 clusterPort = 4;
  * @return {number}
  */
@@ -652,6 +715,21 @@ proto.io.netifi.proteus.broker.info.Broker.prototype.setClusterport = function(v
 
 
 /**
+ * optional string adminAddress = 7;
+ * @return {string}
+ */
+proto.io.netifi.proteus.broker.info.Broker.prototype.getAdminaddress = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+};
+
+
+/** @param {string} value */
+proto.io.netifi.proteus.broker.info.Broker.prototype.setAdminaddress = function(value) {
+  jspb.Message.setProto3StringField(this, 7, value);
+};
+
+
+/**
  * optional int32 adminPort = 5;
  * @return {number}
  */
@@ -663,6 +741,36 @@ proto.io.netifi.proteus.broker.info.Broker.prototype.getAdminport = function() {
 /** @param {number} value */
 proto.io.netifi.proteus.broker.info.Broker.prototype.setAdminport = function(value) {
   jspb.Message.setProto3IntField(this, 5, value);
+};
+
+
+/**
+ * optional string webSocketAddress = 8;
+ * @return {string}
+ */
+proto.io.netifi.proteus.broker.info.Broker.prototype.getWebsocketaddress = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
+};
+
+
+/** @param {string} value */
+proto.io.netifi.proteus.broker.info.Broker.prototype.setWebsocketaddress = function(value) {
+  jspb.Message.setProto3StringField(this, 8, value);
+};
+
+
+/**
+ * optional int32 webSocketPort = 9;
+ * @return {number}
+ */
+proto.io.netifi.proteus.broker.info.Broker.prototype.getWebsocketport = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
+};
+
+
+/** @param {number} value */
+proto.io.netifi.proteus.broker.info.Broker.prototype.setWebsocketport = function(value) {
+  jspb.Message.setProto3IntField(this, 9, value);
 };
 
 
