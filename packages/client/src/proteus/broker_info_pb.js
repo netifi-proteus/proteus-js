@@ -252,7 +252,8 @@ proto.io.netifi.proteus.broker.info.Destination.toObject = function(includeInsta
   var f, obj = {
     group: jspb.Message.getFieldWithDefault(msg, 1, ""),
     destination: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    broker: (f = msg.getBroker()) && proto.io.netifi.proteus.broker.info.Broker.toObject(includeInstance, f)
+    broker: (f = msg.getBroker()) && proto.io.netifi.proteus.broker.info.Broker.toObject(includeInstance, f),
+    ipaddress: msg.getIpaddress_asB64()
   };
 
   if (includeInstance) {
@@ -301,6 +302,10 @@ proto.io.netifi.proteus.broker.info.Destination.deserializeBinaryFromReader = fu
       var value = new proto.io.netifi.proteus.broker.info.Broker;
       reader.readMessage(value,proto.io.netifi.proteus.broker.info.Broker.deserializeBinaryFromReader);
       msg.setBroker(value);
+      break;
+    case 4:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setIpaddress(value);
       break;
     default:
       reader.skipField();
@@ -351,6 +356,13 @@ proto.io.netifi.proteus.broker.info.Destination.serializeBinaryToWriter = functi
       3,
       f,
       proto.io.netifi.proteus.broker.info.Broker.serializeBinaryToWriter
+    );
+  }
+  f = message.getIpaddress_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      4,
+      f
     );
   }
 };
@@ -413,6 +425,45 @@ proto.io.netifi.proteus.broker.info.Destination.prototype.clearBroker = function
  */
 proto.io.netifi.proteus.broker.info.Destination.prototype.hasBroker = function() {
   return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * optional bytes ipAddress = 4;
+ * @return {!(string|Uint8Array)}
+ */
+proto.io.netifi.proteus.broker.info.Destination.prototype.getIpaddress = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * optional bytes ipAddress = 4;
+ * This is a type-conversion wrapper around `getIpaddress()`
+ * @return {string}
+ */
+proto.io.netifi.proteus.broker.info.Destination.prototype.getIpaddress_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getIpaddress()));
+};
+
+
+/**
+ * optional bytes ipAddress = 4;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getIpaddress()`
+ * @return {!Uint8Array}
+ */
+proto.io.netifi.proteus.broker.info.Destination.prototype.getIpaddress_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getIpaddress()));
+};
+
+
+/** @param {!(string|Uint8Array)} value */
+proto.io.netifi.proteus.broker.info.Destination.prototype.setIpaddress = function(value) {
+  jspb.Message.setProto3BytesField(this, 4, value);
 };
 
 
