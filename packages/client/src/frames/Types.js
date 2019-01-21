@@ -16,13 +16,18 @@
  * @flow
  */
 
+import type {IPv4, IPv6} from 'ipaddr.js';
+
 export type Frame =
   | BrokerSetupFrame
   | DestinationSetupFrame
-  | DestinationFrame
   | GroupFrame
   | BroadcastFrame
   | ShardFrame;
+
+export type Tags = {
+  [key: string]: string,
+};
 
 // prettier-ignore
 export type BrokerSetupFrame = {|
@@ -40,54 +45,40 @@ export type DestinationSetupFrame = {|
   type: 0x02,
   majorVersion: ?number,
   minorVersion: ?number,
-  destination: string,
+  inetAddress: IPv4 | IPv6,
   group: string,
   accessKey: number,
-  accessToken: Buffer
-|};
-
-// prettier-ignore
-export type DestinationFrame = {|
-  type: 0x03,
-  majorVersion: ?number,
-  minorVersion: ?number,
-  fromDestination: string,
-  fromGroup: string,
-  toDestination: string,
-  toGroup: string,
-  metadata: Buffer,
+  accessToken: Buffer,
+  tags: Tags
 |};
 
 // prettier-ignore
 export type GroupFrame = {|
-  type: 0x04,
+  type: 0x03,
   majorVersion: ?number,
   minorVersion: ?number,
-  fromDestination: string,
-  fromGroup: string,
-  toGroup: string,
+  group: string,
   metadata: Buffer,
+  tags: Tags
 |};
 
 // prettier-ignore
 export type BroadcastFrame = {|
-  type: 0x05,
+  type: 0x04,
   majorVersion: ?number,
   minorVersion: ?number,
-  fromDestination: string,
-  fromGroup: string,
-  toGroup: string,
+  group: string,
   metadata: Buffer,
+  tags: Tags
 |};
 
 // prettier-ignore
 export type ShardFrame = {|
-  type: 0x06,
+  type: 0x05,
   majorVersion: ?number,
   minorVersion: ?number,
-  fromDestination: string,
-  fromGroup: string,
-  toGroup: string,
+  group: string,
   shardKey: Buffer,
   metadata: Buffer,
+  tags: Tags
 |};

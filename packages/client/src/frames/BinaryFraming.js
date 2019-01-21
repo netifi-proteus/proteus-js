@@ -40,11 +40,6 @@ import {
   decodeDestinationSetupFrame,
 } from './DestinationSetupFlyweight';
 
-import {
-  encodeDestinationFrame,
-  decodeDestinationFrame,
-} from './DestinationFlyweight';
-
 import {encodeGroupFrame, decodeGroupFrame} from './GroupFlyweight';
 
 import {encodeBroadcastFrame, decodeBroadcastFrame} from './BroadcastFlyweight';
@@ -62,8 +57,6 @@ export function encodeFrame(frame: Frame): Buffer {
       return encodeBrokerSetupFrame(frame);
     case FrameTypes.DESTINATION_SETUP:
       return encodeDestinationSetupFrame(frame);
-    case FrameTypes.DESTINATION:
-      return encodeDestinationFrame(frame);
     case FrameTypes.GROUP:
       return encodeGroupFrame(frame);
     case FrameTypes.BROADCAST:
@@ -92,8 +85,6 @@ export function decodeFrame(buffer: Buffer): Frame {
       return decodeBrokerSetupFrame(buffer, majorVersion, minorVersion);
     case FrameTypes.DESTINATION_SETUP:
       return decodeDestinationSetupFrame(buffer, majorVersion, minorVersion);
-    case FrameTypes.DESTINATION:
-      return decodeDestinationFrame(buffer, majorVersion, minorVersion);
     case FrameTypes.GROUP:
       return decodeGroupFrame(buffer, majorVersion, minorVersion);
     case FrameTypes.BROADCAST:
