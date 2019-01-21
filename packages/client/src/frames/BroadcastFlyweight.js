@@ -28,54 +28,57 @@ import {FRAME_HEADER_SIZE, encodeFrameHeader} from './FrameHeaderFlyweight';
 
 import {UTF8Encoder, BufferEncoder, createBuffer} from 'rsocket-core';
 
-const FROM_DESTINATION_LENGTH_SIZE = 4;
-const FROM_GROUP_LENGTH_SIZE = 4;
-const TO_GROUP_LENGTH_SIZE = 4;
+const GROUP_LENGTH_SIZE = 4;
+const METADATA_LENGTH_SIZE = 4;
+const KEY_LENGTH_SIZE = 4;
+const VALUE_LENGTH_SIZE = 4;
 
 export function encodeBroadcastFrame(frame: BroadcastFrame): Buffer {
-  const fromDestinationLength = UTF8Encoder.byteLength(frame.fromDestination);
-  const fromGroupLength = UTF8Encoder.byteLength(frame.fromGroup);
-  const toGroupLength = UTF8Encoder.byteLength(frame.toGroup);
+  const groupLength = UTF8Encoder.byteLength(frame.group);
   const metadataLength = BufferEncoder.byteLength(frame.metadata);
+  const tagsLength = Object.entries(frame.tags).reduce((acc, [key, value]) => {
+    const keyLength = UTF8Encoder.byteLength(key);
+    const valueLength = UTF8Encoder.byteLength(value);
+    return acc + KEY_LENGTH_SIZE + keyLength + VALUE_LENGTH_SIZE + valueLength;
+  }, 0);
 
   const buffer = createBuffer(
     FRAME_HEADER_SIZE +
-      FROM_DESTINATION_LENGTH_SIZE +
-      fromDestinationLength +
-      FROM_GROUP_LENGTH_SIZE +
-      fromGroupLength +
-      TO_GROUP_LENGTH_SIZE +
-      toGroupLength +
-      metadataLength,
+      GROUP_LENGTH_SIZE +
+      groupLength +
+      METADATA_LENGTH_SIZE +
+      metadataLength +
+      tagsLength,
   );
 
   let offset = encodeFrameHeader(buffer, frame);
 
-  offset = buffer.writeUInt32BE(fromDestinationLength, offset);
+  offset = buffer.writeUInt32BE(groupLength, offset);
   offset = UTF8Encoder.encode(
-    frame.fromDestination,
+    frame.group,
     buffer,
     offset,
-    offset + fromDestinationLength,
+    offset + groupLength,
   );
 
-  offset = buffer.writeUInt32BE(fromGroupLength, offset);
-  offset = UTF8Encoder.encode(
-    frame.fromGroup,
+  offset = buffer.writeUInt32BE(metadataLength, offset);
+  offset = BufferEncoder.encode(
+    frame.metadata,
     buffer,
     offset,
-    offset + fromGroupLength,
+    offset + metadataLength,
   );
 
-  offset = buffer.writeUInt32BE(toGroupLength, offset);
-  offset = UTF8Encoder.encode(
-    frame.toGroup,
-    buffer,
-    offset,
-    offset + toGroupLength,
-  );
+  Object.entries(frame.tags).forEach(([key, value]) => {
+    const keyLength = UTF8Encoder.byteLength(key);
+    const valueLength = UTF8Encoder.byteLength(value);
 
-  BufferEncoder.encode(frame.metadata, buffer, offset, offset + metadataLength);
+    offset = buffer.writeUInt32BE(keyLength, offset);
+    offset = UTF8Encoder.encode(key, buffer, offset, offset + keyLength);
+
+    offset = buffer.writeUInt32BE(valueLength, offset);
+    offset = UTF8Encoder.encode(value, buffer, offset, offset + valueLength);
+  });
 
   return buffer;
 }
@@ -87,41 +90,45 @@ export function decodeBroadcastFrame(
 ): BroadcastFrame {
   let offset = FRAME_HEADER_SIZE;
 
-  const fromDestinationLength = buffer.readUInt32BE(offset);
-  offset += FROM_DESTINATION_LENGTH_SIZE;
+  const groupLength = buffer.readUInt32BE(offset);
+  offset += GROUP_LENGTH_SIZE;
 
-  const fromDestination = UTF8Encoder.decode(
+  const group = UTF8Encoder.decode(buffer, offset, offset + groupLength);
+  offset += groupLength;
+
+  const metadataLength = buffer.readUInt32BE(offset);
+  offset += METADATA_LENGTH_SIZE;
+
+  const metadata = BufferEncoder.decode(
     buffer,
     offset,
-    offset + fromDestinationLength,
+    offset + metadataLength,
   );
-  offset += fromDestinationLength;
+  offset += metadataLength;
 
-  const fromGroupLength = buffer.readUInt32BE(offset);
-  offset += FROM_GROUP_LENGTH_SIZE;
+  const tags = {};
+  while (offset < buffer.length) {
+    const keyLength = buffer.readUInt32BE(offset);
+    offset += KEY_LENGTH_SIZE;
 
-  const fromGroup = UTF8Encoder.decode(
-    buffer,
-    offset,
-    offset + fromGroupLength,
-  );
-  offset += fromGroupLength;
+    const key = UTF8Encoder.decode(buffer, offset, offset + keyLength);
+    offset += keyLength;
 
-  const toGroupLength = buffer.readUInt32BE(offset);
-  offset += TO_GROUP_LENGTH_SIZE;
+    const valueLength = buffer.readUInt32BE(offset);
+    offset += VALUE_LENGTH_SIZE;
 
-  const toGroup = UTF8Encoder.decode(buffer, offset, offset + toGroupLength);
-  offset += toGroupLength;
+    const value = UTF8Encoder.decode(buffer, offset, offset + valueLength);
+    offset += valueLength;
 
-  const metadata = BufferEncoder.decode(buffer, offset, buffer.length);
+    tags[key] = value;
+  }
 
   return {
     type: FrameTypes.BROADCAST,
     majorVersion,
     minorVersion,
-    fromDestination,
-    fromGroup,
-    toGroup,
+    group,
     metadata,
+    tags,
   };
 }
