@@ -22,6 +22,7 @@ import {
   IPartialFutureSubscriber,
   IPartialSubscriber,
 } from 'rsocket-flowable';
+import {MAX_REQUEST_N} from 'rsocket-core/build/RSocketFrame';
 
 interface Unsubscribable {
   unsubscribe: () => void;
@@ -53,7 +54,7 @@ class ObservableFlowable<T> implements Subscribable<T> {
 
   constructor(
     delegate: Flowable<T>,
-    batchSize?: number = Number.MAX_SAFE_INTEGER,
+    batchSize?: number = MAX_REQUEST_N,
   ) {
     //Symbol logic cloned from observable.ts in rxjs
     const observableSymbol =
@@ -75,7 +76,7 @@ class ObservableFlowable<T> implements Subscribable<T> {
               try {
                 subscriber.next(value);
                 //Only if someone specified a batch size
-                if (this._batchSize < Number.MAX_SAFE_INTEGER) {
+                if (this._batchSize < MAX_REQUEST_N) {
                   this._buffered--;
                   if (this._buffered <= 0) {
                     this._buffered = this._batchSize;
