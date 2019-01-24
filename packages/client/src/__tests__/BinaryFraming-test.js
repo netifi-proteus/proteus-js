@@ -72,6 +72,30 @@ describe('DESTINATION_SETUP', () => {
     expect(input.accessToken).to.deep.equal(frame.accessToken);
     expect(input.tags).to.deep.equal(frame.tags);
   });
+
+  it('handles optional inetAddress in DESTINATION_SETUP frames', () => {
+    const group = 'group';
+    const accessKey = Number.MAX_SAFE_INTEGER;
+    const accessToken = Buffer.from([0x0a, 0x0b, 0x0c]);
+    const tags = {key: 'value'};
+    const input = {
+      type: FrameTypes.DESTINATION_SETUP,
+      group,
+      accessKey,
+      accessToken,
+      tags,
+    };
+
+    const buffer = encodeFrame(input);
+    const frame = decodeFrame(buffer);
+
+    expect(input.type).to.equal(frame.type);
+    expect(frame.inetAddress).to.equal(null);
+    expect(input.group).to.equal(frame.group);
+    expect(input.accessKey).to.equal(frame.accessKey);
+    expect(input.accessToken).to.deep.equal(frame.accessToken);
+    expect(input.tags).to.deep.equal(frame.tags);
+  });
 });
 
 describe('GROUP', () => {

@@ -18,6 +18,8 @@
 
 import type {ReactiveSocket, Payload, ConnectionStatus} from 'rsocket-types';
 
+import type {Tags} from '../frames';
+
 import {Flowable, Single} from 'rsocket-flowable';
 
 import {FrameTypes, encodeFrame} from '../frames';
@@ -40,9 +42,8 @@ export default class DeferredConnectingRSocket
   }
 
   static broadcast(
-    fromGroup: string,
-    fromDestination: string,
-    toGroup: string,
+    group: string,
+    tags?: Tags,
     connect: () => Single<ReactiveSocket<Buffer, Buffer>>,
   ): ReactiveSocket<Buffer, Buffer> {
     return new DeferredConnectingRSocket(payload => {
@@ -50,9 +51,8 @@ export default class DeferredConnectingRSocket
         type: FrameTypes.BROADCAST,
         majorVersion: null,
         minorVersion: null,
-        fromGroup,
-        fromDestination,
-        toGroup,
+        group,
+        tags: tags || {},
         metadata: payload.metadata || Buffer.alloc(0),
       });
       return {
@@ -63,9 +63,8 @@ export default class DeferredConnectingRSocket
   }
 
   static group(
-    fromGroup: string,
-    fromDestination: string,
-    toGroup: string,
+    group: string,
+    tags?: Tags,
     connect: () => Single<ReactiveSocket<Buffer, Buffer>>,
   ): ReactiveSocket<Buffer, Buffer> {
     return new DeferredConnectingRSocket(payload => {
@@ -73,34 +72,8 @@ export default class DeferredConnectingRSocket
         type: FrameTypes.GROUP,
         majorVersion: null,
         minorVersion: null,
-        fromGroup,
-        fromDestination,
-        toGroup,
-        metadata: payload.metadata || Buffer.alloc(0),
-      });
-      return {
-        data: payload.data,
-        metadata,
-      };
-    }, connect);
-  }
-
-  static destination(
-    fromGroup: string,
-    fromDestination: string,
-    toGroup: string,
-    toDestination: string,
-    connect: () => Single<ReactiveSocket<Buffer, Buffer>>,
-  ): ReactiveSocket<Buffer, Buffer> {
-    return new DeferredConnectingRSocket(payload => {
-      const metadata = encodeFrame({
-        type: FrameTypes.DESTINATION,
-        majorVersion: null,
-        minorVersion: null,
-        fromGroup,
-        fromDestination,
-        toGroup,
-        toDestination,
+        group,
+        tags: tags || {},
         metadata: payload.metadata || Buffer.alloc(0),
       });
       return {
