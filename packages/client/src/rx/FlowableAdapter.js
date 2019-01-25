@@ -52,10 +52,7 @@ class ObservableFlowable<T> implements Subscribable<T> {
   _batchSize: number;
   _buffered: number;
 
-  constructor(
-    delegate: Flowable<T>,
-    batchSize?: number = MAX_REQUEST_N,
-  ) {
+  constructor(delegate: Flowable<T>, batchSize?: number = MAX_REQUEST_N) {
     //Symbol logic cloned from observable.ts in rxjs
     const observableSymbol =
       typeof Symbol === 'function' && Symbol.observable
