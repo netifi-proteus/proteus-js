@@ -22,6 +22,8 @@ import {Flowable, Single} from 'rsocket-flowable';
 
 import {FrameTypes, encodeFrame} from '../frames';
 
+import type {Tags} from '../frames';
+
 export default class WrappingRSocket implements ReactiveSocket<Buffer, Buffer> {
   _transformer: (Payload<Buffer, Buffer>) => Payload<Buffer, Buffer>;
   _source: ReactiveSocket<Buffer, Buffer>;
@@ -35,9 +37,8 @@ export default class WrappingRSocket implements ReactiveSocket<Buffer, Buffer> {
   }
 
   static group(
-    fromGroup: string,
-    fromDestination: string,
-    toGroup: string,
+    group: string,
+    tags: Tags,
     source: ReactiveSocket<Buffer, Buffer>,
   ): ReactiveSocket<Buffer, Buffer> {
     return new WrappingRSocket(payload => {
@@ -45,9 +46,8 @@ export default class WrappingRSocket implements ReactiveSocket<Buffer, Buffer> {
         type: FrameTypes.GROUP,
         majorVersion: null,
         minorVersion: null,
-        fromGroup,
-        fromDestination,
-        toGroup,
+        group,
+        tags,
         metadata: payload.metadata || Buffer.alloc(0),
       });
       return {
@@ -57,22 +57,18 @@ export default class WrappingRSocket implements ReactiveSocket<Buffer, Buffer> {
     }, source);
   }
 
-  static destination(
-    fromGroup: string,
-    fromDestination: string,
-    toGroup: string,
-    toDestination: string,
+  static broadcast(
+    group: string,
+    tags: Tags,
     source: ReactiveSocket<Buffer, Buffer>,
   ): ReactiveSocket<Buffer, Buffer> {
     return new WrappingRSocket(payload => {
       const metadata = encodeFrame({
-        type: FrameTypes.DESTINATION,
+        type: FrameTypes.BROADCAST,
         majorVersion: null,
         minorVersion: null,
-        fromGroup,
-        fromDestination,
-        toGroup,
-        toDestination,
+        group,
+        tags,
         metadata: payload.metadata || Buffer.alloc(0),
       });
       return {

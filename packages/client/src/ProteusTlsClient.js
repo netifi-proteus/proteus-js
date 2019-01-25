@@ -21,6 +21,7 @@
 import type {ConnectionStatus, DuplexConnection, Frame} from 'rsocket-types';
 import type {ISubject, ISubscriber, ISubscription} from 'rsocket-types';
 import type {Encoders} from 'rsocket-core';
+import {MAX_REQUEST_N} from 'rsocket-core/build/RSocketFrame';
 
 import tls from 'tls';
 import {Flowable} from 'rsocket-flowable';
@@ -121,7 +122,7 @@ export class ProteusTcpConnection implements DuplexConnection {
       onSubscribe: _subscription => {
         subscription = _subscription;
         this._senders.add(subscription);
-        subscription.request(Number.MAX_SAFE_INTEGER);
+        subscription.request(MAX_REQUEST_N);
       },
     });
   }

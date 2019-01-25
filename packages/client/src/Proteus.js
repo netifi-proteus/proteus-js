@@ -27,6 +27,7 @@ import type {ClientConfig} from 'rsocket-rpc-core';
 import invariant from 'fbjs/lib/invariant';
 import {DeferredConnectingRSocket, UnwrappingRSocket} from './rsocket';
 import {FrameTypes, encodeFrame} from './frames';
+import type {Tags} from './frames';
 
 import RSocketWebSocketClient from 'rsocket-websocket-client';
 
@@ -35,6 +36,7 @@ export type ProteusConfig = {|
   setup: {|
     group: string,
     destination?: string,
+    tags?: Tags,
     keepAlive?: number,
     lifetime?: number,
     accessKey: number,
@@ -52,7 +54,7 @@ export type ProteusConfig = {|
 export default class Proteus {
   _client: RpcClient<Buffer, Buffer>;
   _group: string;
-  _destination: string;
+  _tags: Tags;
   _connect: () => Single<ReactiveSocket<Buffer, Buffer>>;
   _connecting: Object;
   _connection: ReactiveSocket<Buffer, Buffer>;
@@ -60,13 +62,13 @@ export default class Proteus {
 
   constructor(
     group: string,
-    destination: string,
+    tags: Tags,
     proteusClient: RpcClient<Buffer, Buffer>,
     requestHandler: RequestHandlingRSocket,
   ) {
     this._client = proteusClient;
     this._group = group;
-    this._destination = destination;
+    this._tags = tags;
     this._connect = () => {
       if (this._connection) {
         return Single.of(this._connection);
@@ -158,39 +160,23 @@ export default class Proteus {
     return this._group;
   }
 
-  myDestination(): string {
-    return this._destination;
+  myTags(): string {
+    return this._tags;
   }
 
-  broadcast(group: string): ReactiveSocket<Buffer, Buffer> {
-    return DeferredConnectingRSocket.broadcast(
-      this._group,
-      this._destination,
-      group,
-      this._connect,
-    );
+  broadcast(group: string, tags?: Tags): ReactiveSocket<Buffer, Buffer> {
+    return DeferredConnectingRSocket.broadcast(group, tags, this._connect);
   }
 
-  group(group: string): ReactiveSocket<Buffer, Buffer> {
-    return DeferredConnectingRSocket.group(
-      this._group,
-      this._destination,
-      group,
-      this._connect,
-    );
+  group(group: string, tags?: Tags): ReactiveSocket<Buffer, Buffer> {
+    return DeferredConnectingRSocket.group(group, tags, this._connect);
   }
 
   destination(
     destination: string,
     group: string,
   ): ReactiveSocket<Buffer, Buffer> {
-    return DeferredConnectingRSocket.destination(
-      this._group,
-      this._destination,
-      group,
-      destination,
-      this._connect,
-    );
+    return DeferredConnectingRSocket.group(group, {destination}, this._connect);
   }
 
   addService(service: string, handler: Responder<Buffer, Buffer>): void {
@@ -221,6 +207,10 @@ export default class Proteus {
       config.setup.destination !== undefined
         ? config.setup.destination
         : uuidv4();
+    const tags =
+      config.setup.tags !== undefined
+        ? {destination, ...config.setup.tags}
+        : {destination};
     const keepAlive =
       config.setup.keepAlive !== undefined
         ? config.setup.keepAlive
@@ -250,8 +240,8 @@ export default class Proteus {
       type: FrameTypes.DESTINATION_SETUP,
       majorVersion: null,
       minorVersion: null,
-      destination,
       group: config.setup.group,
+      tags,
       accessKey,
       accessToken,
     });
@@ -276,7 +266,7 @@ export default class Proteus {
 
     const client = new RpcClient(finalConfig);
 
-    return new Proteus(config.setup.group, destination, client, requestHandler);
+    return new Proteus(config.setup.group, tags, client, requestHandler);
   }
 }
 

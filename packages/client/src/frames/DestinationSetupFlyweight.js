@@ -45,7 +45,10 @@ const VALUE_LENGTH_SIZE = 4;
 export function encodeDestinationSetupFrame(
   frame: DestinationSetupFrame,
 ): Buffer {
-  const inetAddress = Buffer.from(frame.inetAddress.toByteArray());
+  const inetAddress =
+    frame.inetAddress != null
+      ? Buffer.from(frame.inetAddress.toByteArray())
+      : Buffer.alloc(0);
   const inetAddressLength = BufferEncoder.byteLength(inetAddress);
   const groupLength = UTF8Encoder.byteLength(frame.group);
   const accessTokenLength = BufferEncoder.byteLength(frame.accessToken);
@@ -118,12 +121,13 @@ export function decodeDestinationSetupFrame(
   const inetAddressLength = buffer.readUInt32BE(offset);
   offset += INET_ADDRESS_LENGTH_SIZE;
 
-  const inetAddress = BufferEncoder.decode(
-    buffer,
-    offset,
-    offset + inetAddressLength,
-  );
-  offset += inetAddressLength;
+  let inetAddress = null;
+  if (inetAddressLength > 0) {
+    inetAddress = ipaddr.fromByteArray(
+      BufferEncoder.decode(buffer, offset, offset + inetAddressLength),
+    );
+    offset += inetAddressLength;
+  }
 
   const groupLength = buffer.readUInt32BE(offset);
   offset += GROUP_LENGTH_SIZE;
@@ -165,7 +169,7 @@ export function decodeDestinationSetupFrame(
     type: FrameTypes.DESTINATION_SETUP,
     majorVersion,
     minorVersion,
-    inetAddress: ipaddr.fromByteArray(inetAddress),
+    inetAddress,
     group,
     accessKey,
     accessToken,
