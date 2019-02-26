@@ -152,8 +152,11 @@ export default class Proteus {
           },
         });
 
-        setTimeout(() => proteusClient.connect().subscribe(this._connecting), this.calculateRetryDuration());
-        
+        setTimeout(
+          () => proteusClient.connect().subscribe(this._connecting),
+          this.calculateRetryDuration(),
+        );
+
         return this._connecting;
       }
     };
@@ -234,11 +237,11 @@ export default class Proteus {
     const keepAlive =
       config.setup.keepAlive !== undefined
         ? config.setup.keepAlive
-        : 60000 /* 60s in ms */;
+        : 60000; /* 60s in ms */
     const lifetime =
       config.setup.lifetime !== undefined
         ? config.setup.lifetime
-        : 360000 /* 360s in ms */;
+        : 360000; /* 360s in ms */
     const accessKey = config.setup.accessKey;
     const accessToken = Buffer.from(config.setup.accessToken, 'base64');
 
