@@ -8,6 +8,7 @@ var rsocket_rpc_metrics = require('rsocket-rpc-metrics').Metrics;
 var rsocket_flowable = require('rsocket-flowable');
 var proteus_broker_info_pb = require('../proteus/broker_info_pb.js');
 var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js');
+var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
 
 var BrokerInfoServiceClient = function () {
   function BrokerInfoServiceClient(rs, tracer, meterRegistry) {
