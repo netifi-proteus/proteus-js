@@ -59,6 +59,8 @@ export default class Proteus {
   _connecting: Object;
   _connection: ReactiveSocket<Buffer, Buffer>;
   _requestHandler: RequestHandlingRSocket;
+  _lastConnectionAttemptTs: number;
+  _attempts: number;
 
   constructor(
     group: string,
@@ -149,7 +151,12 @@ export default class Proteus {
             //do nothing
           },
         });
-        proteusClient.connect().subscribe(this._connecting);
+
+        setTimeout(
+          () => proteusClient.connect().subscribe(this._connecting),
+          this.calculateRetryDuration(),
+        );
+
         return this._connecting;
       }
     };
@@ -187,6 +194,22 @@ export default class Proteus {
     this._client.close();
   }
 
+  calculateRetryDuration(): number {
+    const currentTs = Date.now();
+    const oldTs = this._lastConnectionAttemptTs || 0;
+    const calculatedDuration = Math.min(this._attempts, 30);
+
+    if (currentTs - oldTs > 60000) {
+      this._attempts = 0;
+    }
+
+    this._lastConnectionAttemptTs = currentTs;
+
+    this._attempts++;
+
+    return calculatedDuration * 1000;
+  }
+
   static create(config: ProteusConfig): Proteus {
     invariant(
       config &&
@@ -214,11 +237,11 @@ export default class Proteus {
     const keepAlive =
       config.setup.keepAlive !== undefined
         ? config.setup.keepAlive
-        : 60000 /* 60s in ms */;
+        : 60000; /* 60s in ms */
     const lifetime =
       config.setup.lifetime !== undefined
         ? config.setup.lifetime
-        : 360000 /* 360s in ms */;
+        : 360000; /* 360s in ms */
     const accessKey = config.setup.accessKey;
     const accessToken = Buffer.from(config.setup.accessToken, 'base64');
 
