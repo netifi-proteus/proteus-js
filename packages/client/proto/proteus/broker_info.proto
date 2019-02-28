@@ -3,6 +3,7 @@ syntax = "proto3";
 package io.netifi.proteus.broker.info;
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 option java_package = "io.netifi.proteus.broker.info";
 option java_outer_classname = "BrokerInfo";
@@ -25,6 +26,7 @@ message Destination {
     Broker broker      = 3;
     bytes ipAddress    = 4;
     repeated Tag tags  = 5;
+    int64 accessKey    = 6;
 }
 
 message Broker {
@@ -41,6 +43,12 @@ message Broker {
    int32 tcpPort            = 11;
    string webConsoleAddress = 12;
    int32 webConsolePort     = 13;
+   Cluster cluster          = 14;
+}
+
+message Cluster {
+  string clusterId   = 1;
+  string clusterName = 2;
 }
 
 message Event {
@@ -51,6 +59,7 @@ message Event {
     Type type               = 1;
     Broker broker           = 2;
     Destination destination = 3;
+    google.protobuf.Timestamp timestamp = 4;
 }
 
 service BrokerInfoService {
