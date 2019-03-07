@@ -36,6 +36,8 @@
   "dependencies": {
     "google-protobuf": "^3.6.0",
     "ipaddr.js": "^1.8.1",
+    "js-md5": "^0.7.3",
+    "long": "^4.0.0",
     "opentracing": "^0.14.3",
     "rsocket-rpc-core": "^0.0.4",
     "rsocket-rpc-frames": "^0.0.3",

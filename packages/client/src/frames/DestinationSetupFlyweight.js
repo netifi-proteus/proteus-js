@@ -24,6 +24,8 @@ import type {DestinationSetupFrame} from './Types';
 
 import {FrameTypes} from './Frame';
 
+import ConnectionId from './ConnectionId';
+
 import {FRAME_HEADER_SIZE, encodeFrameHeader} from './FrameHeaderFlyweight';
 
 import {UTF8Encoder, BufferEncoder, createBuffer} from 'rsocket-core';
@@ -39,6 +41,8 @@ const INET_ADDRESS_LENGTH_SIZE = 4;
 const GROUP_LENGTH_SIZE = 4;
 const ACCESS_KEY_SIZE = 8;
 const ACCESS_TOKEN_LENGTH_SIZE = 4;
+const CONNECTION_ID_SIZE = 16;
+const ADDITIONAL_FLAGS_SIZE = 2;
 const KEY_LENGTH_SIZE = 4;
 const VALUE_LENGTH_SIZE = 4;
 
@@ -64,9 +68,11 @@ export function encodeDestinationSetupFrame(
       inetAddressLength +
       GROUP_LENGTH_SIZE +
       groupLength +
+      CONNECTION_ID_SIZE +
       ACCESS_KEY_SIZE +
       ACCESS_TOKEN_LENGTH_SIZE +
       accessTokenLength +
+      ADDITIONAL_FLAGS_SIZE +
       tagsLength,
   );
 
@@ -88,6 +94,13 @@ export function encodeDestinationSetupFrame(
     offset + groupLength,
   );
 
+  offset = UTF8Encoder.encode(
+    Uint8Array.from(frame.connectionId.bytes()),
+    buffer,
+    offset,
+    offset + CONNECTION_ID_SIZE,
+  );
+
   offset = writeUInt64BE(buffer, frame.accessKey, offset);
   offset = buffer.writeUInt32BE(accessTokenLength, offset);
   offset = BufferEncoder.encode(
@@ -96,6 +109,8 @@ export function encodeDestinationSetupFrame(
     offset,
     offset + accessTokenLength,
   );
+
+  offset = BufferEncoder.encode(new Uint8Array(2), buffer, offset, offset + ADDITIONAL_FLAGS_SIZE);
 
   Object.entries(frame.tags).forEach(([key, value]) => {
     const keyLength = UTF8Encoder.byteLength(key);
@@ -134,6 +149,8 @@ export function decodeDestinationSetupFrame(
 
   const group = UTF8Encoder.decode(buffer, offset, offset + groupLength);
   offset += groupLength;
+
+
 
   const accessKey = readUInt64BE(buffer, offset);
   offset += ACCESS_KEY_SIZE;

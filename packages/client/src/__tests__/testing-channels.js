@@ -89,45 +89,48 @@ const client = new ProteusTracingServiceClient(
   clientGateway.group('com.netifi.proteus.tracing'),
 );
 
-let lastSpan = null;
-let canceled = false;
-let max = 10;
-let count = 0;
-let opname = 'stream span op';
-let spanStream = new Flowable(subscriber => {
-  subscriber.onSubscribe({
-    cancel: () => {
-      canceled = true;
-      console.log('Subscriber canceled span stream');
-    },
-    request: n => {
-      while (!canceled && n-- > 0 && count++ < max) {
-        lastSpan = basicTracer.startSpan(opname, {
-          childOf: lastSpan,
-          startTime: Date.now() * 1000,
-          tags: {},
-        });
-        subscriber.onNext(
-          mapSpan(
-            lastSpan,
-            'testSource',
-            'remoteTracer',
-            clientGateway.myGroup(),
-            clientGateway.myDestination(),
-          ),
-        );
-      }
-      if (count >= max) {
-        subscriber.onComplete();
-      }
-    },
+let spanStream = function() {
+  let lastSpan = null;
+  let canceled = false;
+  let max = 10;
+  let count = 0;
+  let opname = 'stream span op';
+
+  return new Flowable(subscriber => {
+    subscriber.onSubscribe({
+      cancel: () => {
+        canceled = true;
+        console.log('Subscriber canceled span stream');
+      },
+      request: n => {
+        while (!canceled && n-- > 0 && count++ < max) {
+          lastSpan = basicTracer.startSpan(opname, {
+            childOf: lastSpan,
+            startTime: Date.now() * 1000,
+            tags: {},
+          });
+          subscriber.onNext(
+            mapSpan(
+              lastSpan,
+              'testSource',
+              'remoteTracer',
+              clientGateway.myGroup(),
+              clientGateway.myDestination(),
+            ),
+          );
+        }
+        if (count >= max) {
+          subscriber.onComplete();
+        }
+      },
+    });
   });
-});
+};
 
 setTimeout(() => {
   console.log('Here we go');
   let _sub;
-  client.streamSpans(spanStream, Buffer.alloc(0)).subscribe({
+  client.streamSpans(spanStream(), Buffer.alloc(0)).subscribe({
     onNext: ack => {
       console.log('received ack');
       _sub.request(1);
@@ -153,7 +156,7 @@ let streamSpansStreamAcks = function() {
   opname = 'streams two ways!';
 
   let _sub;
-  client.streamSpansStreamAcks(spanStream, Buffer.alloc(0)).subscribe({
+  client.streamSpansStreamAcks(spanStream(), Buffer.alloc(0)).subscribe({
     onNext: ack => {
       console.log('received ack*');
       finalCount++;
