@@ -10,5 +10,4 @@ export default class ConnectionId {
   bytes() {
     return this._bytes;
   }
-
 }

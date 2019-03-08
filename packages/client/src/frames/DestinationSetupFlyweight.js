@@ -153,7 +153,11 @@ export function decodeDestinationSetupFrame(
   const group = UTF8Encoder.decode(buffer, offset, offset + groupLength);
   offset += groupLength;
 
-  const connectionIdBuffer = BufferEncoder.decode(buffer, offset, offset + CONNECTION_ID_SIZE);
+  const connectionIdBuffer = BufferEncoder.decode(
+    buffer,
+    offset,
+    offset + CONNECTION_ID_SIZE,
+  );
   const connectionId = Uint8Array.from(connectionIdBuffer);
   offset += CONNECTION_ID_SIZE;
 
@@ -170,7 +174,11 @@ export function decodeDestinationSetupFrame(
   );
   offset += accessTokenLength;
 
-  const additionalFlagBuffer = BufferEncoder.decode(buffer, offset, offset + ADDITIONAL_FLAGS_SIZE);
+  const additionalFlagBuffer = BufferEncoder.decode(
+    buffer,
+    offset,
+    offset + ADDITIONAL_FLAGS_SIZE,
+  );
   const additionalFlags = additionalFlagBuffer.readIntBE(0, 2);
   offset += ADDITIONAL_FLAGS_SIZE;
 
