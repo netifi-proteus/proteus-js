@@ -31,7 +31,7 @@ module.exports = {
   rules: {
     // Possible Errors (http://eslint.org/docs/rules/#possible-errors)
     'no-cond-assign': 1,
-    'no-console': 1,
+    'no-console': 0,
     'no-constant-condition': [1, {checkLoops: false}],
     'no-control-regex': 1,
     'no-debugger': 1,
@@ -186,7 +186,7 @@ module.exports = {
     'newline-before-return': 0,
     'newline-per-chained-call': 0,
     'no-array-constructor': 1,
-    'no-bitwise': 1,
+    'no-bitwise': 0,
     'no-continue': 0,
     'no-inline-comments': 0,
     'no-lonely-if': 0,

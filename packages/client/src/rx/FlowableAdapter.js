@@ -53,7 +53,7 @@ class ObservableFlowable<T> implements Subscribable<T> {
   _buffered: number;
 
   constructor(delegate: Flowable<T>, batchSize?: number = MAX_REQUEST_N) {
-    //Symbol logic cloned from observable.ts in rxjs
+    // Symbol logic cloned from observable.ts in rxjs
     const observableSymbol =
       typeof Symbol === 'function' && Symbol.observable
         ? Symbol.observable
@@ -72,7 +72,7 @@ class ObservableFlowable<T> implements Subscribable<T> {
             if (subscriber && subscriber.next) {
               try {
                 subscriber.next(value);
-                //Only if someone specified a batch size
+                // Only if someone specified a batch size
                 if (this._batchSize < MAX_REQUEST_N) {
                   this._buffered--;
                   if (this._buffered <= 0) {
@@ -119,7 +119,7 @@ class ObservableSingle<T> implements Subscribable<T> {
   _completed: boolean;
 
   constructor(delegate: Single<T>) {
-    //Symbol logic cloned from observable.ts in rxjs
+    // Symbol logic cloned from observable.ts in rxjs
     const observableSymbol =
       typeof Symbol === 'function' && Symbol.observable
         ? Symbol.observable
@@ -165,7 +165,7 @@ class ObservableSingle<T> implements Subscribable<T> {
   }
 }
 
-/*** Helper classes ***/
+/** * Helper classes ** */
 
 class UnsubscribableSubscription implements Unsubscribable {
   _canceled: boolean;
