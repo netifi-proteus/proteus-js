@@ -170,6 +170,10 @@ export function decodeDestinationSetupFrame(
   );
   offset += accessTokenLength;
 
+  const additionalFlagBuffer = BufferEncoder.decode(buffer, offset, offset + ADDITIONAL_FLAGS_SIZE);
+  const additionalFlags = additionalFlagBuffer.readIntBE(0, 2);
+  offset += ADDITIONAL_FLAGS_SIZE;
+
   const tags = {};
   while (offset < buffer.length) {
     const keyLength = buffer.readUInt32BE(offset);
@@ -193,9 +197,10 @@ export function decodeDestinationSetupFrame(
     minorVersion,
     inetAddress,
     group,
+    connectionId,
     accessKey,
     accessToken,
-    connectionId,
+    additionalFlags,
     tags,
   };
 }
