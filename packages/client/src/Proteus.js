@@ -19,7 +19,7 @@
 ('use-strict');
 
 import {DuplexConnection, Responder, ReactiveSocket} from 'rsocket-types';
-import {Single, Flowable} from 'rsocket-flowable';
+import {Single} from 'rsocket-flowable';
 import type {PayloadSerializers} from 'rsocket-core/build/RSocketSerialization';
 import {BufferEncoders} from 'rsocket-core';
 import {RpcClient, RequestHandlingRSocket} from 'rsocket-rpc-core';
@@ -45,7 +45,7 @@ export type ProteusConfig = {|
   transport: {|
     url?: string,
     wsCreator?: (url: string) => WebSocket,
-    //encoder?: Encoders<*>, *** Right now only BufferEncoder is supported for WebSocket so do not allow passing it in if using a URL ***
+    // encoder?: Encoders<*>, *** Right now only BufferEncoder is supported for WebSocket so do not allow passing it in if using a URL ***
     connection?: DuplexConnection,
   |},
   responder?: Responder<Buffer, Buffer>,
@@ -79,8 +79,8 @@ export default class Proteus {
           this._connecting.subscribe(subscriber);
         });
       } else {
-        /*** This is a useful Publisher implementation that wraps could feasibly wrap the Single type ***/
-        /*** Might be useful to clean up and contribute back or put in a utility or something ***/
+        /** * This is a useful Publisher implementation that wraps could feasibly wrap the Single type ** */
+        /** * Might be useful to clean up and contribute back or put in a utility or something ** */
         this._connecting = (function() {
           const _subscribers = [];
           let _connection: ReactiveSocket<Buffer, Buffer>;
@@ -88,7 +88,7 @@ export default class Proteus {
           let _completed = false;
           return {
             onComplete: connection => {
-              //Memoize for future subscribers
+              // Memoize for future subscribers
               _completed = true;
               _connection = connection;
 
@@ -148,7 +148,7 @@ export default class Proteus {
             console.warn(err);
           },
           onSubscribe: cancel => {
-            //do nothing
+            // do nothing
           },
         });
 
@@ -225,7 +225,7 @@ export default class Proteus {
       'Proteus: Transport config must supply a connection or a URL',
     );
 
-    //default to GUID-y destination ID
+    // default to GUID-y destination ID
     const destination =
       config.setup.destination !== undefined
         ? config.setup.destination
@@ -293,11 +293,11 @@ export default class Proteus {
   }
 }
 
-//Helper function to generate GUID-ish IDs, should a user not provide one
+// Helper function to generate GUID-ish IDs, should a user not provide one
 function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == 'x' ? r : (r & 0x3) | 0x8;
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }

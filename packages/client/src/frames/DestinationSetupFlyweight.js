@@ -24,8 +24,6 @@ import type {DestinationSetupFrame} from './Types';
 
 import {FrameTypes} from './Frame';
 
-import ConnectionId from './ConnectionId';
-
 import {FRAME_HEADER_SIZE, encodeFrameHeader} from './FrameHeaderFlyweight';
 
 import {UTF8Encoder, BufferEncoder, createBuffer} from 'rsocket-core';
@@ -94,8 +92,8 @@ export function encodeDestinationSetupFrame(
     offset + groupLength,
   );
 
-  offset = UTF8Encoder.encode(
-    Uint8Array.from(frame.connectionId.bytes()),
+  offset = BufferEncoder.encode(
+    Buffer.from(frame.connectionId.bytes()),
     buffer,
     offset,
     offset + CONNECTION_ID_SIZE,
@@ -110,7 +108,12 @@ export function encodeDestinationSetupFrame(
     offset + accessTokenLength,
   );
 
-  offset = BufferEncoder.encode(new Uint8Array(2), buffer, offset, offset + ADDITIONAL_FLAGS_SIZE);
+  offset = BufferEncoder.encode(
+    Buffer.alloc(2),
+    buffer,
+    offset,
+    offset + ADDITIONAL_FLAGS_SIZE,
+  );
 
   Object.entries(frame.tags).forEach(([key, value]) => {
     const keyLength = UTF8Encoder.byteLength(key);
@@ -150,7 +153,13 @@ export function decodeDestinationSetupFrame(
   const group = UTF8Encoder.decode(buffer, offset, offset + groupLength);
   offset += groupLength;
 
-
+  const connectionIdBuffer = BufferEncoder.decode(
+    buffer,
+    offset,
+    offset + CONNECTION_ID_SIZE,
+  );
+  const connectionId = Uint8Array.from(connectionIdBuffer);
+  offset += CONNECTION_ID_SIZE;
 
   const accessKey = readUInt64BE(buffer, offset);
   offset += ACCESS_KEY_SIZE;
@@ -164,6 +173,14 @@ export function decodeDestinationSetupFrame(
     offset + accessTokenLength,
   );
   offset += accessTokenLength;
+
+  const additionalFlagBuffer = BufferEncoder.decode(
+    buffer,
+    offset,
+    offset + ADDITIONAL_FLAGS_SIZE,
+  );
+  const additionalFlags = additionalFlagBuffer.readIntBE(0, 2);
+  offset += ADDITIONAL_FLAGS_SIZE;
 
   const tags = {};
   while (offset < buffer.length) {
@@ -188,8 +205,10 @@ export function decodeDestinationSetupFrame(
     minorVersion,
     inetAddress,
     group,
+    connectionId,
     accessKey,
     accessToken,
+    additionalFlags,
     tags,
   };
 }

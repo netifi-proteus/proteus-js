@@ -24,7 +24,7 @@ export class ZipkinTracingService {
       sub.onSubscribe();
       const post_body = '[' + convertSpan(span) + ']';
 
-      var post_options = {
+      const post_options = {
         host: this._host,
         port: this._port,
         path: this._path,
@@ -36,12 +36,12 @@ export class ZipkinTracingService {
 
       // Set up the request
       console.log('Posting span...');
-      var post_req = http.request(post_options, function(res) {
+      const post_req = http.request(post_options, res => {
         res.setEncoding('utf8');
-        res.on('data', function(chunk) {
+        res.on('data', chunk => {
           console.log('Response chunk: ' + chunk);
         });
-        res.on('end', function() {
+        res.on('end', () => {
           console.log('Done!');
           sub.onComplete(new Ack());
         });
@@ -61,7 +61,7 @@ export class ZipkinTracingService {
         onNext: span => {
           const post_body = '[' + convertSpan(span) + ']';
 
-          var post_options = {
+          const post_options = {
             host: this._host,
             port: this._port,
             path: this._path,
@@ -73,12 +73,12 @@ export class ZipkinTracingService {
 
           // Set up the request
           console.log('Posting span...');
-          var post_req = http.request(post_options, function(res) {
+          const post_req = http.request(post_options, res => {
             res.setEncoding('utf8');
-            res.on('data', function(chunk) {
+            res.on('data', chunk => {
               console.log('Response chunk: ' + chunk);
             });
-            res.on('end', function() {
+            res.on('end', () => {
               console.log('Done!');
               if (!once) {
                 once = true;
@@ -120,7 +120,7 @@ export class ZipkinTracingService {
         onNext: span => {
           const post_body = '[' + convertSpan(span) + ']';
 
-          var post_options = {
+          const post_options = {
             host: this._host,
             port: this._port,
             path: this._path,
@@ -132,21 +132,21 @@ export class ZipkinTracingService {
 
           // Set up the request
           console.log('Posting span...');
-          var post_req = http.request(post_options, function(res) {
+          const post_req = http.request(post_options, res => {
             res.setEncoding('utf8');
-            res.on('data', function(chunk) {
+            res.on('data', chunk => {
               console.log('Response chunk: ' + chunk);
             });
-            res.on('end', function() {
+            res.on('end', () => {
               console.log('Done!');
               pending--;
               if (!once) {
                 once = true;
                 processor.subscribe(sub);
-                //sub.onSubscribe(processor);
+                // sub.onSubscribe(processor);
               }
               processor.onNext(new Ack());
-              //_subscription.request(1);
+              // _subscription.request(1);
               if (done && pending <= 0) {
                 processor.onComplete();
               }
@@ -166,7 +166,7 @@ export class ZipkinTracingService {
         },
         onSubscribe: subscription => {
           processor.onSubscribe(subscription);
-          //processor.request(1);
+          // processor.request(1);
         },
       });
     });
@@ -181,21 +181,21 @@ const kind = {
   4: 'CONSUMER',
 };
 function convertSpan(span: Span) {
-  let obj = span.toObject();
-  //Map KIND from number back to string for Go library
+  const obj = span.toObject();
+  // Map KIND from number back to string for Go library
   obj.kind = kind[obj.kind];
-  //Fix id lengths
+  // Fix id lengths
   obj.traceId = (obj.traceId || '').padStart(32, '0');
   obj.id = (obj.id || '').padStart(16, '0');
   obj.parentId = (obj.parentId || '').padStart(16, '0');
-  //Format requires that parentId is absent for "root" trace
+  // Format requires that parentId is absent for "root" trace
   if (obj.id === obj.parentId) {
     delete obj.parentId;
   }
-  //Rename annotations to expected name
+  // Rename annotations to expected name
   obj.annotations = obj.annotationsList;
   delete obj.annotationsList;
-  //Restructure tags to a map and rename per expectation
+  // Restructure tags to a map and rename per expectation
   obj.tags = obj.tagsMap.reduce((agg, kvp) => {
     agg[kvp[0]] = kvp[1];
     return agg;

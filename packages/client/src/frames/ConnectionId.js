@@ -1,13 +1,13 @@
-import md5 from 'md5-js'
+import md5 from 'js-md5';
 
 export default class ConnectionId {
-  _bytes: number[]
+  _bytes: number[];
 
-  constructor(connectionIdSeed : String){
-    _bytes = md5(connectionIdSeed).digest();
+  constructor(connectionIdSeed: string) {
+    this._bytes = Uint8Array.from(md5.digest(connectionIdSeed));
   }
 
-  bytes(){
-    return _bytes;
+  bytes() {
+    return this._bytes;
   }
 }

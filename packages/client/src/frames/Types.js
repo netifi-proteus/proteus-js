@@ -17,7 +17,7 @@
  */
 
 import type {IPv4, IPv6} from 'ipaddr.js';
-import ConnectionId from './ConnectionId'
+import ConnectionId from './ConnectionId';
 
 export type Frame =
   | BrokerSetupFrame
