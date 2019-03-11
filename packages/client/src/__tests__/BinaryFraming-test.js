@@ -21,6 +21,7 @@ import ipaddr from 'ipaddr.js';
 
 import {encodeFrame, decodeFrame, FrameTypes} from '../frames';
 import ConnectionId from '../frames/ConnectionId';
+import AdditionalFlags from '../frames/AdditionalFlags';
 
 describe('BROKER_SETUP', () => {
   it('serializes BROKER_SETUP frames', () => {
@@ -62,6 +63,9 @@ describe('DESTINATION_SETUP', () => {
       accessToken,
       tags,
       connectionId: new ConnectionId('abc'),
+      additionalFlags: new AdditionalFlags({
+        public: true,
+      }),
     };
 
     const buffer = encodeFrame(input);
@@ -70,10 +74,11 @@ describe('DESTINATION_SETUP', () => {
     expect(input.type).to.equal(frame.type);
     expect(input.inetAddress.toString()).to.equal(frame.inetAddress.toString());
     expect(input.group).to.equal(frame.group);
-    expect(input.connectionId.bytes()).to.deep.equal(frame.connectionId);
+    expect(input.connectionId.bytes()).to.deep.equal(frame.connectionId.bytes());
     expect(input.accessKey).to.equal(frame.accessKey);
     expect(input.accessToken).to.deep.equal(frame.accessToken);
     expect(input.tags).to.deep.equal(frame.tags);
+    expect(input.additionalFlags.sum()).to.equal(frame.additionalFlags.sum());
   });
 
   it('handles optional inetAddress in DESTINATION_SETUP frames', () => {
@@ -88,6 +93,7 @@ describe('DESTINATION_SETUP', () => {
       accessToken,
       tags,
       connectionId: new ConnectionId('abc'),
+      additionalFlags: new AdditionalFlags({public: false}),
     };
 
     const buffer = encodeFrame(input);
@@ -96,10 +102,11 @@ describe('DESTINATION_SETUP', () => {
     expect(input.type).to.equal(frame.type);
     expect(frame.inetAddress).to.equal(null);
     expect(input.group).to.equal(frame.group);
-    expect(input.connectionId.bytes()).to.deep.equal(frame.connectionId);
+    expect(input.connectionId.bytes()).to.deep.equal(frame.connectionId.bytes());
     expect(input.accessKey).to.equal(frame.accessKey);
     expect(input.accessToken).to.deep.equal(frame.accessToken);
     expect(input.tags).to.deep.equal(frame.tags);
+    expect(input.additionalFlags.sum()).to.equal(frame.additionalFlags.sum());
   });
 });
 

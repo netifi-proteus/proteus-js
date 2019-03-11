@@ -34,6 +34,8 @@ import {
   readUInt64BE,
   writeUInt64BE,
 } from 'rsocket-core/build/RSocketBufferUtils';
+import ConnectionId from './ConnectionId';
+import AdditionalFlags from './AdditionalFlags';
 
 const INET_ADDRESS_LENGTH_SIZE = 4;
 const GROUP_LENGTH_SIZE = 4;
@@ -109,7 +111,7 @@ export function encodeDestinationSetupFrame(
   );
 
   offset = BufferEncoder.encode(
-    Buffer.alloc(2),
+    Buffer.from(frame.additionalFlags.bytes()),
     buffer,
     offset,
     offset + ADDITIONAL_FLAGS_SIZE,
@@ -158,7 +160,8 @@ export function decodeDestinationSetupFrame(
     offset,
     offset + CONNECTION_ID_SIZE,
   );
-  const connectionId = Uint8Array.from(connectionIdBuffer);
+  const connectionIdBytes = Uint8Array.from(connectionIdBuffer);
+  const connectionId = ConnectionId.fromBytes(connectionIdBytes);
   offset += CONNECTION_ID_SIZE;
 
   const accessKey = readUInt64BE(buffer, offset);
@@ -179,7 +182,8 @@ export function decodeDestinationSetupFrame(
     offset,
     offset + ADDITIONAL_FLAGS_SIZE,
   );
-  const additionalFlags = additionalFlagBuffer.readIntBE(0, 2);
+  const additionalFlagSum = additionalFlagBuffer.readIntBE(0, 2);
+  const additionalFlags = AdditionalFlags.fromSum(additionalFlagSum);
   offset += ADDITIONAL_FLAGS_SIZE;
 
   const tags = {};

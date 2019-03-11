@@ -18,6 +18,7 @@
 
 import type {IPv4, IPv6} from 'ipaddr.js';
 import ConnectionId from './ConnectionId';
+import AdditionalFlags from './AdditionalFlags';
 
 export type Frame =
   | BrokerSetupFrame
@@ -51,7 +52,7 @@ export type DestinationSetupFrame = {|
   connectionId: ConnectionId,
   accessKey: number,
   accessToken: Buffer,
-  additionalFlags: number,
+  additionalFlags: AdditionalFlags,
   tags: Tags
 |};
 
