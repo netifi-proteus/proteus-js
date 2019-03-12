@@ -41,6 +41,10 @@ export type ProteusConfig = {|
     lifetime?: number,
     accessKey: number,
     accessToken: string,
+    connectionId?: string,
+    additionalFlags?: {|
+        public?: boolean
+      |}
   |},
   transport: {|
     url?: string,
@@ -244,6 +248,11 @@ export default class Proteus {
         : 360000; /* 360s in ms */
     const accessKey = config.setup.accessKey;
     const accessToken = Buffer.from(config.setup.accessToken, 'base64');
+    /* If a connectionId is not provided, seed it */
+    const connectionId = typeof config.setup.connectionId !== 'undefined' ?
+      config.setup.connectionId : Date.now().toString();
+    const additionalFlags = typeof config.setup.additionalFlags !== 'undefined' ?
+      config.setup.additionalFlags : {};
 
     const transport: DuplexConnection =
       config.transport.connection !== undefined
@@ -274,6 +283,8 @@ export default class Proteus {
         keepAlive,
         lifetime,
         metadata,
+        connectionId,
+        additionalFlags
       },
       transport,
       responder,
