@@ -253,10 +253,7 @@ export default class Proteus {
       typeof config.setup.connectionId !== 'undefined'
         ? config.setup.connectionId
         : Date.now().toString();
-    const additionalFlags =
-      typeof config.setup.additionalFlags !== 'undefined'
-        ? config.setup.additionalFlags
-        : { public: false };
+    const additionalFlags = { public: false, ...config.setup.additionalFlags };
 
     const transport: DuplexConnection =
       config.transport.connection !== undefined
