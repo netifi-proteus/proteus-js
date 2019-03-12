@@ -43,8 +43,8 @@ export type ProteusConfig = {|
     accessToken: string,
     connectionId?: string,
     additionalFlags?: {|
-        public?: boolean
-      |}
+      public?: boolean,
+    |},
   |},
   transport: {|
     url?: string,
@@ -249,10 +249,14 @@ export default class Proteus {
     const accessKey = config.setup.accessKey;
     const accessToken = Buffer.from(config.setup.accessToken, 'base64');
     /* If a connectionId is not provided, seed it */
-    const connectionId = typeof config.setup.connectionId !== 'undefined' ?
-      config.setup.connectionId : Date.now().toString();
-    const additionalFlags = typeof config.setup.additionalFlags !== 'undefined' ?
-      config.setup.additionalFlags : {};
+    const connectionId =
+      typeof config.setup.connectionId !== 'undefined'
+        ? config.setup.connectionId
+        : Date.now().toString();
+    const additionalFlags =
+      typeof config.setup.additionalFlags !== 'undefined'
+        ? config.setup.additionalFlags
+        : {};
 
     const transport: DuplexConnection =
       config.transport.connection !== undefined
@@ -284,7 +288,7 @@ export default class Proteus {
         lifetime,
         metadata,
         connectionId,
-        additionalFlags
+        additionalFlags,
       },
       transport,
       responder,

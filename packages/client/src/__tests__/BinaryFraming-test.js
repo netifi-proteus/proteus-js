@@ -74,7 +74,9 @@ describe('DESTINATION_SETUP', () => {
     expect(input.type).to.equal(frame.type);
     expect(input.inetAddress.toString()).to.equal(frame.inetAddress.toString());
     expect(input.group).to.equal(frame.group);
-    expect(input.connectionId.bytes()).to.deep.equal(frame.connectionId.bytes());
+    expect(input.connectionId.bytes()).to.deep.equal(
+      frame.connectionId.bytes(),
+    );
     expect(input.accessKey).to.equal(frame.accessKey);
     expect(input.accessToken).to.deep.equal(frame.accessToken);
     expect(input.tags).to.deep.equal(frame.tags);
@@ -102,7 +104,9 @@ describe('DESTINATION_SETUP', () => {
     expect(input.type).to.equal(frame.type);
     expect(frame.inetAddress).to.equal(null);
     expect(input.group).to.equal(frame.group);
-    expect(input.connectionId.bytes()).to.deep.equal(frame.connectionId.bytes());
+    expect(input.connectionId.bytes()).to.deep.equal(
+      frame.connectionId.bytes(),
+    );
     expect(input.accessKey).to.equal(frame.accessKey);
     expect(input.accessToken).to.deep.equal(frame.accessToken);
     expect(input.tags).to.deep.equal(frame.tags);
