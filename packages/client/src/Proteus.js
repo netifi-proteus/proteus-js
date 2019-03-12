@@ -30,6 +30,8 @@ import {FrameTypes, encodeFrame} from './frames';
 import type {Tags} from './frames';
 
 import RSocketWebSocketClient from 'rsocket-websocket-client';
+import ConnectionId from './frames/ConnectionId';
+import AdditionalFlags from './frames/AdditionalFlags';
 
 export type ProteusConfig = {|
   serializers?: PayloadSerializers<Buffer, Buffer>,
@@ -249,11 +251,16 @@ export default class Proteus {
     const accessKey = config.setup.accessKey;
     const accessToken = Buffer.from(config.setup.accessToken, 'base64');
     /* If a connectionId is not provided, seed it */
-    const connectionId =
+    const connectionIdSeed =
       typeof config.setup.connectionId !== 'undefined'
         ? config.setup.connectionId
         : Date.now().toString();
-    const additionalFlags = { public: false, ...config.setup.additionalFlags };
+    const connectionId = new ConnectionId(connectionIdSeed);
+    const additionalFlagsLiteral = {
+      public: false,
+      ...config.setup.additionalFlags,
+    };
+    const additionalFlags = new AdditionalFlags(additionalFlagsLiteral);
 
     const transport: DuplexConnection =
       config.transport.connection !== undefined
@@ -278,7 +285,7 @@ export default class Proteus {
       accessKey,
       accessToken,
       connectionId,
-      additionalFlags
+      additionalFlags,
     });
 
     const finalConfig: ClientConfig<Buffer, Buffer> = {
