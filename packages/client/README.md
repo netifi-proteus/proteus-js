@@ -13,7 +13,6 @@ The Proteus client should be passed a configuration object. Here are its propert
 ```
 const config = {
   setup: {
-    destination: // TODO: remove?
     group: '', // required - group your client will be visible in
     accessKey: 123, // required
     accessToken: 'abc', // required
