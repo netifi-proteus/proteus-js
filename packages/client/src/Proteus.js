@@ -171,7 +171,7 @@ export default class Proteus {
     return this._group;
   }
 
-  myTags(): string {
+  myTags(): Tags {
     return this._tags;
   }
 
@@ -277,6 +277,8 @@ export default class Proteus {
       tags,
       accessKey,
       accessToken,
+      connectionId,
+      additionalFlags
     });
 
     const finalConfig: ClientConfig<Buffer, Buffer> = {

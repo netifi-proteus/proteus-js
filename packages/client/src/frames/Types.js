@@ -47,7 +47,7 @@ export type DestinationSetupFrame = {|
   type: 0x02,
   majorVersion: ?number,
   minorVersion: ?number,
-  inetAddress: IPv4 | IPv6,
+  inetAddress?: IPv4 | IPv6,
   group: string,
   connectionId: ConnectionId,
   accessKey: number,
