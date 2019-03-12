@@ -52,10 +52,15 @@ export type ProteusConfig = {|
   setup: {|
     group: string,
     destination?: string,
+    tags?: Tags,
     keepAlive?: number,
     lifetime?: number,
     accessKey: number,
     accessToken: string,
+    connectionId?: string,
+    additionalFlags?: {|
+      public?: boolean,
+    |}
   |},
   transport: {|
     url?: string,

@@ -94,13 +94,6 @@ export function encodeDestinationSetupFrame(
     offset + groupLength,
   );
 
-  offset = BufferEncoder.encode(
-    Buffer.from(frame.connectionId.bytes()),
-    buffer,
-    offset,
-    offset + CONNECTION_ID_SIZE,
-  );
-
   offset = writeUInt64BE(buffer, frame.accessKey, offset);
   offset = buffer.writeUInt32BE(accessTokenLength, offset);
   offset = BufferEncoder.encode(
@@ -108,6 +101,13 @@ export function encodeDestinationSetupFrame(
     buffer,
     offset,
     offset + accessTokenLength,
+  );
+
+  offset = BufferEncoder.encode(
+    Buffer.from(frame.connectionId.bytes()),
+    buffer,
+    offset,
+    offset + CONNECTION_ID_SIZE,
   );
 
   offset = BufferEncoder.encode(
@@ -155,15 +155,6 @@ export function decodeDestinationSetupFrame(
   const group = UTF8Encoder.decode(buffer, offset, offset + groupLength);
   offset += groupLength;
 
-  const connectionIdBuffer = BufferEncoder.decode(
-    buffer,
-    offset,
-    offset + CONNECTION_ID_SIZE,
-  );
-  const connectionIdBytes = Uint8Array.from(connectionIdBuffer);
-  const connectionId = ConnectionId.fromBytes(connectionIdBytes);
-  offset += CONNECTION_ID_SIZE;
-
   const accessKey = readUInt64BE(buffer, offset);
   offset += ACCESS_KEY_SIZE;
 
@@ -176,6 +167,15 @@ export function decodeDestinationSetupFrame(
     offset + accessTokenLength,
   );
   offset += accessTokenLength;
+
+  const connectionIdBuffer = BufferEncoder.decode(
+    buffer,
+    offset,
+    offset + CONNECTION_ID_SIZE,
+  );
+  const connectionIdBytes = Uint8Array.from(connectionIdBuffer);
+  const connectionId = ConnectionId.fromBytes(connectionIdBytes);
+  offset += CONNECTION_ID_SIZE;
 
   const additionalFlagBuffer = BufferEncoder.decode(
     buffer,
