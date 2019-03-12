@@ -88,7 +88,7 @@ export class ZipkinRecorder extends DefaultRecorder {
                 );
               },
               onSubscribe: sub => {
-                //No intention of canceling
+                // No intention of canceling
                 this._sub = sub;
                 this._sub.request(1);
               },
@@ -120,14 +120,14 @@ function mapSpan(
   if (span.spanId.toString() !== span.parentId.toString()) {
     result.setParentId(span.parentId.toString());
   }
-  //kind
+  // kind
   if (span.tags['proteus.type']) {
-    let kindString = span.tags['proteus.type'].toString().toUpperCase();
-    let kind = Span.Kind[kindString] || Span.Kind.SPAN_KIND_UNSPECIFIED;
+    const kindString = span.tags['proteus.type'].toString().toUpperCase();
+    const kind = Span.Kind[kindString] || Span.Kind.SPAN_KIND_UNSPECIFIED;
     result.setKind(kind);
   }
   if (span.tags) {
-    let map = result.getTagsMap();
+    const map = result.getTagsMap();
     Object.keys(span.tags).forEach(key => {
       map.set(key, span.tags[key]);
     });
@@ -139,7 +139,7 @@ function mapSpan(
     }
   }
   if (span.logs) {
-    let annotations = [];
+    const annotations = [];
     span.logs.forEach(log => {
       const annotation = new Annotation();
       annotation.setTimestamp(log.timestamp);
@@ -154,7 +154,7 @@ function mapSpan(
   if (remoteService) {
     result.setRemoteEndpoint(constructEndpoint(remoteService));
   }
-  result.setShared(!!shared);
+  result.setShared(Boolean(shared));
 
   return result;
 }
@@ -162,7 +162,7 @@ function mapSpan(
 function constructEndpoint(service: string): Endpoint {
   const endpoint = new Endpoint();
   endpoint.setServiceName(service);
-  //TODO: Figure this out for real
+  // TODO: Figure this out for real
   endpoint.setIpv4('127.0.0.1');
   return endpoint;
 }

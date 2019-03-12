@@ -89,7 +89,7 @@ export default class DeferredConnectingRSocket
       onComplete: connection => connection.fireAndForget(transformedPayload),
       onError: err => console.warn('Failed to connect:' + JSON.stringify(err)),
       onSubscribe: cancel => {
-        /*not sure we would ever cancel*/
+        /* not sure we would ever cancel */
       },
     });
   }
@@ -113,7 +113,7 @@ export default class DeferredConnectingRSocket
           subscriber.onError(error);
         },
         onSubscribe: cancel => {
-          /*not sure we would ever cancel*/
+          /* not sure we would ever cancel */
         },
       });
     });
@@ -138,7 +138,7 @@ export default class DeferredConnectingRSocket
           subscriber.onError(error);
         },
         onSubscribe: cancel => {
-          /*not sure we would ever cancel*/
+          /* not sure we would ever cancel */
         },
       });
     });
@@ -165,7 +165,7 @@ export default class DeferredConnectingRSocket
           subscriber.onError(error);
         },
         onSubscribe: cancel => {
-          /*not sure we would ever cancel*/
+          /* not sure we would ever cancel */
         },
       });
     });
@@ -188,7 +188,7 @@ export default class DeferredConnectingRSocket
           subscriber.onError(error);
         },
         onSubscribe: cancel => {
-          /*not sure we would ever cancel*/
+          /* not sure we would ever cancel */
         },
       });
     });
@@ -200,7 +200,7 @@ export default class DeferredConnectingRSocket
         connection.close();
       },
       onSubscribe: cancel => {
-        /*not sure we would ever cancel*/
+        /* not sure we would ever cancel */
       },
     });
   }

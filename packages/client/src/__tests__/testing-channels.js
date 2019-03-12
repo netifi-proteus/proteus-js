@@ -22,14 +22,14 @@ const tcpConnection = new RSocketTcpClient(
   BufferEncoders,
 );
 
-let tracingServiceGateway = Proteus.create({
+const tracingServiceGateway = Proteus.create({
   setup: {
     group: 'com.netifi.proteus.tracing',
     accessKey: 9007199254740991,
     accessToken: 'kTBDVtfRBO4tHOnZzSyY5ym2kfY=',
   },
   transport: {
-    //connection: tcpConnection
+    // connection: tcpConnection
     url,
     wsCreator: url =>
       new WebSocket(url, {
@@ -56,7 +56,7 @@ tracingServiceGateway._connect().subscribe({
 });
 
 const clientOneId = 'thingOne';
-let clientGateway = Proteus.create({
+const clientGateway = Proteus.create({
   setup: {
     group: 'pinger',
     destination: clientOneId,
@@ -64,7 +64,7 @@ let clientGateway = Proteus.create({
     accessToken: 'kTBDVtfRBO4tHOnZzSyY5ym2kfY=',
   },
   transport: {
-    //connection: tcpConnection,
+    // connection: tcpConnection,
     url,
     wsCreator: url =>
       new WebSocket(url, {
@@ -75,11 +75,11 @@ let clientGateway = Proteus.create({
 
 const basicTracer = new BasicTracer(
   {
-    /*default sampler/recorder*/
+    /* default sampler/recorder */
     recorder: {record: () => {}},
   },
   clientGateway,
-  null /*no url needed*/,
+  null /* no url needed */,
   'channel-test',
   null,
   true,
@@ -89,45 +89,48 @@ const client = new ProteusTracingServiceClient(
   clientGateway.group('com.netifi.proteus.tracing'),
 );
 
-let lastSpan = null;
-let canceled = false;
-let max = 10;
-let count = 0;
-let opname = 'stream span op';
-let spanStream = new Flowable(subscriber => {
-  subscriber.onSubscribe({
-    cancel: () => {
-      canceled = true;
-      console.log('Subscriber canceled span stream');
-    },
-    request: n => {
-      while (!canceled && n-- > 0 && count++ < max) {
-        lastSpan = basicTracer.startSpan(opname, {
-          childOf: lastSpan,
-          startTime: Date.now() * 1000,
-          tags: {},
-        });
-        subscriber.onNext(
-          mapSpan(
-            lastSpan,
-            'testSource',
-            'remoteTracer',
-            clientGateway.myGroup(),
-            clientGateway.myDestination(),
-          ),
-        );
-      }
-      if (count >= max) {
-        subscriber.onComplete();
-      }
-    },
+const spanStream = function() {
+  let lastSpan = null;
+  let canceled = false;
+  const max = 10;
+  let count = 0;
+  const opname = 'stream span op';
+
+  return new Flowable(subscriber => {
+    subscriber.onSubscribe({
+      cancel: () => {
+        canceled = true;
+        console.log('Subscriber canceled span stream');
+      },
+      request: n => {
+        while (!canceled && n-- > 0 && count++ < max) {
+          lastSpan = basicTracer.startSpan(opname, {
+            childOf: lastSpan,
+            startTime: Date.now() * 1000,
+            tags: {},
+          });
+          subscriber.onNext(
+            mapSpan(
+              lastSpan,
+              'testSource',
+              'remoteTracer',
+              clientGateway.myGroup(),
+              clientGateway.myDestination(),
+            ),
+          );
+        }
+        if (count >= max) {
+          subscriber.onComplete();
+        }
+      },
+    });
   });
-});
+};
 
 setTimeout(() => {
   console.log('Here we go');
   let _sub;
-  client.streamSpans(spanStream, Buffer.alloc(0)).subscribe({
+  client.streamSpans(spanStream(), Buffer.alloc(0)).subscribe({
     onNext: ack => {
       console.log('received ack');
       _sub.request(1);
@@ -144,16 +147,11 @@ setTimeout(() => {
   });
 }, 5000);
 
-let streamSpansStreamAcks = function() {
+const streamSpansStreamAcks = function() {
   console.log('Beginning to stream spans and acks');
-  //reset count
-  count = 0;
   let finalCount = 0;
-  lastSpan = null;
-  opname = 'streams two ways!';
-
   let _sub;
-  client.streamSpansStreamAcks(spanStream, Buffer.alloc(0)).subscribe({
+  client.streamSpansStreamAcks(spanStream(), Buffer.alloc(0)).subscribe({
     onNext: ack => {
       console.log('received ack*');
       finalCount++;
@@ -185,17 +183,17 @@ function mapSpan(
   if (span.spanId.toString() !== span.parentId.toString()) {
     result.setParentId(span.parentId.toString());
   }
-  //kind
+  // kind
   if (span.tags['proteus.type']) {
-    let kindString = span.tags['proteus.type'].toString().toUpperCase();
-    let kind = Span.Kind[kindString] || Span.Kind.SPAN_KIND_UNSPECIFIED;
+    const kindString = span.tags['proteus.type'].toString().toUpperCase();
+    const kind = Span.Kind[kindString] || Span.Kind.SPAN_KIND_UNSPECIFIED;
     result.setKind(kind);
   } else {
-    let kind = Span.Kind['CLIENT'];
+    const kind = Span.Kind.CLIENT;
     result.setKind(kind);
   }
   if (span.tags) {
-    let map = result.getTagsMap();
+    const map = result.getTagsMap();
     Object.keys(span.tags).forEach(key => {
       map.set(key, span.tags[key]);
     });
@@ -207,7 +205,7 @@ function mapSpan(
     }
   }
   if (span.logs) {
-    let annotations = [];
+    const annotations = [];
     span.logs.forEach(log => {
       const annotation = new Annotation();
       annotation.setTimestamp(log.timestamp);
@@ -222,7 +220,7 @@ function mapSpan(
   if (remoteService) {
     result.setRemoteEndpoint(constructEndpoint(remoteService));
   }
-  result.setShared(!!shared);
+  result.setShared(Boolean(shared));
 
   return result;
 }
@@ -230,7 +228,7 @@ function mapSpan(
 function constructEndpoint(service) {
   const endpoint = new Endpoint();
   endpoint.setServiceName(service);
-  //TODO: Figure this out for real
+  // TODO: Figure this out for real
   endpoint.setIpv4('127.0.0.1');
   return endpoint;
 }

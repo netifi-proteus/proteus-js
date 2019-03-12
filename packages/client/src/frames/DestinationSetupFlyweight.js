@@ -34,11 +34,15 @@ import {
   readUInt64BE,
   writeUInt64BE,
 } from 'rsocket-core/build/RSocketBufferUtils';
+import ConnectionId from './ConnectionId';
+import AdditionalFlags from './AdditionalFlags';
 
 const INET_ADDRESS_LENGTH_SIZE = 4;
 const GROUP_LENGTH_SIZE = 4;
 const ACCESS_KEY_SIZE = 8;
 const ACCESS_TOKEN_LENGTH_SIZE = 4;
+const CONNECTION_ID_SIZE = 16;
+const ADDITIONAL_FLAGS_SIZE = 2;
 const KEY_LENGTH_SIZE = 4;
 const VALUE_LENGTH_SIZE = 4;
 
@@ -64,9 +68,11 @@ export function encodeDestinationSetupFrame(
       inetAddressLength +
       GROUP_LENGTH_SIZE +
       groupLength +
+      CONNECTION_ID_SIZE +
       ACCESS_KEY_SIZE +
       ACCESS_TOKEN_LENGTH_SIZE +
       accessTokenLength +
+      ADDITIONAL_FLAGS_SIZE +
       tagsLength,
   );
 
@@ -95,6 +101,20 @@ export function encodeDestinationSetupFrame(
     buffer,
     offset,
     offset + accessTokenLength,
+  );
+
+  offset = BufferEncoder.encode(
+    Buffer.from(frame.connectionId.bytes()),
+    buffer,
+    offset,
+    offset + CONNECTION_ID_SIZE,
+  );
+
+  offset = BufferEncoder.encode(
+    Buffer.from(frame.additionalFlags.bytes()),
+    buffer,
+    offset,
+    offset + ADDITIONAL_FLAGS_SIZE,
   );
 
   Object.entries(frame.tags).forEach(([key, value]) => {
@@ -148,6 +168,24 @@ export function decodeDestinationSetupFrame(
   );
   offset += accessTokenLength;
 
+  const connectionIdBuffer = BufferEncoder.decode(
+    buffer,
+    offset,
+    offset + CONNECTION_ID_SIZE,
+  );
+  const connectionIdBytes = Uint8Array.from(connectionIdBuffer);
+  const connectionId = ConnectionId.fromBytes(connectionIdBytes);
+  offset += CONNECTION_ID_SIZE;
+
+  const additionalFlagBuffer = BufferEncoder.decode(
+    buffer,
+    offset,
+    offset + ADDITIONAL_FLAGS_SIZE,
+  );
+  const additionalFlagSum = additionalFlagBuffer.readIntBE(0, 2);
+  const additionalFlags = AdditionalFlags.fromSum(additionalFlagSum);
+  offset += ADDITIONAL_FLAGS_SIZE;
+
   const tags = {};
   while (offset < buffer.length) {
     const keyLength = buffer.readUInt32BE(offset);
@@ -171,8 +209,10 @@ export function decodeDestinationSetupFrame(
     minorVersion,
     inetAddress,
     group,
+    connectionId,
     accessKey,
     accessToken,
+    additionalFlags,
     tags,
   };
 }
