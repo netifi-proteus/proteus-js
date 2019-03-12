@@ -32,6 +32,7 @@ import type {Tags} from './frames';
 import RSocketWebSocketClient from 'rsocket-websocket-client';
 import ConnectionId from './frames/ConnectionId';
 import AdditionalFlags from './frames/AdditionalFlags';
+import uuid from 'uuid/v4';
 
 export type ProteusConfig = {|
   serializers?: PayloadSerializers<Buffer, Buffer>,
@@ -235,7 +236,7 @@ export default class Proteus {
     const destination =
       config.setup.destination !== undefined
         ? config.setup.destination
-        : uuidv4();
+        : uuid();
     const tags =
       config.setup.tags !== undefined
         ? {destination, ...config.setup.tags}
@@ -312,13 +313,4 @@ export default class Proteus {
 
     return new Proteus(config.setup.group, tags, client, requestHandler);
   }
-}
-
-// Helper function to generate GUID-ish IDs, should a user not provide one
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
 }

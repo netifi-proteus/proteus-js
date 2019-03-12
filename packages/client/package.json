@@ -44,6 +44,7 @@
     "rsocket-rpc-metrics": "^0.0.1",
     "rsocket-rpc-tracing": "^0.0.3",
     "rsocket-websocket-client": "^0.0.10",
-    "rxjs": "^6.2.2"
+    "rxjs": "^6.2.2",
+    "uuid": "^3.3.2"
   }
 }
