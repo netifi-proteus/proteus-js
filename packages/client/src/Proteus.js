@@ -256,7 +256,7 @@ export default class Proteus {
     const additionalFlags =
       typeof config.setup.additionalFlags !== 'undefined'
         ? config.setup.additionalFlags
-        : {};
+        : { public: false };
 
     const transport: DuplexConnection =
       config.transport.connection !== undefined
