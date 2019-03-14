@@ -36,9 +36,9 @@ export default function toObservable(
   rsocketType: Flowable<T> | Single<T>,
   batchSize?: number,
 ) {
-  if (rsocketType instanceof Flowable) {
+  if (rsocketType typeof Flowable) {
     return from(new ObservableFlowable(rsocketType, batchSize));
-  } else if (rsocketType instanceof Single) {
+  } else if (rsocketType typeof Single) {
     return from(new ObservableSingle(rsocketType));
   } else {
     console.log('Unrecognized type: ' + rsocketType);
