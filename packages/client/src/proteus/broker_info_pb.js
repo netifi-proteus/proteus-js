@@ -971,12 +971,19 @@ proto.io.netifi.proteus.broker.info.Destination.prototype.setAccesskey = functio
  * @constructor
  */
 proto.io.netifi.proteus.broker.info.Broker = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.io.netifi.proteus.broker.info.Broker.repeatedFields_, null);
 };
 goog.inherits(proto.io.netifi.proteus.broker.info.Broker, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   proto.io.netifi.proteus.broker.info.Broker.displayName = 'proto.io.netifi.proteus.broker.info.Broker';
 }
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.io.netifi.proteus.broker.info.Broker.repeatedFields_ = [15];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -1019,7 +1026,9 @@ proto.io.netifi.proteus.broker.info.Broker.toObject = function(includeInstance, 
     tcpport: jspb.Message.getFieldWithDefault(msg, 11, 0),
     webconsoleaddress: jspb.Message.getFieldWithDefault(msg, 12, ""),
     webconsoleport: jspb.Message.getFieldWithDefault(msg, 13, 0),
-    cluster: (f = msg.getCluster()) && proto.io.netifi.proteus.broker.info.Cluster.toObject(includeInstance, f)
+    cluster: (f = msg.getCluster()) && proto.io.netifi.proteus.broker.info.Cluster.toObject(includeInstance, f),
+    tagsList: jspb.Message.toObjectList(msg.getTagsList(),
+    proto.io.netifi.proteus.broker.info.Tag.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -1113,6 +1122,11 @@ proto.io.netifi.proteus.broker.info.Broker.deserializeBinaryFromReader = functio
       var value = new proto.io.netifi.proteus.broker.info.Cluster;
       reader.readMessage(value,proto.io.netifi.proteus.broker.info.Cluster.deserializeBinaryFromReader);
       msg.setCluster(value);
+      break;
+    case 15:
+      var value = new proto.io.netifi.proteus.broker.info.Tag;
+      reader.readMessage(value,proto.io.netifi.proteus.broker.info.Tag.deserializeBinaryFromReader);
+      msg.addTags(value);
       break;
     default:
       reader.skipField();
@@ -1241,6 +1255,14 @@ proto.io.netifi.proteus.broker.info.Broker.serializeBinaryToWriter = function(me
       14,
       f,
       proto.io.netifi.proteus.broker.info.Cluster.serializeBinaryToWriter
+    );
+  }
+  f = message.getTagsList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      15,
+      f,
+      proto.io.netifi.proteus.broker.info.Tag.serializeBinaryToWriter
     );
   }
 };
@@ -1483,6 +1505,37 @@ proto.io.netifi.proteus.broker.info.Broker.prototype.clearCluster = function() {
  */
 proto.io.netifi.proteus.broker.info.Broker.prototype.hasCluster = function() {
   return jspb.Message.getField(this, 14) != null;
+};
+
+
+/**
+ * repeated Tag tags = 15;
+ * @return {!Array<!proto.io.netifi.proteus.broker.info.Tag>}
+ */
+proto.io.netifi.proteus.broker.info.Broker.prototype.getTagsList = function() {
+  return /** @type{!Array<!proto.io.netifi.proteus.broker.info.Tag>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.io.netifi.proteus.broker.info.Tag, 15));
+};
+
+
+/** @param {!Array<!proto.io.netifi.proteus.broker.info.Tag>} value */
+proto.io.netifi.proteus.broker.info.Broker.prototype.setTagsList = function(value) {
+  jspb.Message.setRepeatedWrapperField(this, 15, value);
+};
+
+
+/**
+ * @param {!proto.io.netifi.proteus.broker.info.Tag=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.io.netifi.proteus.broker.info.Tag}
+ */
+proto.io.netifi.proteus.broker.info.Broker.prototype.addTags = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 15, opt_value, proto.io.netifi.proteus.broker.info.Tag, opt_index);
+};
+
+
+proto.io.netifi.proteus.broker.info.Broker.prototype.clearTagsList = function() {
+  this.setTagsList([]);
 };
 
 
