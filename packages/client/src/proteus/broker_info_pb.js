@@ -237,8 +237,8 @@ proto.io.netifi.proteus.broker.info.Id.prototype.toObject = function(opt_include
  */
 proto.io.netifi.proteus.broker.info.Id.toObject = function(includeInstance, msg) {
   var f, obj = {
-    first: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    second: jspb.Message.getFieldWithDefault(msg, 2, 0)
+    first: jspb.Message.getFieldWithDefault(msg, 1, "0"),
+    second: jspb.Message.getFieldWithDefault(msg, 2, "0")
   };
 
   if (includeInstance) {
@@ -276,11 +276,11 @@ proto.io.netifi.proteus.broker.info.Id.deserializeBinaryFromReader = function(ms
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {number} */ (reader.readFixed64());
+      var value = /** @type {string} */ (reader.readFixed64String());
       msg.setFirst(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readFixed64());
+      var value = /** @type {string} */ (reader.readFixed64String());
       msg.setSecond(value);
       break;
     default:
@@ -313,15 +313,15 @@ proto.io.netifi.proteus.broker.info.Id.prototype.serializeBinary = function() {
 proto.io.netifi.proteus.broker.info.Id.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getFirst();
-  if (f !== 0) {
-    writer.writeFixed64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeFixed64String(
       1,
       f
     );
   }
   f = message.getSecond();
-  if (f !== 0) {
-    writer.writeFixed64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeFixed64String(
       2,
       f
     );
@@ -331,31 +331,31 @@ proto.io.netifi.proteus.broker.info.Id.serializeBinaryToWriter = function(messag
 
 /**
  * optional fixed64 first = 1;
- * @return {number}
+ * @return {string}
  */
 proto.io.netifi.proteus.broker.info.Id.prototype.getFirst = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, "0"));
 };
 
 
-/** @param {number} value */
+/** @param {string} value */
 proto.io.netifi.proteus.broker.info.Id.prototype.setFirst = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setProto3StringIntField(this, 1, value);
 };
 
 
 /**
  * optional fixed64 second = 2;
- * @return {number}
+ * @return {string}
  */
 proto.io.netifi.proteus.broker.info.Id.prototype.getSecond = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, "0"));
 };
 
 
-/** @param {number} value */
+/** @param {string} value */
 proto.io.netifi.proteus.broker.info.Id.prototype.setSecond = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  jspb.Message.setProto3StringIntField(this, 2, value);
 };
 
 
