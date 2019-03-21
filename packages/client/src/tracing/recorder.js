@@ -135,7 +135,7 @@ function mapSpan(
       map.set('group', group);
     }
     if (destination) {
-      map.set('destination', destination);
+      map.set('com.netifi.destination', destination);
     }
   }
   if (span.logs) {
