@@ -190,7 +190,11 @@ export default class Proteus {
     destination: string,
     group: string,
   ): ReactiveSocket<Buffer, Buffer> {
-    return DeferredConnectingRSocket.group(group, {destination}, this._connect);
+    return DeferredConnectingRSocket.group(
+      group,
+      {'com.netifi.destination': destination},
+      this._connect,
+    );
   }
 
   addService(service: string, handler: Responder<Buffer, Buffer>): void {
@@ -239,8 +243,8 @@ export default class Proteus {
         : uuid();
     const tags =
       config.setup.tags !== undefined
-        ? {destination, ...config.setup.tags}
-        : {destination};
+        ? {'com.netifi.destination': destination, ...config.setup.tags}
+        : {'com.netifi.destination': destination};
     const keepAlive =
       config.setup.keepAlive !== undefined
         ? config.setup.keepAlive
