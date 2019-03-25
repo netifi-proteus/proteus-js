@@ -27,7 +27,15 @@ import {
   AccessTokenInfo,
 } from './proteus/accesskey_info_pb';
 
-import {Broker, Group, Destination, Event} from './proteus/broker_info_pb';
+import {
+  Broker,
+  Group,
+  Destination,
+  Event,
+  Cluster,
+  Id,
+  Tag,
+} from './proteus/broker_info_pb';
 
 import {
   AccessKeyInfoServiceClient,
@@ -50,20 +58,23 @@ import toObservable from './rx/FlowableAdapter';
 export type {ProteusConfig} from './Proteus';
 
 export {
-  Proteus,
-  toObservable,
-  BrokerInfoServiceClient,
-  BrokerInfoServiceServer,
+  AccessKey,
   AccessKeyInfoServiceClient,
   AccessKeyInfoServiceServer,
-  BrokerManagementServiceClient,
-  BrokerManagementServiceServer,
-  AccessKey,
   AccessKeyParameters,
   AccessToken,
   AccessTokenInfo,
   Broker,
-  Group,
+  BrokerInfoServiceClient,
+  BrokerInfoServiceServer,
+  BrokerManagementServiceClient,
+  BrokerManagementServiceServer,
+  Cluster,
   Destination,
   Event,
+  Group,
+  Id,
+  Proteus,
+  Tag,
+  toObservable,
 };
