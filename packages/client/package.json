@@ -1,7 +1,7 @@
 {
   "name": "proteus-js-client",
   "repository": "https://github.com/netifi-proteus/proteus-js",
-  "version": "1.6.0-SNAPSHOT.2",
+  "version": "1.6.0-SNAPSHOT-9",
   "description": "Proteus JavaScript Client",
   "contributors": [
     "Ryland Degnan <ryland@netifi.com>",
@@ -35,13 +35,17 @@
   },
   "dependencies": {
     "google-protobuf": "^3.6.0",
-    "ipaddr.js": "^1.8.1",
+    "ipaddr.js": "^1.9.0",
+    "js-md5": "^0.7.3",
+    "long": "^4.0.0",
     "opentracing": "^0.14.3",
+    "rsocket-flowable": "^0.0.10",
     "rsocket-rpc-core": "^0.0.4",
     "rsocket-rpc-frames": "^0.0.3",
     "rsocket-rpc-metrics": "^0.0.1",
     "rsocket-rpc-tracing": "^0.0.3",
     "rsocket-websocket-client": "^0.0.10",
-    "rxjs": "^6.2.2"
+    "rxjs": "^6.2.2",
+    "uuid": "^3.3.2"
   }
 }

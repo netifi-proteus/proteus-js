@@ -53,7 +53,7 @@ export default class BasicSpan {
   }
 
   addTags(keyValuePairs) {
-    for (let key in keyValuePairs) {
+    for (const key in keyValuePairs) {
       this.setTag(key, keyValuePairs[key]);
     }
   }
@@ -82,14 +82,14 @@ export default class BasicSpan {
   }
 
   static generateLongString() {
-    //let buffer = uuid.v4(null, new Buffer(8));
+    // let buffer = uuid.v4(null, new Buffer(8));
     const high = Math.floor(Math.random() * (Math.pow(2, 32) - 1));
     const low = Math.floor(Math.random() * (Math.pow(2, 32) - 1));
     return new Long(low, high, true).toString(16).padStart(16, '0');
   }
 
   static generateTraceString() {
-    //let buffer = uuid.v4(null, new Buffer(8));
+    // let buffer = uuid.v4(null, new Buffer(8));
     return BasicSpan.generateLongString() + BasicSpan.generateLongString();
   }
 }

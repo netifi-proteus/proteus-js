@@ -19,7 +19,7 @@
 ('use-strict');
 
 import {DuplexConnection, Responder, ReactiveSocket} from 'rsocket-types';
-import {Single, Flowable} from 'rsocket-flowable';
+import {Single} from 'rsocket-flowable';
 import type {PayloadSerializers} from 'rsocket-core/build/RSocketSerialization';
 import {BufferEncoders} from 'rsocket-core';
 import {RpcClient, RequestHandlingRSocket} from 'rsocket-rpc-core';
@@ -30,6 +30,9 @@ import {FrameTypes, encodeFrame} from './frames';
 import type {Tags} from './frames';
 
 import RSocketWebSocketClient from 'rsocket-websocket-client';
+import ConnectionId from './frames/ConnectionId';
+import AdditionalFlags from './frames/AdditionalFlags';
+import uuid from 'uuid/v4';
 
 export type ProteusConfig = {|
   serializers?: PayloadSerializers<Buffer, Buffer>,
@@ -41,11 +44,15 @@ export type ProteusConfig = {|
     lifetime?: number,
     accessKey: number,
     accessToken: string,
+    connectionId?: string,
+    additionalFlags?: {|
+      public?: boolean,
+    |},
   |},
   transport: {|
     url?: string,
     wsCreator?: (url: string) => WebSocket,
-    //encoder?: Encoders<*>, *** Right now only BufferEncoder is supported for WebSocket so do not allow passing it in if using a URL ***
+    // encoder?: Encoders<*>, *** Right now only BufferEncoder is supported for WebSocket so do not allow passing it in if using a URL ***
     connection?: DuplexConnection,
   |},
   responder?: Responder<Buffer, Buffer>,
@@ -79,8 +86,8 @@ export default class Proteus {
           this._connecting.subscribe(subscriber);
         });
       } else {
-        /*** This is a useful Publisher implementation that wraps could feasibly wrap the Single type ***/
-        /*** Might be useful to clean up and contribute back or put in a utility or something ***/
+        /** * This is a useful Publisher implementation that wraps could feasibly wrap the Single type ** */
+        /** * Might be useful to clean up and contribute back or put in a utility or something ** */
         this._connecting = (function() {
           const _subscribers = [];
           let _connection: ReactiveSocket<Buffer, Buffer>;
@@ -88,7 +95,7 @@ export default class Proteus {
           let _completed = false;
           return {
             onComplete: connection => {
-              //Memoize for future subscribers
+              // Memoize for future subscribers
               _completed = true;
               _connection = connection;
 
@@ -148,7 +155,7 @@ export default class Proteus {
             console.warn(err);
           },
           onSubscribe: cancel => {
-            //do nothing
+            // do nothing
           },
         });
 
@@ -167,7 +174,7 @@ export default class Proteus {
     return this._group;
   }
 
-  myTags(): string {
+  myTags(): Tags {
     return this._tags;
   }
 
@@ -183,7 +190,11 @@ export default class Proteus {
     destination: string,
     group: string,
   ): ReactiveSocket<Buffer, Buffer> {
-    return DeferredConnectingRSocket.group(group, {destination}, this._connect);
+    return DeferredConnectingRSocket.group(
+      group,
+      {'com.netifi.destination': destination},
+      this._connect,
+    );
   }
 
   addService(service: string, handler: Responder<Buffer, Buffer>): void {
@@ -225,15 +236,15 @@ export default class Proteus {
       'Proteus: Transport config must supply a connection or a URL',
     );
 
-    //default to GUID-y destination ID
+    // default to GUID-y destination ID
     const destination =
       config.setup.destination !== undefined
         ? config.setup.destination
-        : uuidv4();
+        : uuid();
     const tags =
       config.setup.tags !== undefined
-        ? {destination, ...config.setup.tags}
-        : {destination};
+        ? {'com.netifi.destination': destination, ...config.setup.tags}
+        : {'com.netifi.destination': destination};
     const keepAlive =
       config.setup.keepAlive !== undefined
         ? config.setup.keepAlive
@@ -244,6 +255,17 @@ export default class Proteus {
         : 360000; /* 360s in ms */
     const accessKey = config.setup.accessKey;
     const accessToken = Buffer.from(config.setup.accessToken, 'base64');
+    /* If a connectionId is not provided, seed it */
+    const connectionIdSeed =
+      typeof config.setup.connectionId !== 'undefined'
+        ? config.setup.connectionId
+        : Date.now().toString();
+    const connectionId = new ConnectionId(connectionIdSeed);
+    const additionalFlagsLiteral = {
+      public: false,
+      ...config.setup.additionalFlags,
+    };
+    const additionalFlags = new AdditionalFlags(additionalFlagsLiteral);
 
     const transport: DuplexConnection =
       config.transport.connection !== undefined
@@ -267,6 +289,8 @@ export default class Proteus {
       tags,
       accessKey,
       accessToken,
+      connectionId,
+      additionalFlags,
     });
 
     const finalConfig: ClientConfig<Buffer, Buffer> = {
@@ -274,6 +298,8 @@ export default class Proteus {
         keepAlive,
         lifetime,
         metadata,
+        connectionId,
+        additionalFlags,
       },
       transport,
       responder,
@@ -291,13 +317,4 @@ export default class Proteus {
 
     return new Proteus(config.setup.group, tags, client, requestHandler);
   }
-}
-
-//Helper function to generate GUID-ish IDs, should a user not provide one
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
 }

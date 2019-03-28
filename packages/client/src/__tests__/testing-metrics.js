@@ -34,7 +34,7 @@ const tcpConnection = new RSocketTcpClient(
 const metricsInterval = 15;
 const meterRegistry = new SimpleMeterRegistry();
 
-let tracingServiceGateway = Proteus.create({
+const tracingServiceGateway = Proteus.create({
   setup: {
     group: 'com.netifi.proteus.tracing',
     destination: 'tracing-gateway-js',
@@ -42,7 +42,7 @@ let tracingServiceGateway = Proteus.create({
     accessToken: 'kTBDVtfRBO4tHOnZzSyY5ym2kfY=',
   },
   transport: {
-    //connection: tcpConnection
+    // connection: tcpConnection
     url,
     wsCreator: url =>
       new WebSocket(url, {
@@ -70,7 +70,7 @@ tracingServiceGateway._connect().subscribe({
   onSubscribe: () => {},
 });
 
-let metricsServiceGateway = Proteus.create({
+const metricsServiceGateway = Proteus.create({
   setup: {
     group: 'com.netifi.proteus.metrics',
     destination: 'metrics-gateway-js',
@@ -78,7 +78,7 @@ let metricsServiceGateway = Proteus.create({
     accessToken: 'kTBDVtfRBO4tHOnZzSyY5ym2kfY=',
   },
   transport: {
-    //connection: tcpConnection
+    // connection: tcpConnection
     url,
     wsCreator: url =>
       new WebSocket(url, {
@@ -104,7 +104,7 @@ metricsServiceGateway._connect().subscribe({
 });
 
 const clientOneId = 'thingOne';
-let clientGateway = Proteus.create({
+const clientGateway = Proteus.create({
   setup: {
     group: 'pinger',
     destination: clientOneId,
@@ -112,7 +112,7 @@ let clientGateway = Proteus.create({
     accessToken: 'kTBDVtfRBO4tHOnZzSyY5ym2kfY=',
   },
   transport: {
-    //connection: tcpConnection,
+    // connection: tcpConnection,
     url,
     wsCreator: url =>
       new WebSocket(url, {
@@ -134,11 +134,11 @@ const metricsExporter = new MetricsExporter(
 
 const basicTracer = new BasicTracer(
   {
-    /*default sampler/recorder*/
+    /* default sampler/recorder */
     recorder: {record: () => {}},
   },
   clientGateway,
-  null /*no url needed*/,
+  null /* no url needed */,
   'channel-test',
   null,
   true,
@@ -152,10 +152,10 @@ const client = new ProteusTracingServiceClient(
 
 let lastSpan = null;
 let canceled = false;
-let max = 10;
+const max = 10;
 let count = 0;
 let opname = 'stream span op';
-let singleSpan = new Single(subscriber => {
+const singleSpan = new Single(subscriber => {
   subscriber.onSubscribe(() => {
     canceled = true;
     console.log('Subscriber canceled span');
@@ -177,7 +177,7 @@ let singleSpan = new Single(subscriber => {
     ),
   );
 });
-let spanStream = new Flowable(subscriber => {
+const spanStream = new Flowable(subscriber => {
   subscriber.onSubscribe({
     cancel: () => {
       canceled = true;
@@ -244,9 +244,9 @@ setTimeout(() => {
   });
 }, 5000);
 
-let streamSpansStreamAcks = function() {
+const streamSpansStreamAcks = function() {
   console.log('Beginning to stream spans and acks');
-  //reset count
+  // reset count
   count = 0;
   let finalCount = 0;
   lastSpan = null;
@@ -287,17 +287,17 @@ function mapSpan(
   if (span.spanId.toString() !== span.parentId.toString()) {
     result.setParentId(span.parentId.toString());
   }
-  //kind
+  // kind
   if (span.tags['proteus.type']) {
-    let kindString = span.tags['proteus.type'].toString().toUpperCase();
-    let kind = Span.Kind[kindString] || Span.Kind.SPAN_KIND_UNSPECIFIED;
+    const kindString = span.tags['proteus.type'].toString().toUpperCase();
+    const kind = Span.Kind[kindString] || Span.Kind.SPAN_KIND_UNSPECIFIED;
     result.setKind(kind);
   } else {
-    let kind = Span.Kind['CLIENT'];
+    const kind = Span.Kind.CLIENT;
     result.setKind(kind);
   }
   if (span.tags) {
-    let map = result.getTagsMap();
+    const map = result.getTagsMap();
     Object.keys(span.tags).forEach(key => {
       map.set(key, span.tags[key]);
     });
@@ -305,11 +305,11 @@ function mapSpan(
       map.set('group', group);
     }
     if (destination) {
-      map.set('destination', destination);
+      map.set('com.netifi.destination', destination);
     }
   }
   if (span.logs) {
-    let annotations = [];
+    const annotations = [];
     span.logs.forEach(log => {
       const annotation = new Annotation();
       annotation.setTimestamp(log.timestamp);
@@ -324,7 +324,7 @@ function mapSpan(
   if (remoteService) {
     result.setRemoteEndpoint(constructEndpoint(remoteService));
   }
-  result.setShared(!!shared);
+  result.setShared(Boolean(shared));
 
   return result;
 }
@@ -332,7 +332,7 @@ function mapSpan(
 function constructEndpoint(service) {
   const endpoint = new Endpoint();
   endpoint.setServiceName(service);
-  //TODO: Figure this out for real
+  // TODO: Figure this out for real
   endpoint.setIpv4('127.0.0.1');
   return endpoint;
 }

@@ -162,8 +162,9 @@ export class ProteusTcpConnection implements DuplexConnection {
   }
 
   _handleError = (error?: ?Error): void => {
-    error = error || new Error('RSocketTcpClient: Socket closed unexpectedly.');
-    this._close(error);
+    this._close(
+      error || new Error('RSocketTcpClient: Socket closed unexpectedly.'),
+    );
   };
 
   _handleData = (chunk: Buffer): void => {

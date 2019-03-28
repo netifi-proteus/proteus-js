@@ -25,7 +25,7 @@ export class BasicTracer extends Tracer {
    */
   constructor(
     {sampler, recorder} = {},
-    proteusGateway?: Proteus,
+    gateway?: Proteus,
     url?: string,
     localService?: string,
     remoteService?: string,
@@ -33,8 +33,9 @@ export class BasicTracer extends Tracer {
   ) {
     super();
     this._sampler = sampler || new DefaultSampler();
-    if (!proteusGateway) {
-      proteusGateway = Proteus.create({
+    const proteusGateway =
+      gateway ||
+      Proteus.create({
         setup: {
           group: 'default-tracer-demo',
           accessKey: 9007199254740991,
@@ -44,7 +45,6 @@ export class BasicTracer extends Tracer {
           url,
         },
       });
-    }
 
     this._recorder =
       recorder ||

@@ -1,7 +1,6 @@
 'use strict';
 
-import {http} from 'http';
-import {Ping, Pong, Empty} from '../proteus/testing/ping-pong_pb';
+import {Ping, Pong} from '../proteus/testing/ping-pong_pb';
 import {Single, Flowable} from 'rsocket-flowable';
 
 export class PongService {
@@ -21,7 +20,7 @@ export class PongService {
   pingStream(message: Ping, metadata: Buffer): Flowable<Pong> {
     let count = 1;
     const responses = [];
-    for (var i = 1; i < 6; i++) {
+    for (let i = 1; i < 6; i++) {
       const pong = new Pong();
       pong.setMessage('Pong ' + count++);
       responses.push(pong);

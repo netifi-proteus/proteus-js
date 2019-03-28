@@ -68,9 +68,9 @@ const tcpConnection = new ProteusTlsClient(
 //   onSubscribe: () => {},
 // });
 
-//setTimeout(() => {
+// setTimeout(() => {
 const clientOneId = 'thingOne';
-let clientGatewayOne = Proteus.create({
+const clientGatewayOne = Proteus.create({
   setup: {
     group: 'pinger',
     destination: clientOneId,
@@ -95,7 +95,7 @@ let clientGatewayOne = Proteus.create({
 });
 
 const clientTwoId = 'thingTwo';
-let clientGatewayTwo = Proteus.create({
+const clientGatewayTwo = Proteus.create({
   setup: {
     group: 'ponger',
     destination: clientTwoId,
@@ -125,10 +125,10 @@ clientGatewayOne.addService(
     new PongService(),
     new BasicTracer(
       {
-        /*default sampler/recorder*/
+        /* default sampler/recorder */
       },
       clientGatewayOne,
-      null /*no url needed*/,
+      null /* no url needed */,
       'io.netifi.proteus.tracing.PingPongService',
       null,
       true,
@@ -136,14 +136,14 @@ clientGatewayOne.addService(
   ),
 );
 
-let clientOne = new PingPongServiceClient(
+const clientOne = new PingPongServiceClient(
   clientGatewayOne.group('ponger'),
   new BasicTracer(
     {
-      /*default sampler/recorder*/
+      /* default sampler/recorder */
     },
     clientGatewayOne,
-    null /*no url needed*/,
+    null /* no url needed */,
     'Integration.Test',
     'io.netifi.proteus.tracing.PingPongService',
     false,
@@ -156,10 +156,10 @@ clientGatewayTwo.addService(
     new PongService(),
     new BasicTracer(
       {
-        /*default sampler/recorder*/
+        /* default sampler/recorder */
       },
       clientGatewayTwo,
-      null /*no url needed*/,
+      null /* no url needed */,
       'io.netifi.proteus.tracing.PingPongService',
       null,
       false,
@@ -168,22 +168,21 @@ clientGatewayTwo.addService(
 );
 clientGatewayTwo._connect();
 
-let clientTwo = new PingPongServiceClient(
+const clientTwo = new PingPongServiceClient(
   clientGatewayOne.group('pinger'),
   new BasicTracer(
     {
-      /*default sampler/recorder*/
+      /* default sampler/recorder */
     },
     clientGatewayTwo,
-    null /*no url needed*/,
+    null /* no url needed */,
     'Integration.Test',
     'io.netifi.proteus.tracing.PingPongService',
     false,
   ),
 );
 
-let outerPing = null;
-outerPing = function outerPing(client, clientId) {
+function outerPing(client, clientId) {
   const ping = new Ping();
   ping.setMessage('Please respond once to me:' + clientId);
   console.log('Pinging: ' + clientId);
@@ -195,19 +194,17 @@ outerPing = function outerPing(client, clientId) {
     onError: err => console.log(err),
     onSubscribe: () => {},
   });
-};
+}
 
-let outerFnf = null;
-outerFnf = function outerFnf(client, clientId) {
+function outerFnf(client, clientId) {
   const ping = new Ping();
   ping.setMessage('Hi from ' + clientId);
   console.log('Pinging FnF: ' + clientId);
   client.pingFireAndForget(ping, Buffer.alloc(0));
   setTimeout(() => outerFnf(client, clientId), 1250);
-};
+}
 
-let outerStream = null;
-outerStream = function outerStream(client, clientId) {
+function outerStream(client, clientId) {
   const ping = new Ping();
   ping.setMessage('Give me all you got, from ' + clientId);
   console.log('Pinging for stream: ' + clientId);
@@ -229,7 +226,7 @@ outerStream = function outerStream(client, clientId) {
       _subscription.request(1);
     },
   });
-};
+}
 
 setTimeout(() => {
   console.log('single ping, client one');
@@ -249,8 +246,8 @@ setTimeout(() => {
 
 const http = require('http');
 http
-  .createServer(function(req, res) {
-    res.write("Shhhh, I'm working"); //write a response to the client
-    res.end(); //end the response
+  .createServer((req, res) => {
+    res.write("Shhhh, I'm working"); // write a response to the client
+    res.end(); // end the response
   })
   .listen(9091);
