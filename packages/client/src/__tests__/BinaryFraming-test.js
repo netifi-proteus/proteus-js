@@ -17,6 +17,8 @@
 import {expect} from 'chai';
 import {describe, it} from 'mocha';
 
+import ipaddr from 'ipaddr.js';
+
 import {encodeFrame, decodeFrame, FrameTypes} from '../frames';
 
 describe('BROKER_SETUP', () => {
@@ -46,131 +48,121 @@ describe('BROKER_SETUP', () => {
 
 describe('DESTINATION_SETUP', () => {
   it('serializes DESTINATION_SETUP frames', () => {
-    const destination = 'destination';
+    const inetAddress = ipaddr.parse('127.0.0.1');
     const group = 'group';
     const accessKey = Number.MAX_SAFE_INTEGER;
     const accessToken = Buffer.from([0x0a, 0x0b, 0x0c]);
+    const tags = {key: 'value'};
     const input = {
       type: FrameTypes.DESTINATION_SETUP,
-      destination,
+      inetAddress,
       group,
       accessKey,
       accessToken,
+      tags,
     };
 
     const buffer = encodeFrame(input);
     const frame = decodeFrame(buffer);
 
     expect(input.type).to.equal(frame.type);
-    expect(input.destination).to.equal(frame.destination);
+    expect(input.inetAddress.toString()).to.equal(frame.inetAddress.toString());
     expect(input.group).to.equal(frame.group);
     expect(input.accessKey).to.equal(frame.accessKey);
     expect(input.accessToken).to.deep.equal(frame.accessToken);
+    expect(input.tags).to.deep.equal(frame.tags);
   });
-});
 
-describe('DESTINATION', () => {
-  it('serializes DESTINATION frames', () => {
-    const fromDestination = 'fromDestination';
-    const fromGroup = 'fromGroup';
-    const toDestination = 'toDestination';
-    const toGroup = 'toGroup';
-    const metadata = Buffer.from([0x0a, 0x0b, 0x0c]);
+  it('handles optional inetAddress in DESTINATION_SETUP frames', () => {
+    const group = 'group';
+    const accessKey = Number.MAX_SAFE_INTEGER;
+    const accessToken = Buffer.from([0x0a, 0x0b, 0x0c]);
+    const tags = {key: 'value'};
     const input = {
-      type: FrameTypes.DESTINATION,
-      fromDestination,
-      fromGroup,
-      toDestination,
-      toGroup,
-      metadata,
+      type: FrameTypes.DESTINATION_SETUP,
+      group,
+      accessKey,
+      accessToken,
+      tags,
     };
 
     const buffer = encodeFrame(input);
     const frame = decodeFrame(buffer);
 
     expect(input.type).to.equal(frame.type);
-    expect(input.fromDestination).to.equal(frame.fromDestination);
-    expect(input.fromGroup).to.equal(frame.fromGroup);
-    expect(input.toDestination).to.equal(frame.toDestination);
-    expect(input.toGroup).to.equal(frame.toGroup);
-    expect(input.metadata).to.deep.equal(frame.metadata);
+    expect(frame.inetAddress).to.equal(null);
+    expect(input.group).to.equal(frame.group);
+    expect(input.accessKey).to.equal(frame.accessKey);
+    expect(input.accessToken).to.deep.equal(frame.accessToken);
+    expect(input.tags).to.deep.equal(frame.tags);
   });
 });
 
 describe('GROUP', () => {
   it('serializes GROUP frames', () => {
-    const fromDestination = 'fromDestination';
-    const fromGroup = 'fromGroup';
-    const toGroup = 'toGroup';
+    const group = 'group';
     const metadata = Buffer.from([0x0a, 0x0b, 0x0c]);
+    const tags = {key: 'value'};
     const input = {
       type: FrameTypes.GROUP,
-      fromDestination,
-      fromGroup,
-      toGroup,
+      group,
       metadata,
+      tags,
     };
 
     const buffer = encodeFrame(input);
     const frame = decodeFrame(buffer);
 
     expect(input.type).to.equal(frame.type);
-    expect(input.fromDestination).to.equal(frame.fromDestination);
-    expect(input.fromGroup).to.equal(frame.fromGroup);
-    expect(input.toGroup).to.equal(frame.toGroup);
+    expect(input.group).to.equal(frame.group);
     expect(input.metadata).to.deep.equal(frame.metadata);
+    expect(input.tags).to.deep.equal(frame.tags);
   });
 });
 
 describe('BROADCAST', () => {
   it('serializes BROADCAST frames', () => {
-    const fromDestination = 'fromDestination';
-    const fromGroup = 'fromGroup';
-    const toGroup = 'toGroup';
+    const group = 'group';
     const metadata = Buffer.from([0x0a, 0x0b, 0x0c]);
+    const tags = {key: 'value'};
     const input = {
       type: FrameTypes.BROADCAST,
-      fromDestination,
-      fromGroup,
-      toGroup,
+      group,
       metadata,
+      tags,
     };
 
     const buffer = encodeFrame(input);
     const frame = decodeFrame(buffer);
 
     expect(input.type).to.equal(frame.type);
-    expect(input.fromDestination).to.equal(frame.fromDestination);
-    expect(input.fromGroup).to.equal(frame.fromGroup);
-    expect(input.toGroup).to.equal(frame.toGroup);
+    expect(input.group).to.equal(frame.group);
     expect(input.metadata).to.deep.equal(frame.metadata);
+    expect(input.tags).to.deep.equal(frame.tags);
   });
 });
 
 describe('SHARD', () => {
   it('serializes SHARD frames', () => {
-    const fromDestination = 'fromDestination';
-    const fromGroup = 'fromGroup';
-    const toGroup = 'toGroup';
+    const group = 'group';
     const shardKey = Buffer.from([0x0a, 0x0b, 0x0c]);
     const metadata = Buffer.from([0x0d, 0x0e, 0x0f]);
+    const tags = {key: 'value'};
     const input = {
       type: FrameTypes.SHARD,
-      fromDestination,
-      fromGroup,
-      toGroup,
+      group,
       shardKey,
       metadata,
+      tags,
     };
 
     const buffer = encodeFrame(input);
     const frame = decodeFrame(buffer);
 
     expect(input.type).to.equal(frame.type);
-    expect(input.fromDestination).to.equal(frame.fromDestination);
-    expect(input.fromGroup).to.equal(frame.fromGroup);
-    expect(input.toGroup).to.equal(frame.toGroup);
+    expect(input.group).to.equal(frame.group);
     expect(input.shardKey).to.deep.equal(frame.shardKey);
     expect(input.metadata).to.deep.equal(frame.metadata);
+    expect(input.tags).to.deep.equal(frame.tags);
   });
 });
