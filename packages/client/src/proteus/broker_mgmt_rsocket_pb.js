@@ -1,5 +1,20 @@
 // GENERATED CODE -- DO NOT EDIT!
 
+// Original file comments:
+//
+//    Copyright 2019 The Proteus Authors
+//
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+//
+//        http://www.apache.org/licenses/LICENSE-2.0
+//
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
 'use strict';
 var rsocket_rpc_frames = require('rsocket-rpc-frames');
 var rsocket_rpc_core = require('rsocket-rpc-core');
@@ -16,8 +31,12 @@ var BrokerManagementServiceClient = function () {
     this._tracer = tracer;
     this.shutdownTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "shutdown"}, {"rsocket.rpc.role": "client"});
     this.shutdownMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "shutdown"}, {"role": "client"});
+    this.shutdownGracefullyTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "shutdownGracefully"}, {"rsocket.rpc.role": "client"});
+    this.shutdownGracefullyMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "shutdownGracefully"}, {"role": "client"});
     this.leaveTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "leave"}, {"rsocket.rpc.role": "client"});
     this.leaveMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "leave"}, {"role": "client"});
+    this.restartTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "restart"}, {"rsocket.rpc.role": "client"});
+    this.restartMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "restart"}, {"role": "client"});
     this.rejoinTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "rejoin"}, {"rsocket.rpc.role": "client"});
     this.rejoinMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "rejoin"}, {"role": "client"});
     this.joinTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "join"}, {"rsocket.rpc.role": "client"});
@@ -34,6 +53,8 @@ var BrokerManagementServiceClient = function () {
     this.closeBrokersMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "closeBrokers"}, {"role": "client"});
     this.closeAllTrace = rsocket_rpc_tracing.traceSingle(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "closeAll"}, {"rsocket.rpc.role": "client"});
     this.closeAllMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "closeAll"}, {"role": "client"});
+    this.closeConnectionTrace = rsocket_rpc_tracing.trace(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "closeConnection"}, {"rsocket.rpc.role": "client"});
+    this.closeConnectionMetrics = rsocket_rpc_metrics.timed(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "closeConnection"}, {"role": "client"});
   }
   // Shutdowns down a broker process
   BrokerManagementServiceClient.prototype.shutdown = function shutdown(message, metadata) {
@@ -43,6 +64,26 @@ var BrokerManagementServiceClient = function () {
         var dataBuf = Buffer.from(message.serializeBinary());
         var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
         var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'shutdown', tracingMetadata, metadata || Buffer.alloc(0));
+          this._rs.requestResponse({
+            data: dataBuf,
+            metadata: metadataBuf
+          }).map(function (payload) {
+            //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+            var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+            return google_protobuf_empty_pb.Empty.deserializeBinary(binary);
+          }).subscribe(subscriber);
+        })
+      )
+    );
+  };
+  // Shutdowns down a broker process after draining connections with timeout
+  BrokerManagementServiceClient.prototype.shutdownGracefully = function shutdownGracefully(message, metadata) {
+    const map = {};
+    return this.shutdownGracefullyMetrics(
+      this.shutdownGracefullyTrace(map)(new rsocket_flowable.Single(subscriber => {
+        var dataBuf = Buffer.from(message.serializeBinary());
+        var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+        var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'shutdownGracefully', tracingMetadata, metadata || Buffer.alloc(0));
           this._rs.requestResponse({
             data: dataBuf,
             metadata: metadataBuf
@@ -75,7 +116,27 @@ var BrokerManagementServiceClient = function () {
       )
     );
   };
-  // Rejoins the cluster it  has seed information for
+  // Broker drains connections and leaves the cluster, then joins cluster again
+  BrokerManagementServiceClient.prototype.restart = function restart(message, metadata) {
+    const map = {};
+    return this.restartMetrics(
+      this.restartTrace(map)(new rsocket_flowable.Single(subscriber => {
+        var dataBuf = Buffer.from(message.serializeBinary());
+        var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+        var metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'restart', tracingMetadata, metadata || Buffer.alloc(0));
+          this._rs.requestResponse({
+            data: dataBuf,
+            metadata: metadataBuf
+          }).map(function (payload) {
+            //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+            var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+            return proteus_broker_mgmt_pb.Ack.deserializeBinary(binary);
+          }).subscribe(subscriber);
+        })
+      )
+    );
+  };
+  // Broker joins cluster It previously left
   BrokerManagementServiceClient.prototype.rejoin = function rejoin(message, metadata) {
     const map = {};
     return this.rejoinMetrics(
@@ -247,6 +308,30 @@ var BrokerManagementServiceClient = function () {
       )
     );
   };
+  // Closes connection on the broker by its id. Connection group is optional
+  BrokerManagementServiceClient.prototype.closeConnection = function closeConnection(messages, metadata) {
+    const map = {};
+    return this.closeConnectionMetrics(
+      this.closeConnectionTrace(map)(new rsocket_flowable.Flowable(subscriber => {
+        var dataBuf;
+        var tracingMetadata = rsocket_rpc_tracing.mapToBuffer(map);
+        var metadataBuf ;
+          this._rs.requestChannel(messages.map(function (message) {
+            dataBuf = Buffer.from(message.serializeBinary());
+            metadataBuf = rsocket_rpc_frames.encodeMetadata('io.netifi.proteus.broker.info.BrokerManagementService', 'closeConnection', tracingMetadata, metadata || Buffer.alloc(0));
+            return {
+              data: dataBuf,
+              metadata: metadataBuf
+            };
+          })).map(function (payload) {
+            //TODO: resolve either 'https://github.com/rsocket/rsocket-js/issues/19' or 'https://github.com/google/protobuf/issues/1319'
+            var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+            return proteus_broker_mgmt_pb.Ack.deserializeBinary(binary);
+          }).subscribe(subscriber);
+        })
+      )
+    );
+  };
   return BrokerManagementServiceClient;
 }();
 
@@ -258,8 +343,12 @@ var BrokerManagementServiceServer = function () {
     this._tracer = tracer;
     this.shutdownTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "shutdown"}, {"rsocket.rpc.role": "server"});
     this.shutdownMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "shutdown"}, {"role": "server"});
+    this.shutdownGracefullyTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "shutdownGracefully"}, {"rsocket.rpc.role": "server"});
+    this.shutdownGracefullyMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "shutdownGracefully"}, {"role": "server"});
     this.leaveTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "leave"}, {"rsocket.rpc.role": "server"});
     this.leaveMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "leave"}, {"role": "server"});
+    this.restartTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "restart"}, {"rsocket.rpc.role": "server"});
+    this.restartMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "restart"}, {"role": "server"});
     this.rejoinTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "rejoin"}, {"rsocket.rpc.role": "server"});
     this.rejoinMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "rejoin"}, {"role": "server"});
     this.joinTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "join"}, {"rsocket.rpc.role": "server"});
@@ -276,6 +365,8 @@ var BrokerManagementServiceServer = function () {
     this.closeBrokersMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "closeBrokers"}, {"role": "server"});
     this.closeAllTrace = rsocket_rpc_tracing.traceSingleAsChild(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "closeAll"}, {"rsocket.rpc.role": "server"});
     this.closeAllMetrics = rsocket_rpc_metrics.timedSingle(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "closeAll"}, {"role": "server"});
+    this.closeConnectionTrace = rsocket_rpc_tracing.traceAsChild(tracer, "BrokerManagementService", {"rsocket.rpc.service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "closeConnection"}, {"rsocket.rpc.role": "server"});
+    this.closeConnectionMetrics = rsocket_rpc_metrics.timed(meterRegistry, "BrokerManagementService", {"service": "io.netifi.proteus.broker.info.BrokerManagementService"}, {"method": "closeConnection"}, {"role": "server"});
     this._channelSwitch = (payload, restOfMessages) => {
       if (payload.metadata == null) {
         return rsocket_flowable.Flowable.error(new Error('metadata is empty'));
@@ -335,6 +426,23 @@ var BrokerManagementServiceServer = function () {
                 })
               )
             );
+        case 'closeConnection':
+          deserializedMessages = restOfMessages.map(payload => {
+            var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+            return proteus_broker_mgmt_pb.Connection.deserializeBinary(binary);
+          });
+          return this.closeConnectionMetrics(
+            this.closeConnectionTrace(spanContext)(
+              this._service
+                .closeConnection(deserializedMessages, payload.metadata)
+                .map(function (message) {
+                  return {
+                    data: Buffer.from(message.serializeBinary()),
+                    metadata: Buffer.alloc(0)
+                  }
+                })
+              )
+            );
         default:
           return rsocket_flowable.Flowable.error(new Error('unknown method'));
       }
@@ -367,12 +475,44 @@ var BrokerManagementServiceServer = function () {
             )
           )
         );
+        case 'shutdownGracefully':
+          return this.shutdownGracefullyMetrics(
+            this.shutdownGracefullyTrace(spanContext)(new rsocket_flowable.Single(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .shutdownGracefully(google_protobuf_empty_pb.Empty.deserializeBinary(binary), payload.metadata)
+                .map(function (message) {
+                  return {
+                    data: Buffer.from(message.serializeBinary()),
+                    metadata: Buffer.alloc(0)
+                  }
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
         case 'leave':
           return this.leaveMetrics(
             this.leaveTrace(spanContext)(new rsocket_flowable.Single(subscriber => {
               var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
               return this._service
                 .leave(google_protobuf_empty_pb.Empty.deserializeBinary(binary), payload.metadata)
+                .map(function (message) {
+                  return {
+                    data: Buffer.from(message.serializeBinary()),
+                    metadata: Buffer.alloc(0)
+                  }
+                }).subscribe(subscriber);
+              }
+            )
+          )
+        );
+        case 'restart':
+          return this.restartMetrics(
+            this.restartTrace(spanContext)(new rsocket_flowable.Single(subscriber => {
+              var binary = !payload.data || payload.data.constructor === Buffer || payload.data.constructor === Uint8Array ? payload.data : new Uint8Array(payload.data);
+              return this._service
+                .restart(google_protobuf_empty_pb.Empty.deserializeBinary(binary), payload.metadata)
                 .map(function (message) {
                   return {
                     data: Buffer.from(message.serializeBinary()),
