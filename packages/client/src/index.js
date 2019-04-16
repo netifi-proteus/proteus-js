@@ -37,6 +37,8 @@ import {
   Tag,
 } from './proteus/broker_info_pb';
 
+import {Brokers, Connection} from './proteus/broker_mgmt_pb';
+
 import {
   AccessKeyInfoServiceClient,
   AccessKeyInfoServiceServer,
@@ -49,6 +51,10 @@ import {
   BrokerManagementServiceClient,
   BrokerManagementServiceServer,
 } from './proteus/broker_mgmt_rsocket_pb';
+import {
+  ClusterManagementServiceClient,
+  ClusterManagementServiceServer,
+} from './proteus/cluster_mgmt_rsocket_pb';
 
 import toObservable from './rx/FlowableAdapter';
 
@@ -69,7 +75,11 @@ export {
   BrokerInfoServiceServer,
   BrokerManagementServiceClient,
   BrokerManagementServiceServer,
+  Brokers,
   Cluster,
+  ClusterManagementServiceClient,
+  ClusterManagementServiceServer,
+  Connection,
   Destination,
   Event,
   Group,
