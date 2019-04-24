@@ -1,7 +1,7 @@
 {
   "name": "proteus-js-client",
   "repository": "https://github.com/netifi-proteus/proteus-js",
-  "version": "1.6.1-SNAPSHOT-0",
+  "version": "1.6.1",
   "description": "Proteus JavaScript Client",
   "contributors": [
     "Ryland Degnan <ryland@netifi.com>",
