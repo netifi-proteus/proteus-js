@@ -1,4 +1,5 @@
 # Netifi Proteus JavaScript
+This project has moved to https://github.com/netifi/netifi-js-client
 
 [![Join the chat at https://gitter.im/netifi/general](https://badges.gitter.im/netifi/general.svg)](https://gitter.im/netifi/general) <a href='https://travis-ci.org/netifi-proteus/proteus-js'><img src='https://travis-ci.org/netifi-proteus/proteus-js.svg?branch=master'></a>
 
